@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.DataCombinerMapper">
+
+    <resultMap id="dataCombiner1Result" type="DataCombiner1"></resultMap>
+
+    <!-- getInstantCombinerPV Lấy dữ liệu thông tin Combiner tức thời PV -->
+    <select id="getInstantOperationCombinerPV" resultMap="dataCombiner1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            A.DCAMax,
+            A.N,
+            A.Evt,
+            A.LOW_VOLTAGE,
+            A.LOW_POWER,
+            A.LOW_EFFICIENCY,
+            A.CURRENT,
+            A.VOLTAGE,
+            A.POWER,
+            A.DISCONNECTED,
+            A.FUSE_FAULT,
+            A.COMBINER_FUSE_FAULT,
+            A.COMBINER_CABINET_OPEN,
+            A.TEMP,
+            A.GROUNDFAULT,
+            A.REVERSED_POLARITY,
+            A.INCOMPATIBLE,
+            A.COMM_ERROR,
+            A.INTERNAL_ERROR,
+            A.THEFT,
+            A.ARC_DETECTED,
+            A.IdcCombiner,
+            A.DCAh,
+            A.VdcCombiner,
+            A.T,
+            A.PdcCombiner,
+            A.PR,
+            A.EpCombiner,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_plus.s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = #{deviceId}
+        ORDER BY
+            A.sent_date DESC
+        LIMIT 1
+    </select>
+
+    <!-- getOperationCombinerPV Lấy dữ liệu thông tin vận hành Combiner PV -->
+    <select id="getOperationCombinerPV" resultMap="dataCombiner1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.DCAMax,
+            A.N,
+            A.Evt,
+            A.LOW_VOLTAGE,
+            A.LOW_POWER,
+            A.LOW_EFFICIENCY,
+            A.CURRENT,
+            A.VOLTAGE,
+            A.POWER,
+            A.DISCONNECTED,
+            A.FUSE_FAULT,
+            A.COMBINER_FUSE_FAULT,
+            A.COMBINER_CABINET_OPEN,
+            A.TEMP,
+            A.GROUNDFAULT,
+            A.REVERSED_POLARITY,
+            A.INCOMPATIBLE,
+            A.COMM_ERROR,
+            A.INTERNAL_ERROR,
+            A.THEFT,
+            A.ARC_DETECTED,
+            A.IdcCombiner,
+            A.DCAh,
+            A.VdcCombiner,
+            A.T,
+            A.PdcCombiner,
+            A.PR,
+            A.EpCombiner,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${soft}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+
+    <!-- countDataOperationCombinerPV Lấy tổng số dữ liệu thông tin vận hành Combiner PV -->
+    <select id="countDataOperationCombinerPV" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+                FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+    
+    <select id="getDataCombinerByDeviceIdInFifMinute" resultMap="dataCombiner1Result">
+        SELECT
+            *
+        FROM
+            s3m_data_combiner_1 AS A
+        WHERE
+            A.device_id IS NOT NULL
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY sent_date DESC
+            LIMIT 1
+     </select>
+     
+     <!-- getDataCombinerPV Lấy dữ liệu thông tin vận hành Combiner PV -->
+    <select id="getDataCombinerPV" resultMap="dataCombiner1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            B.device_type as deviceType,
+            A.DCAMax,
+            A.N,
+            A.Evt,
+            A.LOW_VOLTAGE,
+            A.LOW_POWER,
+            A.LOW_EFFICIENCY,
+            A.CURRENT,
+            A.VOLTAGE,
+            A.POWER,
+            A.DISCONNECTED,
+            A.FUSE_FAULT,
+            A.COMBINER_FUSE_FAULT,
+            A.COMBINER_CABINET_OPEN,
+            A.TEMP,
+            A.GROUNDFAULT,
+            A.REVERSED_POLARITY,
+            A.INCOMPATIBLE,
+            A.COMM_ERROR,
+            A.INTERNAL_ERROR,
+            A.THEFT,
+            A.ARC_DETECTED,
+            A.IdcCombiner,
+            A.DCAh,
+            A.VdcCombiner,
+            A.T,
+            A.PdcCombiner,
+            A.PR,
+            A.EpCombiner,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_data_combiner_1${year} A LEFT JOIN s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = ${deviceId}
+        AND
+            A.sent_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.sent_date <![CDATA[<=]]> #{toDate}
+        ORDER BY
+            A.sent_date DESC
+
+    </select>
+
+</mapper>

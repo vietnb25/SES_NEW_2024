@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.grid.dao.ReportMapperGrid">
+
+
+    <resultMap id="reportResult" type="report">
+        <result property="id" column="id" />
+        <result property="dateFrom" column="date_from" />
+        <result property="dateTo" column="date_to" />
+        <result property="reportDate" column="report_date" />
+        <result property="deviceName" column="device_name" />
+        <result property="reportId" column="report_id" />
+        <result property="status" column="status" />
+        <result property="url" column="url" />
+        <result property="deviceId" column="device_id" />
+        <result property="deleted" column="delete_flag" />
+        <result property="managerId" column="manager_id" />
+        <result property="percent" column="percent" />
+        <result property="updated" column="updated" />
+        <result property="systemType" column="system_type" />
+        <result property="dateType" column="date_type" />
+    </resultMap>
+    
+
+       <resultMap id="dataRmuDrawer1Result" type="DataRmuDrawer1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceType" column="device_type" />
+        <result property="deviceName" column="device_name" />
+        <result property="sawId1" column="SAW_ID1"/>
+        <result property="sawId2" column="SAW_ID2"/>
+        <result property="sawId3" column="SAW_ID3"/>
+        <result property="sawId4" column="SAW_ID4"/>
+        <result property="sawId5" column="SAW_ID5"/>
+        <result property="sawId6" column="SAW_ID6"/>
+        <result property="gAMean" column="GROUPA_MEAN_MEANSUREMENT"/>
+        <result property="gAAlarm" column="GROUPA_ALARM_STATUS"/>
+        <result property="gBMean" column="GROUPB_MEAN_MEANSUREMENT"/>
+        <result property="gBAlarm" column="GROUPB_ALARM_STATUS"/>
+        <result property="alarmStatus" column="ALARM_STATUS_BIT"/>
+        <result property="lfbRatio" column="LFB_RATIO"/>
+        <result property="lfbEppc" column="LFB_EPPC"/>
+        <result property="mfbRatio" column="MFB_RATIO"/>
+        <result property="mlfbEppc" column="MLFB_EPPC"/>
+        <result property="hlfbRatio" column="HLFB_RATIO"/>
+        <result property="hlfbEppc" column="HLFB_EPPC"/>
+        <result property="meanRatio" column="MEAN_RATIO"/>
+        <result property="meanEppc" column="MEAN_EPPC"/>
+        <result property="rxEHi" column="RATIOxEPPC_Hi"/>
+        <result property="rxELo" column="RATIOxEPPC_Lo"/>
+        <result property="indicator" column="INDICATOR"/>
+        <result property="t" column="T"/>
+        <result property="h" column="H"/>
+        <result property="uab" column="Uab"/>
+        <result property="ubc" column="Ubc"/>
+        <result property="uca" column="Uca"/>
+        <result property="ull" column="Ull"/>
+        <result property="uan" column="Uan"/>
+        <result property="ubn" column="Ubn"/>
+        <result property="ucn" column="Ucn"/>
+        <result property="uln" column="Uln"/>
+        <result property="ia" column="Ia"/>
+        <result property="ib" column="Ib"/>
+        <result property="ic" column="Ic"/>
+        <result property="in" column="In"/>
+        <result property="ig" column="Ig"/>
+        <result property="iavg" column="Iavg"/>
+        <result property="pa" column="Pa"/>
+        <result property="pb" column="Pb"/>
+        <result property="pc" column="Pc"/>
+        <result property="pTotal" column="P_Total"/>
+        <result property="qa" column="Qa"/>
+        <result property="qb" column="Qb"/>
+        <result property="qc" column="Qc"/>
+        <result property="qTotal" column="Q_Total"/>
+        <result property="sa" column="Sa"/>
+        <result property="sb" column="Sb"/>
+        <result property="sc" column="Sc"/>
+        <result property="sTotal" column="S_Total"/>
+        <result property="pfa" column="PFa"/>
+        <result property="pfb" column="PFb"/>
+        <result property="pfc" column="PFc"/>
+        <result property="pfavg" column="PFavg"/>
+        <result property="f" column="F"/>
+        <result property="ep" column="EP"/>
+        <result property="eq" column="EQ"/>
+        <result property="es" column="ES"/>
+        <result property="thdIa" column="THD_Ia"/>
+        <result property="thdIb" column="THD_Ib"/>
+        <result property="thdIc" column="THD_Ic"/>
+        <result property="thdIn" column="THD_In"/>
+        <result property="thdIg" column="THD_Ig"/>
+        <result property="thdVab" column="THD_Vab"/>
+        <result property="thdVbc" column="THD_Vbc"/>
+        <result property="thdVca" column="THD_Vca"/>
+        <result property="thdVll" column="THD_Vll"/>
+        <result property="thdVan" column="THD_Van"/>
+        <result property="thdVbn" column="THD_Vbn"/>
+        <result property="thdVcn" column="THD_Vcn"/>
+        <result property="thdVln" column="THD_Vln"/>
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+    
+        <resultMap id="warningResult" type="Warning">
+        <result column="id" property="id" />
+        <result column="warning_id" property="warningId" />
+        <result column="warning_type" property="warningType" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="total" property="totalDevice" />
+        <result column="system_type_id" property="systemTypeId" />
+        <result column="from_date" property="fromDate" />
+        <result column="to_date" property="toDate" />
+        <result column="handle_flag" property="handleFlag" />
+        <result column="project_name" property="projectName" />
+        <result column="project_id" property="projectId" />
+        <result column="handle_name" property="handleName" />
+        <result column="staff_name" property="staffName" />
+        <result column="setting_history_id" property="settingHistoryId" />
+        <result column="description" property="description" />
+        <result column="create_id" property="createId" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_id" property="updateId" />
+        <result column="update_date" property="updateDate" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="layer" property="layer" />
+        <result column="total" property="total" />
+        <result column="device_type" property="deviceType" />
+    </resultMap>
+    
+    
+        <select id="getReport" parameterType="map" resultMap="reportResult">
+    SELECT 
+        *
+    FROM
+        s3m_report_table
+    WHERE 
+        delete_flag = 0 and user_id =#{userId} and system_type = 3 and project_id=#{projectId} order by id desc
+    </select>
+    
+       <select id="getDevice" parameterType="map" resultType="map">
+    SELECT 
+        A.device_id, A.device_name
+    FROM
+        s3m_device A
+    WHERE 
+       A.project_id= #{projectId}  AND A.delete_flag = 0 AND A.system_type_id = 5 AND A.device_type=1
+    </select>
+    
+    <select id="getUserId" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT
+        user_id as id
+    FROM
+        s3m_user
+    WHERE
+        username =#{userName}
+    </select>
+    
+        <!--    delete report -->
+    <update id="deleteReport" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        delete_flag=1
+    WHERE 
+        id=#{id}
+    </update>
+    
+        <!--    insert report -->
+    <insert id="addReport" parameterType="vn.ses.s3m.plus.dto.Report">
+    INSERT INTO 
+        s3m_report_table(report_id, device_id, report_date, updated, url, user_id, system_type, date_type, project_id)
+    VALUES
+        (#{reportId}, #{deviceId}, #{reportDate}, #{updated}, #{url}, #{userId}, #{systemType},#{dateType}, #{projectId})
+    </insert>
+    
+    <select id="getdataRmuDrawer1Bylimit" parameterType="map" resultMap="dataRmuDrawer1Result" >
+     SELECT 
+        A.T, A.H 
+    FROM  ${schema}${s3mDataTableRmu} A 
+        JOIN s3m_device B  ON A.device_id = B.device_id 
+    WHERE 
+    <if test="deviceId != null">
+        A.device_id = #{deviceId} AND
+    </if>
+        A.sent_date <![CDATA[>=]]> #{fromDate} 
+    AND 
+        A.sent_date <![CDATA[<=]]> #{toDate}
+    AND 
+        B.project_id =#{projectId}
+    AND(
+        A.T > 500
+    OR  
+        A.H > 900)
+    LIMIT 5
+    </select>
+    
+    <select id="getListReportByLimit" parameterType="map" resultMap="reportResult">
+    SELECT 
+        A.id,
+        A.user_id,
+        A.report_id,
+        A.report_date,
+        A.status,
+        A.url,
+        A.delete_flag,
+        A.percent,
+        A.updated
+    FROM
+        s3m_report_table A
+    WHERE
+        A.delete_flag = 0 AND A.user_id=#{userId}
+    ORDER BY A.id DESC
+    LIMIT #{limit}
+    </select>
+    
+    <select id="getProjectName" parameterType="String" resultType="java.lang.String">
+    SELECT
+        A.project_name 
+    FROM 
+        s3m_project A
+    WHERE
+        A.project_id=#{projectId}
+    </select>
+    
+    <select id="getDataRmuDrawer1" parameterType="map" resultMap="dataRmuDrawer1Result" >
+    SELECT 
+        A.T, A.H , B.device_name, A.device_id
+    FROM 
+        ${schema}${s3mDataTableRmu} A 
+            JOIN 
+        s3m_device B  ON A.device_id = B.device_id 
+    WHERE 
+    <if test="deviceId != null">
+        A.device_id = #{deviceId} AND
+    </if>
+        A.sent_date <![CDATA[>=]]> #{fromDate} 
+    AND 
+        A.sent_date <![CDATA[<=]]> #{toDate}
+    AND 
+        B.project_id =#{projectId}
+    AND( 
+        A.T > 500
+    OR  
+        A.H > 900)
+    </select>
+    
+    <select id="getWarningGrid" parameterType="map" resultMap="warningResult">
+    SELECT 
+        A.warning_type, count(A.warning_type) AS TOTAL, A.device_id, B.device_name, B.device_type
+    FROM 
+        ${schema}s3m_warning A 
+    JOIN 
+        s3m_device B ON A.device_id = B.device_id
+    JOIN
+        ${schema}s3m_data_rmu_drawer_1_view C ON A.device_id = C.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}  
+    AND 
+        A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+    AND
+        (A.warning_type = 506
+        OR A.warning_type = 507
+        OR A.warning_type = 514
+        OR A.warning_type = 522
+        OR A.warning_type = 523
+        OR A.warning_type = 525
+        OR A.warning_type = 516)
+    AND 
+        B.project_id = #{projectId}
+    AND 
+        C.view_type = #{viewType}
+    AND 
+        C.view_time= #{viewTime}
+    GROUP BY 
+        A.warning_type, A.device_id, B.device_type
+    </select>
+    
+<select id="getWarningGridByLimit" parameterType="map" resultMap="warningResult">
+    SELECT 
+        A.warning_type, count(A.warning_type) AS TOTAL, A.device_id, B.device_name
+    FROM 
+        ${schema}s3m_warning A 
+    JOIN 
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}  
+    AND 
+        A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+    AND
+        (A.warning_type = 506
+        OR A.warning_type = 507
+        OR A.warning_type = 514
+        OR A.warning_type = 522
+        OR A.warning_type = 523
+        OR A.warning_type = 525
+        OR A.warning_type = 516)
+    AND 
+        B.project_id = #{projectId}
+    
+    GROUP BY 
+        A.warning_type
+    LIMIT 5
+    </select>
+    
+    
+</mapper>

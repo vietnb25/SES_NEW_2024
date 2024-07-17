@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.MaterialValueMapper">
+    <resultMap id="dataMaterialValue" type="MaterialValue">
+        <result column="id" property="id"></result>
+        <result column="type_time" property="typeTime"></result>
+        <result column="time_name" property="typeTimeName"></result>
+        <result column="project_id" property="projectId"></result>
+        <result column="material_id" property="materialId"></result>
+        <result column="material_name" property="materialName"></result>
+        <result column="material_price" property="materialPrice"></result>
+        <result column="create_date" property="createDate"></result>
+        <result column="update_date" property="updateDate"></result>
+    </resultMap>
+
+    <select id="getMaterialValueByProjectAndType" resultMap="dataMaterialValue" parameterType="map" >
+        SELECT A.id, A.project_id, A.type_time,B.time_name as time_name,
+               A.material_id,C.material_name, A.material_price,
+              A.update_date, A.create_date
+        FROM s3m_plus_material_value A
+         join s3m_plus_type_time B on A.type_time = B.id
+         join s3m_plus_material_type C on A.material_id = C.id
+        where A.project_id = #{project}  and A.material_id = #{materialId}
+        ;
+    </select>
+    <insert id="addMaterialValue" parameterType="MaterialValue">
+        INSERT INTO
+        s3m_plus_material_value
+        (`project_id`, `type_time`, `material_price`, `material_id`)
+        VALUES (#{projectId}, #{typeTime}, #{materialPrice}, #{materialId});
+    </insert>
+    <insert id="addMaterialValueHistory" parameterType="MaterialValue">
+        INSERT INTO
+            s3m_plus_material_value_history
+            (`project_id`, `type_time`, `material_price`, `material_id`)
+        VALUES (#{projectId}, #{typeTime}, #{materialPrice}, #{materialId});
+    </insert>
+    <update id="updateMaterialValue" parameterType="MaterialValue">
+        Update s3m_plus_material_value
+        set
+        <if test="materialPrice != null and materialPrice != '' ">
+             material_price = #{materialPrice}
+        </if>
+        where project_id = #{projectId} and material_id = #{materialId} and type_time = #{typeTime}
+    </update>
+</mapper>

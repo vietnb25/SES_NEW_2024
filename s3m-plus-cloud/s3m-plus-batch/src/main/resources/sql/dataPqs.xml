@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataPqsMapper">
+
+    <resultMap id="baseResult" type="DataPqs">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="INTEGER" column="device_id" />
+        <result property="viewType" jdbcType="INTEGER" column="view_type" />
+        <result property="viewTime" jdbcType="VARCHAR" column="view_time" />
+        <result property="pTotal"  column="p_total" />
+        <result property="ep" jdbcType="INTEGER" column="ep" />
+        <result property="epCache" jdbcType="INTEGER" column="ep_cache" />
+        <result property="epAtATime" jdbcType="FLOAT" column="ep_at_a_time" />
+        <result property="lowEp" jdbcType="FLOAT" column="low_ep" />
+        <result property="normalEp" jdbcType="FLOAT" column="normal_ep" />
+        <result property="highEp" jdbcType="FLOAT" column="high_ep" />
+        <result property="lowCostIn" jdbcType="FLOAT" column="low_cost_in" />
+        <result property="normalCostIn" jdbcType="FLOAT" column="normal_cost_in" />
+        <result property="highCostIn" jdbcType="FLOAT" column="high_cost_in" />
+        <result property="lowCostOut" jdbcType="FLOAT" column="low_cost_out" />
+        <result property="normalCostOut" jdbcType="FLOAT" column="normal_cost_out" />
+        <result property="highCostOut" jdbcType="FLOAT" column="high_cost_out" />
+        <result property="sentDate" jdbcType="VARCHAR" column="sent_date" />
+    </resultMap>
+    
+    <select id="getCustomerList" parameterType="map" resultType="java.lang.String">
+        SELECT 
+            customer_id 
+        FROM 
+            ${schema}.${table} A
+        WHERE
+            A.delete_flag != 1
+    </select>
+    
+    <select id="selectLastestByDeviceId" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_pqs
+        WHERE 
+            view_type = #{viewType} 
+            AND device_id = #{deviceId} 
+        ORDER BY id LIMIT 1
+    </select>
+    
+    <select id="selectAllCache" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_pqs
+        WHERE
+            view_type IS NULL
+        AND device_id IS NOT NULL
+        AND device_type = #{deviceType}
+    </select>
+    
+    <select id="selectByTypeLastTime" parameterType="map" resultMap="baseResult">
+        WITH ranked_messages AS (
+  	SELECT m.*, ROW_NUMBER() OVER (PARTITION BY device_id, view_type ORDER BY id DESC) AS rn
+  	FROM ${schema}.s3m_data_pqs AS m)
+	SELECT * FROM ranked_messages WHERE rn IN (1,2,3);
+    </select>
+    
+    <select id="selectLastestTime" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_pqs
+        WHERE 
+        device_type = #{deviceType}
+        AND view_type = 0
+    </select>
+    
+    <update id="updateLastTime" parameterType="DataPqs">
+        UPDATE 
+            ${schema}.s3m_data_pqs
+        SET 
+            view_time = #{viewTime}, 
+            sent_date = #{sentDate} 
+        WHERE 
+            view_type = 0
+        AND device_type = #{deviceType}
+    </update>
+    
+    <update id="update" parameterType="DataPqs">
+        UPDATE 
+            ${schema}.s3m_data_pqs
+        SET 
+            device_id = #{data.deviceId}, 
+            view_type = #{data.viewType}, 
+            view_time = #{data.viewTime},
+            low_cost_in = #{data.lowCostIn},
+            normal_cost_in = #{data.normalCostIn},
+            high_cost_in = #{data.highCostIn},
+            low_cost_out = #{data.lowCostOut},
+            normal_cost_out = #{data.normalCostOut},
+            high_cost_out = #{data.highCostOut}, 
+            p_total = #{data.pTotal},  
+            <if test="data.lowEp != null">
+                low_ep = #{data.lowEp},
+            </if>
+            <if test="data.normalEp != null">
+                normal_ep = #{data.normalEp},
+            </if>
+            <if test="data.highEp != null">
+                high_ep = #{data.highEp},
+            </if>
+            t = #{data.t},
+            ep = #{data.ep},
+            emission_factor_co2_charcoal = #{data.emissionFactorCo2Charcoal},
+           	emission_factor_co2_electric = #{data.emissionFactorCo2Electric},
+           	emission_factor_co2_gasoline = #{data.emissionFactorCo2Gasoline},
+           	area_of_floor = #{data.areaOfFloor},
+           	amount_of_people = #{data.amountOfPeople}
+        WHERE 
+            id = #{data.id}
+    </update>
+    
+    <update id="saveAll" parameterType="DataPqs">
+        INSERT INTO ${schema}.s3m_data_pqs
+            (device_id, view_type, view_time, p_total, ep, ep_at_a_time, low_ep, normal_ep, high_ep, low_cost_in, normal_cost_in, high_cost_in, low_cost_out, normal_cost_out, high_cost_out, sent_date, system_type_id, device_type, t, t_at_a_time, emission_factor_co2_charcoal, emission_factor_co2_electric, emission_factor_co2_gasoline, area_of_floor, amount_of_people)
+        VALUES
+          <foreach item="data" collection="datas" separator=",">
+            (#{data.deviceId}, #{data.viewType}, #{data.viewTime}, #{data.pTotal}, #{data.ep}, #{data.epAtATime}, #{data.lowEp}, #{data.normalEp}, #{data.highEp}, #{data.lowCostIn}, #{data.normalCostIn}, #{data.highCostIn}, #{data.lowCostOut}, #{data.normalCostOut}, #{data.highCostOut}, #{data.sentDate} , #{data.systemTypeId} , #{data.deviceType}, #{data.t}, #{data.tAtATime}, #{data.emissionFactorCo2Charcoal}, #{data.emissionFactorCo2Electric}, #{data.emissionFactorCo2Gasoline}, #{data.areaOfFloor}, #{data.amountOfPeople})
+          </foreach>
+    </update>
+    
+    <update id="updateCache" parameterType="DataPqs">
+        UPDATE 
+            ${schema}.s3m_data_pqs
+        SET 
+            device_id = #{data.deviceId}, 
+            view_type = #{data.viewType}, 
+            ep_cache = #{data.ep},
+            t_cache = #{data.t}
+        WHERE 
+            view_type IS NULL
+            AND
+            id = #{data.id}
+    </update>
+    
+    <update id="saveAllCache" parameterType="DataPqs">
+        INSERT INTO ${schema}.s3m_data_pqs
+            (device_id, view_type, ep_cache, t_cache, device_type)
+        VALUES
+          <foreach item="data" collection="datas" separator=",">
+            (#{data.deviceId}, #{data.viewType}, #{data.ep}, #{data.t}, #{data.deviceType})
+          </foreach>
+    </update>
+    
+    <update id="insertFirstRecord" parameterType="DataPqs">
+        INSERT INTO ${schema}.s3m_data_pqs
+            (view_type, view_time, p_total, ep, ep_at_a_time, low_ep, normal_ep, high_ep, low_cost_in, normal_cost_in, high_cost_in, low_cost_out, normal_cost_out, high_cost_out, sent_date, device_type, t, t_at_a_time)
+        VALUE
+            (#{data.viewType}, #{data.viewTime}, #{data.pTotal}, #{data.ep}, #{data.epAtATime}, #{data.lowEp}, #{data.normalEp}, #{data.highEp}, #{data.lowCostIn}, #{data.normalCostIn}, #{data.highCostIn}, #{data.lowCostOut}, #{data.normalCostOut}, #{data.highCostOut}, #{data.sentDate}, #{data.deviceType}, #{data.t}, #{data.tAtATime})
+    </update>
+    
+</mapper>

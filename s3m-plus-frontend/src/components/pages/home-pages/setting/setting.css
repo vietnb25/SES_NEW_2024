@@ -1,0 +1,66 @@
+.bg {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    height: 30px;
+}
+
+.opt {
+    background-color: #0A1A5C;
+    width: 13%;
+    margin-right: 3%;
+    border: solid 1px #9e9e9e;
+    border-radius: 20px;
+    position: relative;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.opt:hover {
+    background-color: #ff5b0f;
+}
+
+.opt-active:hover {
+    background-color: #ff6e2a;
+}
+
+.opt-active {
+    background-color: #0A1A5C;
+    width: 16%;
+    margin-right: 3%;
+    border: solid 1px #9e9e9e;
+    border-radius: 20px;
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: 1;
+    transition: all 0.3s ease;
+    height: 35px;
+    transition: width 0.5s, height 0.5s;
+}
+
+.opt-link {
+    width: 90%;
+    color: white;
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    display: block;
+}
+
+.opt-icon {
+    color: white;
+}
+
+.opt-text {
+    display: inline-block;
+    margin-left: 3%;
+    color: white;
+}

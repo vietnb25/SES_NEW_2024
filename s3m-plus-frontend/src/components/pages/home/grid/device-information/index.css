@@ -1,0 +1,104 @@
+.hover-device:hover {
+    background: #dee2e6;
+}
+
+.tab-container .menu-inverter {
+    display: flex;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+.tab-container .menu-inverter li {
+    background-color: #052274;
+    list-style: none;
+    flex: 1;
+    height: 36px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    color: #FFFFFF;
+}
+
+.tab-container .menu-inverter li:first-child {
+    border-radius: 5px 0 0 0;
+}
+.tab-container .menu-inverter li:nth-child(7) {
+    border-radius: 0 5px 0 0;
+}
+
+.tab-container .menu-inverter li a {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0 5px;
+    color: #FFFFFF;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+}
+.tab-container .menu-inverter li:hover a{
+    color: #FFFFFF;
+}
+.tab-container .menu-inverter li:first-child a{
+    color: #FFFFFF;
+}
+
+.tab-container .menu-inverter li a span {
+    color: #FFFFFF;
+}
+
+.tab-container .menu-inverter li a i::before {
+    color: #FFFFFF;
+
+}
+
+.tab-container .menu-inverter .line{
+    position: absolute;
+    height: 3px;
+    width: 10%;
+    background: #FFA87D;
+    left: 0;
+    bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.tab-container .menu-inverter li:nth-child(1):hover ~ .line{
+    left: 0% !important;
+}
+.tab-container .menu-inverter li:nth-child(2):hover ~ .line{
+    left: 20% !important;
+}
+.tab-container .menu-inverter li:nth-child(3):hover ~ .line{
+    left: 40% !important;
+}
+.tab-container .menu-inverter li:nth-child(4):hover ~ .line{
+    left: 60% !important;
+}
+.tab-container .menu-inverter li:nth-child(5):hover ~ .line{
+    left: 80% !important;
+}
+
+.tab-container .menu-inverter .line-inverter{
+    position: absolute;
+    height: 3px;
+    width: 20%;
+    background: #FFA87D;
+    left: 0;
+    bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.tab-container .menu-inverter li:nth-child(1):hover ~ .line-inverter{
+    left: 0% !important;
+}
+.tab-container .menu-inverter li:nth-child(2):hover ~ .line-inverter{
+    left: 20% !important;
+}
+.tab-container .menu-inverter li:nth-child(3):hover ~ .line-inverter{
+    left: 40% !important;
+}
+.tab-container .menu-inverter li:nth-child(4):hover ~ .line-inverter{
+    left: 60% !important;
+}
+.tab-container .menu-inverter li:nth-child(5):hover ~ .line-inverter{
+    left: 80% !important;
+}

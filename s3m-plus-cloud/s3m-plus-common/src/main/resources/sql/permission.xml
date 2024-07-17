@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.PermissionMapper">
+
+    <resultMap id="permissionTreeDataResult" type="PermissionTreeData">
+        <result property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+    
+    <resultMap id="permissionMapDataResult" type="PermissionMapData">
+        <result property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+    
+    <resultMap id="permissionCategoryResult" type="PermissionCategoryData">
+        <result property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+    
+    <insert id="addTreeDataPermission" parameterType="map">
+        INSERT INTO
+            s3m_permission_tree (user_id, content)
+        VALUES (
+            #{userId},
+            #{treeData});
+    </insert>
+    
+    <insert id="addMapDataPermission" parameterType="map">
+        INSERT INTO
+            s3m_permission_map (user_id, content)
+        VALUES (
+            #{userId},
+            #{mapData});
+    </insert>
+    
+    <select id="getTreeData" parameterType="map" resultMap="permissionTreeDataResult">
+        SELECT 
+            id,
+            user_id,
+            content,
+            created_at
+         FROM 
+            s3m_permission_tree
+         WHERE
+            id IS NOT NULL
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+    </select>
+    
+    <select id="getMapData" parameterType="map" resultMap="permissionMapDataResult">
+        SELECT 
+            id,
+            user_id,
+            content,
+            created_at
+         FROM 
+            s3m_permission_map
+         WHERE
+            id IS NOT NULL
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+    </select>
+    
+    <update id="updateTreeData" parameterType="map">
+        UPDATE
+            s3m_permission_tree
+        SET
+            content = #{treeData}
+        WHERE
+            user_id = #{userId}
+    </update>
+    
+    <update id="updateMapData" parameterType="map">
+        UPDATE
+            s3m_permission_map
+        SET
+            content = #{mapData}
+        WHERE
+            user_id = #{userId}
+    </update>
+    
+    <insert id="addPermissionCategory" parameterType="map">
+        INSERT INTO
+            s3m_permission_category (user_id, content)
+        VALUES (
+            #{userId},
+            #{treeData});
+    </insert>
+    
+    <update id="updatePermissionCategory" parameterType="map">
+        UPDATE
+            s3m_permission_category
+        SET
+            content = #{treeData}
+        WHERE
+            user_id = #{userId}
+    </update>
+    
+    <select id="getCategoryPermission" parameterType="map" resultMap="permissionCategoryResult">
+        SELECT 
+            id,
+            user_id,
+            content,
+            created_at
+         FROM 
+            s3m_permission_category
+         WHERE
+            id IS NOT NULL
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+    </select>
+    
+    <delete id="deleteTreeData">
+        DELETE FROM
+            s3m_permission_tree
+        WHERE
+            user_id = #{userId}
+    </delete>
+    
+    <delete id="deleteMapData">
+        DELETE FROM
+            s3m_permission_map
+        WHERE
+            user_id = #{userId}
+    </delete>
+    
+    <delete id="deleteCategoryData">
+        DELETE FROM
+            s3m_permission_category
+        WHERE
+            user_id = #{userId}
+    </delete>
+    
+</mapper>

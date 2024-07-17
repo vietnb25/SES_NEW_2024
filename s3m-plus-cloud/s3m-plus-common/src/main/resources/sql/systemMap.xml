@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SystemMapMapper">
+
+    <resultMap id="systemMapResult" type="SystemMap">
+       <result property="id" column="system_map_id"/>
+       <result property="name" column="system_map_name"/>
+       <result property="projectId" column="project_id"/>
+       <result property="systemTypeId" column="system_type_id"/>
+       <result property="layer" column="layer"/>
+       <result property="jsonData" column="data_json"/>
+       <result property="mainFlag" column="main_flag"/>
+       <result property="color" column="color"/>
+       <result property="connectTo" column="connect_to"/>
+       <result property="description" column="description"/>
+       <result property="createDate" column="create_date" />
+       <result property="updateDate" column="update_date" />
+       <result property="createId" column="create_id"/>
+       <result property="updateId" column="update_id"/>
+       <result property="projectName" column="project_name"/>
+    </resultMap>
+    
+    <select id="getAllSystemMap" resultMap="systemMapResult">
+        SELECT distinct
+           A.project_id,
+           A.system_type_id,
+           A.system_map_id
+        FROM 
+            s3m_system_map A
+        JOIN
+            s3m_project B ON A.project_id = B.project_id
+        WHERE 
+            A.system_map_id IS NOT NULL 
+        AND
+            A.delete_flag != 1
+        GROUP BY A.project_id, A.system_type_id, A.system_map_id;
+    </select>
+    
+    <!-- Lấy danh sách dữ liệu svg theo projectId. -->
+    <select id="getSystemMapByProject" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+        GROUP BY
+            system_type_id
+    </select>
+
+    <!-- Lấy danh sách dữ liệu svg theo projectId. -->
+    <select id="getListSystemMapById" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+    </select>
+    
+    <select id="getListSystemMapByProjectId" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+    </select>
+    
+    <select id="getListSystemMapByIdAndType" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+        AND
+            system_type_id = #{systemTypeId}
+    </select>
+    
+    <select id="getSystemMapById" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            system_map_id = #{systemMapId}
+    </select>
+    
+    <select id="getSystemMapByIdTool" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            system_map_id = #{systemMapId}
+    </select>
+    
+    <select id="getSystemMaps" parameterType="map" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM 
+            s3m_system_map A
+        WHERE 
+            A.system_map_id IS NOT NULL  
+            <if test="projectId != null">
+                    AND A.project_id = #{projectId}
+            </if>
+            ORDER BY A.update_date DESC
+    </select>
+    
+    <select id="getPowerBySystemMapId" parameterType="map" resultType="Double">
+    	SELECT 
+    		SUM(E.ac_power) 
+    	FROM
+    		s3m_system_map D
+    		LEFT JOIN s3m_device E ON D.system_map_id = E.system_map_id 
+    	WHERE 
+    		D.system_map_id = ${systemMapId} 
+    		AND D.system_type_id = 2
+    </select>
+    
+    <update id="updateSystemMap" parameterType="SystemMap">
+        UPDATE
+            s3m_system_map
+        SET
+        	system_map_name = #{systemMap.name},
+            data_json = #{systemMap.jsonData},
+            update_date = NOW()
+        WHERE
+            system_map_id = #{systemMap.id}
+    </update>
+    
+    <update id="updateSystemMapTool">
+        UPDATE
+            s3m_system_map
+        SET
+            data_json = #{systemMap.jsonData},
+            update_date = NOW()
+        WHERE
+            system_map_id = #{systemMap.id}
+    </update>
+    
+    <insert id="addSystemMap">
+        INSERT INTO s3m_system_map(system_map_name, project_id, system_type_id, data_json, layer, main_flag, description, create_id, create_date)
+        VALUES(#{systemMap.name}, #{systemMap.projectId}, #{systemMap.systemTypeId}, #{systemMap.jsonData}, #{systemMap.layer}, #{systemMap.mainFlag}, #{systemMap.description}, #{systemMap.createId}, NOW())
+    </insert>
+    
+    <select id="getListSystemMapByIdTool" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            system_map_id IS NOT NULL
+        	<if test="type != null">
+            AND  system_type_id = #{type}
+            </if>
+            AND project_id = #{projectId}
+    </select>
+    
+    <delete id="deleteSystemMap">
+    	UPDATE
+            s3m_system_map
+        SET
+            delete_flag = 1,
+            update_date = NOW()
+        WHERE
+            system_map_id = #{systemMapId}
+    </delete>
+    
+    <select id="getMainSystem" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+        AND
+            system_type_id = #{systemType}
+        AND
+            main_flag = 1
+    </select>
+    
+    <!-- Lấy danh sách sơ đồ 1 sợi theo projectId và systemTypeId. -->
+    <select id="getListSystemMapByProjectIdAndSystemTypeId" resultMap="systemMapResult">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+        AND
+            system_type_id = #{systemTypeId}
+        AND 
+            delete_flag = 0
+            
+        ORDER BY
+        	layer ASC,
+        	system_map_name ASC
+            
+    </select>
+    
+    <select id="getSystemMapByCustomer" resultMap="systemMapResult" parameterType="map">
+        SELECT
+           A.project_id,
+           A.system_type_id
+        FROM 
+            s3m_system_map A
+        JOIN
+            s3m_project B ON A.project_id = B.project_id
+        WHERE 
+            A.system_map_id IS NOT NULL 
+        <if test="customerId != null">
+            AND
+                B.customer_id = #{customerId}
+        </if>
+        AND
+            A.delete_flag != 1
+        GROUP BY A.project_id, A.system_type_id;
+    </select>
+    
+    <select id="checkSystemMap" resultMap="systemMapResult" parameterType="map">
+        SELECT
+           A.project_id,
+           A.system_type_id
+        FROM 
+            s3m_plus.s3m_system_map A
+        JOIN
+            s3m_plus.s3m_project B ON A.project_id = B.project_id
+        WHERE 
+            A.system_map_id IS NOT NULL 
+        AND
+            B.customer_id = ${customerId}
+        AND
+            B.project_id = ${projectId}
+        AND
+            A.delete_flag != 1
+    </select>
+    
+    <select id="getSystemMapByCustomerAndProject" resultMap="systemMapResult" parameterType="map">
+        SELECT
+           A.system_type_id,
+           C.system_type_name AS systemTypeName,
+           B.project_name
+        FROM 
+            s3m_system_map A
+        JOIN
+            s3m_project B ON A.project_id = B.project_id
+        JOIN
+            s3m_system_type C ON A.system_type_id = C.system_type_id
+        WHERE 
+            A.system_map_id IS NOT NULL 
+            <if test="customerId != null">
+            AND
+                B.customer_id = ${customerId}
+            </if>
+            <if test="projectId != null">
+            AND
+                A.project_id =${projectId}
+            </if>
+        AND
+            A.delete_flag != 1
+        GROUP BY A.project_id, A.system_type_id;
+    </select>
+    
+    <select id="getSystemMapByProjectId" resultMap="systemMapResult">
+        SELECT distinct
+           A.project_id,
+           A.system_type_id,
+           A.system_map_id
+        FROM 
+            s3m_system_map A
+        JOIN
+            s3m_project B ON A.project_id = B.project_id
+        WHERE 
+            A.system_map_id IS NOT NULL
+        AND 
+            A.layer =1
+        AND
+            A.delete_flag != 1
+        GROUP BY A.project_id, A.system_type_id, A.system_map_id;
+    </select>
+    
+    <select id="getCountModun" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(*) FROM s3m_system_map WHERE system_type_id = #{systemTypeId} AND delete_flag =0;
+    </select>
+    
+     <select id="getCountDeviceModule" resultType="java.lang.Integer" parameterType="map">
+        SELECT 
+            count(*)
+        FROM s3m_system_map A
+        JOIN s3m_project B ON A.project_id = B.project_id        
+        WHERE 
+            A.system_type_id = #{systemTypeId} 
+            AND A.delete_flag =0
+            AND B.customer_id = #{customerId}
+    </select>
+</mapper>

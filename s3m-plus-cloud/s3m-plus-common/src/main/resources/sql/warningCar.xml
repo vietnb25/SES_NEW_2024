@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.WarningCarMapper">
+	<resultMap id="warningCarResult" type="WarningCar">
+		<result column="id" property="id" />
+		<result column="location" property="area" />
+		<result column="device_name" property="deviceName" />
+		<result column="object_type_name" property="objectTypeName" />
+		<result column="load_type_name" property="loadTypeName" />
+		<result column="create_id" property="createId" />
+		<result column="status" property="status" />
+		<result column="create_date" property="createDate" />
+		<result column="update_date" property="updateDate" />
+		<result column="project_id" property="projectId" />
+		<result column="device_id" property="deviceId" />
+		<result column="system_type_id" property="systemTypeId" />
+		<result column="organization_create" property="organizationCreate" />
+		<result column="reason_method" property="reasonMethod" />
+		<result column="organization_execution" property="organizationExecution" />
+		<result column="completion_time" property="completionTime" />
+		<result column="result_execution" property="resultExecution" />
+		<result column="organization_test" property="organizationTest" />
+		<result column="countStatus" property="countStatus" />
+
+	</resultMap>
+
+	<insert id="addWarningCars" parameterType="WarningCar">
+        INSERT INTO ${schema}s3m_warning_car(       
+        	system_type_id,
+        	project_id,
+        	device_id,
+        	status,
+        	create_id,
+        	organization_create,
+        	content,
+        	create_date,
+        	update_date)
+        values(
+        	#{warningCar.systemTypeId},
+        	#{warningCar.projectId},
+        	#{warningCar.deviceId},
+        	#{warningCar.status},
+        	#{warningCar.createId},
+        	#{warningCar.organizationCreate},
+        	#{warningCar.content},
+        	#{warningCar.createDate},
+        	#{warningCar.updateDate}
+        	)
+    </insert>
+	<update id="updateWarningCars" parameterType="WarningCar">
+        UPDATE
+            ${schema}s3m_warning_car
+        SET
+            organization_create = #{warningCar.organizationCreate},
+            content = #{warningCar.content},
+            status = #{warningCar.status},
+            reason_method = #{warningCar.reasonMethod},
+            organization_execution = #{warningCar.organizationExecution},
+            completion_time = #{warningCar.completionTime},
+            result_execution = #{warningCar.resultExecution},
+            organization_test = #{warningCar.organizationTest},
+            update_date = #{warningCar.updateDate}
+        WHERE
+            id = #{warningCar.id}
+    </update>
+
+
+	<select id="getWarningCars" parameterType="map" resultMap="warningCarResult">
+		SELECT
+			A.id,
+		    B.location,
+		    B.device_name,
+            E.name AS object_type_name,
+			L.name AS load_type_name,
+            A.status,
+		    A.create_date,
+		    A.update_date,
+		    A.create_id,        
+		    D.project_id,
+		    A.device_id
+		FROM
+			${schema}s3m_warning_car A
+		LEFT JOIN 
+		    s3m_device B ON A.device_id = B.device_id
+		LEFT JOIN 
+		    s3m_project D ON D.project_id = B.project_id
+		LEFT JOIN 
+			s3m_object C on C.id = B.object_id
+		LEFT JOIN 
+			s3m_object_type_mst E on E.id = C.object_type_id
+		LEFT JOIN 
+			s3m_load_type_mst L on L.id = B.load_type_id
+		WHERE
+		    1=1
+		<if test="fromDate == null and toDate == null">
+		    AND A.status != 3
+		</if>
+        <if test="fromDate != null and toDate != null">
+            AND A.create_date <![CDATA[ >= ]]> #{fromDate} AND A.create_date <![CDATA[ <= ]]> #{toDate}
+        </if>
+		<if test="systemTypeId != null">
+            AND A.system_type_id = #{systemTypeId}
+        </if>
+		<if test="projectId != null">
+		    AND B.project_id = #{projectId}
+		</if>
+		<if test="deviceId != null">
+		    AND A.device_id = #{deviceId}
+		</if>
+		ORDER BY
+		  A.status ASC
+		<if test="offset != null and pageSize != null">
+		    LIMIT #{offset}, #{pageSize}
+		</if>
+	</select>
+
+	<select id="getCountListWarningCar" parameterType="map" resultMap="warningCarResult">
+		SELECT
+           count(*)
+        FROM
+			${schema}s3m_warning_car A
+		LEFT JOIN 
+		    s3m_device B ON A.device_id = B.device_id
+		LEFT JOIN 
+		    s3m_project D ON D.project_id = B.project_id
+		LEFT JOIN 
+			s3m_object C on C.id = B.object_id
+		LEFT JOIN 
+			s3m_object_type_mst E on E.id = C.object_type_id
+		LEFT JOIN 
+			s3m_load_type_mst L on L.id = B.load_type_id
+		WHERE
+		    A.create_date
+		<![CDATA[>=]]>
+		#{fromDate}
+		AND
+		    A.create_date
+		<![CDATA[<=]]>
+		#{toDate}
+		<if test="projectId != null">
+		    AND B.project_id = #{projectId}
+		</if>
+		<if test="deviceId != null">
+		    AND A.device_id = #{deviceId}
+		</if>
+		GROUP BY
+            A.id, A.device_id, DAY(A.create_date), MONTH(A.create_date), YEAR(A.create_date)
+	</select>
+	<select id="getWarningCarById" parameterType="java.lang.Integer" resultMap="warningCarResult">
+		SELECT
+			A.id,
+            A.organization_create,
+            A.content,
+            A.reason_method,
+            A.organization_execution,
+            A.completion_time,
+            A.result_execution,
+            A.organization_test,
+		    B.location,
+		    B.device_name,
+            C.name,
+			L.name,
+            A.status,
+		    A.create_date,
+		    A.update_date,
+		    A.create_id,        
+		    D.project_id,
+		    A.device_id
+		FROM
+			${schema}s3m_warning_car A
+		LEFT JOIN 
+		    s3m_device B ON A.device_id = B.device_id
+		LEFT JOIN 
+		    s3m_project D ON D.project_id = B.project_id
+		LEFT JOIN 
+			s3m_object C on C.id = B.object_id
+		LEFT JOIN 
+			s3m_object_type_mst E on E.id = C.object_type_id
+		LEFT JOIN 
+			s3m_load_type_mst L on L.id = B.load_type_id
+		WHERE
+             A.id = #{id}
+</select>
+
+	<select id="getCountWarningCarByStatus" parameterType="map" resultType="java.lang.Integer">
+		SELECT
+			count(A.id) AS countStatus
+		FROM
+			${schema}s3m_warning_car A
+		WHERE
+		    
+		 A.status !=3
+		<if test="projectId != null">
+		    AND A.project_id = #{projectId}
+		</if>
+		<if test="systemTypeId != null">
+            AND A.system_type_id = #{systemTypeId}
+        </if>
+
+	</select>
+</mapper>

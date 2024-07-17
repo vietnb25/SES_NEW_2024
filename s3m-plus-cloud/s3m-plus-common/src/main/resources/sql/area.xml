@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.AreaMapper">
+
+    <resultMap id="areaResult" type="Area">
+        <result property="areaId" column="area_id" />
+        <result property="areaName" column="area_name" />
+        <result property="description" column="description" />
+        <result property="managerId" column="manager_id" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="updateDate" column="update_date" />
+        <result property="managerName" column="manager_name" />
+		<result property="superManagerId" column="super_manager_id" />
+    </resultMap>
+    
+
+    <!-- Lấy danh sách Area. -->
+    <select id="getListArea" resultMap="areaResult">
+        SELECT
+        *
+        FROM
+            s3m_area
+        WHERE
+            area_id IS NOT NULL
+        <if test="managerId != null">
+            AND manager_id = #{managerId}
+        </if>
+        and
+            delete_flag !=1
+    </select>
+
+    <select id="getListAreas" resultMap="areaResult">
+        SELECT
+          *
+        FROM
+          s3m_area
+        WHERE
+          delete_flag != 1
+    </select>
+
+    <select id="getAreasActive" parameterType="map" resultMap="areaResult">
+        SELECT 
+            DISTINCT A.area_id,
+            A.area_name,
+            A.manager_id,
+            D.id as super_manager_id
+        FROM
+            s3m_area A
+        JOIN
+            s3m_project B ON B.area_id = A.area_id
+        JOIN
+            s3m_manager C ON A.manager_id = C.manager_id
+        JOIN
+            s3m_super_manager D ON D.id = C.super_manager_id
+        WHERE 
+            A.area_id is not null
+        <if test="customerId != null">
+            AND B.customer_id = #{customerId}
+        </if>
+    </select>
+
+    <select id="getIds" resultMap="areaResult">
+        SELECT
+            area_id, area_name
+        FROM
+            s3m_area
+        WHERE
+            area_id IN
+        <foreach item="areaId" collection="areaIds" open="(" separator="," close=")">
+            #{areaId}
+        </foreach>
+    </select>
+
+    <select id="getAreas" parameterType="map" resultMap="areaResult">
+        SELECT
+        *
+        FROM
+            s3m_area
+        WHERE
+            area_id IS NOT NULL
+        <if test="managerId != null">
+                AND manager_id = #{managerId}
+            </if>
+        <if test="areaId != null">
+                AND area_id = #{areaId}
+            </if>
+    </select>
+
+    <select id="getAreaByCustomerId" parameterType="map" resultMap="areaResult">
+        SELECT DISTINCT
+        A.area_id,
+        A.area_name
+        FROM
+            s3m_area A LEFT JOIN s3m_project B ON A.area_id = B.area_id
+                       LEFT JOIN s3m_customer C ON B.customer_id = C.customer_id
+        WHERE
+            A.area_id IS NOT NULL
+        <if test="customerId != null">
+                AND C.customer_id = #{customerId}
+            </if>
+    </select>
+
+    <select id="getAreaBySuperManagerId" parameterType="map" resultMap="areaResult">
+        SELECT DISTINCT
+        A.area_id,
+        A.area_name
+        FROM
+            s3m_area A
+                LEFT JOIN
+            s3m_manager B ON A.manager_id = B.manager_id
+                LEFT JOIN
+            s3m_super_manager C ON B.super_manager_id = C.id
+        WHERE
+            area_id IS NOT NULL
+        <if test="superManagerId != null">
+                AND C.id = #{superManagerId}
+            </if>
+    </select>
+
+    <select id="getArea" parameterType="map" resultMap="areaResult">
+        SELECT
+        *
+        FROM
+            s3m_area
+        WHERE
+            area_id IS NOT NULL
+        <if test="areaId != null">
+                AND area_id = #{areaId}
+            </if>
+    </select>
+
+    <select id="getAreaByProjectId" parameterType="map" resultMap="areaResult">
+        SELECT
+            *
+        FROM
+            s3m_area A
+                LEFT JOIN s3m_project B ON A.area_id = B.area_id
+        WHERE
+            A.area_id IS NOT NULL
+        <if test="projectId != null">
+                AND B.project_id = #{projectId}
+            </if>
+    </select>
+
+    <select id="searchArea" parameterType="map" resultMap="areaResult">
+        SELECT
+            A.area_name,
+            A.description,
+            B.manager_name,
+            A.manager_id,
+            A.update_date
+        FROM
+            s3m_area A
+                INNER JOIN
+            s3m_manager B ON A.manager_id = B.manager_id
+        WHERE
+            (A.area_name LIKE '%${keyword}%'
+                OR A.description LIKE '%${keyword}%'
+                OR B.manager_name LIKE '%${keyword}%')
+                AND A.delete_flag != 1
+    </select>
+
+    <select id="getPowerByAreaId" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.p_total)
+        FROM
+            s3m_data_load_frame_1_2022 A
+            JOIN s3m_device B  ON A.device_id = B.device_id
+            JOIN s3m_project C ON B.project_id = C.project_id
+            JOIN s3m_area D ON C.area_id = D.area_id
+            JOIN s3m_manager E ON D.manager_id = E.manager_id
+        WHERE
+            C.customer_id = ${customerId}
+            AND E.super_manager_id = ${superManagerId} 
+            AND D.manager_id = ${managerId}
+            AND C.area_id = ${areaId}
+    </select>
+
+    <insert id="addArea" parameterType="vn.ses.s3m.plus.dto.Area">
+        INSERT into s3m_area(area_name, manager_id, latitude, longitude, description)
+        values
+        (#{areaName}, #{managerId}, #{latitude}, #{longitude}, #{description})
+    </insert>
+
+    <update id="updateArea" parameterType="map">
+        Update s3m_area SET
+        <if test="areaName != null">
+            area_name = #{areaName},
+        </if>
+        <if test="latitude != null">
+            latitude = #{latitude},
+        </if>
+        <if test="longitude != null">
+            longitude = #{longitude},
+        </if>
+        <if test="areaDesc != null">
+            description = #{areaDesc},
+        </if>
+        <if test="managerId != null">
+            manager_id = #{managerId}
+        </if>
+        WHERE
+        area_id = #{areaId}
+    </update>
+
+    <update id="editArea" parameterType="vn.ses.s3m.plus.dto.Area">
+        Update s3m_area
+        SET
+            area_name = #{areaName},
+            latitude = #{latitude},
+            longitude = #{longitude},
+            description = #{description},
+            manager_id = #{managerId}
+        WHERE
+        area_id = #{areaId}
+    </update>
+
+    <delete id="deleteArea" parameterType="map">
+        Update s3m_area
+        SET
+            delete_flag = 1
+        where
+            area_id=#{areaId}
+    </delete>
+    <!-- Check dependent area  -->
+    <select id="checkDependentAreaByUser" parameterType="map" resultType="map">
+        SELECT 
+            area_id
+        FROM
+            s3m_user
+        WHERE
+            area_id=#{areaId} AND delete_flag=0
+    </select>
+    <!-- Check dependent area  -->
+    <select id="checkDependentAreaByProject" parameterType="map" resultType="map">
+        SELECT 
+            area_id
+        FROM
+            s3m_project
+        WHERE
+            area_id=#{areaId} AND delete_flag=0
+    </select>
+    
+    <select id="getAreasByIds" parameterType="map" resultMap="areaResult">
+        SELECT DISTINCT
+            B.area_id,
+            B.area_name
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON B.area_id = A.area_id
+            JOIN s3m_manager C ON C.manager_id = B.manager_id
+            JOIN s3m_super_manager D ON D.id = C.super_manager_id
+        WHERE
+            A.customer_id =  ${customerId}
+            AND D.id =${superManagerId}
+            AND C.manager_id = ${managerId}
+    </select>
+    
+
+    <select id="getAreaDownload" parameterType="map" resultMap="areaResult">
+        SELECT
+            area_id, area_name
+        FROM
+            s3m_area
+        WHERE
+            area_id = #{areaId}
+    </select>
+
+    <select id="getAreaByCustomerIdAndManagerId" parameterType="map" resultMap="areaResult">
+        SELECT DISTINCT A.area_id,
+            A.area_name
+        FROM s3m_area A
+            JOIN s3m_project B ON B.area_id = A.area_id
+        WHERE A.area_id is not null
+        <if test="customerId != null">
+            AND B.customer_id = #{customerId}
+        </if>
+        <if test="managerId != null">
+            AND A.manager_id = #{managerId}
+        </if>
+    </select>
+    
+    <select id="getInformationArea" parameterType="map" resultType="map">
+        SELECT DISTINCT
+            B.area_name AS areaName,
+            C.manager_name AS managerName,
+            D.name AS superManagerName,
+            E.customer_name AS customerName 
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON A.area_id = B.area_id
+            JOIN s3m_manager C ON B.manager_id = C.manager_id
+            JOIN s3m_super_manager D ON C.super_manager_id = D.id
+            JOIN s3m_customer E ON A.customer_id = E.customer_id
+        WHERE
+            A.customer_id = ${customerId}
+            AND D.id = ${superManagerId} 
+            AND C.manager_id = ${managerId}
+            AND B.area_id = ${areaId}
+    </select>
+
+</mapper>

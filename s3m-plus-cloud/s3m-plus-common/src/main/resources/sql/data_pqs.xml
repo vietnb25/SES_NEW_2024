@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ReportMapper">
+
+	<resultMap id="dataResult" type="DataPqs">
+		<result property="id" jdbcType="INTEGER" column="id" />
+		<result property="deviceId" jdbcType="INTEGER" column="device_id" />
+		<result property="deviceName" jdbcType="INTEGER" column="device_name" />
+		<result property="viewType" jdbcType="INTEGER" column="view_type" />
+		<result property="viewTime" jdbcType="VARCHAR" column="view_time" />
+		<result property="pTotal" column="p_total" />
+		<result property="ep" jdbcType="INTEGER" column="ep" />
+		<result property="epCache" jdbcType="INTEGER" column="ep_cache" />
+		<result property="epAtATime" jdbcType="FLOAT" column="ep_at_a_time" />
+		<result property="lowEp" jdbcType="FLOAT" column="low_ep" />
+		<result property="normalEp" jdbcType="FLOAT" column="normal_ep" />
+		<result property="highEp" jdbcType="FLOAT" column="high_ep" />
+		<result property="lowCostIn" jdbcType="FLOAT" column="low_cost_in" />
+		<result property="normalCostIn" jdbcType="FLOAT" column="normal_cost_in" />
+		<result property="highCostIn" jdbcType="FLOAT" column="high_cost_in" />
+		<result property="lowCostOut" jdbcType="FLOAT" column="low_cost_out" />
+		<result property="normalCostOut" jdbcType="FLOAT" column="normal_cost_out" />
+		<result property="highCostOut" jdbcType="FLOAT" column="high_cost_out" />
+		<result property="valueShift1" jdbcType="FLOAT" column="valueShift1" />
+		<result property="valueShift2" jdbcType="FLOAT" column="valueShift2" />
+		<result property="valueShift3" jdbcType="FLOAT" column="valueShift3" />
+		<result property="totalUnit" jdbcType="VARCHAR" column="total_unit" />
+		<result property="sentDate" jdbcType="VARCHAR" column="sent_date" />
+
+		<result property="warningId" jdbcType="INTEGER" column="warning_id" />
+		<result property="warningTypeId" jdbcType="INTEGER" column="warning_type_id" />
+		<result property="warningTypeName" jdbcType="VARCHAR" column="warning_type_name" />
+		<result property="numberOfEquiment" jdbcType="INTEGER" column="number_of_equipment" />
+		<result property="quantityWarning" jdbcType="INTEGER" column="quantity_warning" />
+		<result property="area" jdbcType="INTEGER" column="area" />
+		<result property="loadType" jdbcType="INTEGER" column="loadType" />
+		<result property="deviceTypeId" jdbcType="INTEGER" column="device_type" />
+		<result property="loadTypeName" jdbcType="INTEGER" column="load_type_name" />
+		<result property="loadTypeId" jdbcType="INTEGER" column="load_type_id" />
+		<result property="t" jdbcType="INTEGER" column="t" />
+		<result property="tCache" jdbcType="INTEGER" column="t_cache" />
+		<result property="tAtATime" jdbcType="FLOAT" column="t_at_a_time" />
+	</resultMap>
+
+	<select id="getEnergyTotal" parameterType="map" resultMap="dataResult">
+		SELECT
+            A.view_time,
+            SUM(CASE 
+                WHEN A.low_ep IS NOT NULL THEN A.low_ep ELSE 0 END) AS low_ep,
+            SUM(CASE 
+                WHEN A.normal_ep IS NOT NULL THEN A.normal_ep ELSE 0 END) AS normal_ep,
+            SUM(CASE 
+                WHEN A.high_ep IS NOT NULL THEN A.high_ep ELSE 0 END) AS high_ep
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON B.project_id = C.project_id
+        WHERE
+            B.system_type_id = #{systemTypeId}
+		<if test="deviceId != null">
+        AND 
+            A.device_id IN (${deviceId})
+        </if>
+		AND 
+           C.project_id = #{project}
+--          AND
+--            B.calculate_flag = 1
+        AND
+           A.view_time BETWEEN #{fromDate} AND #{toDate}
+		<if test="typeTime == 1">
+            AND
+                A.view_type = 3
+        </if>
+		<if test="typeTime == 2">
+            AND
+                A.view_type = 2
+        </if>
+		<if test="typeTime == 3">
+            AND
+                A.view_type = 1
+        </if>
+		GROUP BY A.view_time
+        ORDER BY A.view_time ASC
+	</select>
+
+	<select id="getCostTotal" parameterType="map" resultMap="dataResult">
+		SELECT
+            A.view_time,
+            B.device_id,
+            B.device_name,
+            A.ep_at_a_time,
+            SUM(A.ep) AS ep,
+            SUM(CASE 
+                WHEN A.low_ep IS NOT NULL THEN A.low_ep ELSE 0 END) AS low_ep,
+            SUM(CASE 
+                WHEN A.normal_ep IS NOT NULL THEN A.normal_ep ELSE 0 END) AS normal_ep,
+            SUM(CASE 
+                WHEN A.high_ep IS NOT NULL THEN A.high_ep ELSE 0 END) AS high_ep
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON B.project_id = C.project_id
+        WHERE
+            B.system_type_id = #{systemTypeId}
+		<if test="deviceId != null">
+        AND 
+            A.device_id IN (${deviceId})
+        </if>
+		AND 
+           C.project_id = #{project}
+--          AND
+--            B.calculate_flag = 1
+        AND
+           A.view_time BETWEEN #{fromDate} AND #{toDate}
+		<if test="typeTime == 1">
+            AND
+                A.view_type = 3
+        </if>
+		<if test="typeTime == 2">
+            AND
+                A.view_type = 2
+        </if>
+		<if test="typeTime == 3">
+            AND
+                A.view_type = 1
+        </if>
+		GROUP BY A.device_id
+        ORDER BY A.view_time ASC
+	</select>
+	<select id="getWarningTotal" parameterType="map" resultMap="dataResult">
+        SELECT
+        D.warning_type_id,D.warning_type_name,B.load_type_id, count(distinct A.device_id) as 'number_of_equipment', B.system_type_id, B.project_id
+        FROM
+        ${schema}s3m_warning A
+        LEFT JOIN
+        s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+        s3m_project C ON B.project_id = C.project_id
+        JOIN
+        s3m_warning_type_mst D on D.warning_type_id = A.warning_type
+        WHERE
+        B.system_type_id = ${systemTypeId}
+        AND
+        B.project_id = ${project}
+        AND
+        A.device_id IN (${deviceIds})
+        AND
+        <if test="typeTime == 1">
+            date_format(A.from_date, "%Y-%m-%d") BETWEEN "${fromDate}" AND "${toDate}"
+        </if>
+        <if test="typeTime == 2">
+            date_format(A.from_date, '%Y-%m') BETWEEN "${fromDate}" AND "${toDate}"
+        </if>
+
+        <if test="typeTime == 3">
+            date_format(A.from_date, '%Y') BETWEEN "${fromDate}" AND "${toDate}"
+        </if>
+        GROUP BY A.warning_type;
+    </select>
+
+
+	<select id="getEnergyTotalByShift" parameterType="map" resultMap="dataResult">
+		SELECT A.device_id, C.project_id, C.project_name, A.ep, D.shift_1, D.shift_2, D.shift_3, D.from_date, D.to_date,
+		<if test="typeTime == 1">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d") AS view_time,
+    </if>
+		<if test="typeTime == 2">
+            DATE_FORMAT(A.view_time, "%Y-%m") AS view_time,
+    </if>
+		<if test="typeTime == 3">
+            DATE_FORMAT(A.view_time, "%Y") AS view_time,
+    </if>
+		SUM(CASE WHEN shift_1 NOT LIKE ''
+    THEN
+        CASE 
+        WHEN substring(D.shift_1,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<]]>
+		substring(D.shift_1,9,5) COLLATE utf8mb3_unicode_ci THEN (CASE 
+            WHEN substring(D.shift_1,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci AND substring(D.shift_1,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+            ELSE 0 END)
+        ELSE         
+            ((CASE 
+            WHEN substring(D.shift_1,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci OR substring(D.shift_1,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+        ELSE 0 END)) END
+    ELSE 0 END) AS valueShift1,
+    SUM(CASE WHEN shift_2 NOT LIKE ''
+    THEN
+        CASE 
+        WHEN substring(D.shift_2,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<]]>
+		substring(D.shift_2,9,5) COLLATE utf8mb3_unicode_ci THEN (CASE 
+            WHEN substring(D.shift_2,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci AND substring(D.shift_2,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+            ELSE 0 END)
+        ELSE         
+            ((CASE 
+            WHEN substring(D.shift_2,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci OR substring(D.shift_2,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+        ELSE 0 END)) END
+    ELSE 0 END) AS valueShift2,
+    SUM(CASE WHEN shift_3 NOT LIKE ''
+    THEN
+        CASE 
+        WHEN substring(D.shift_3,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<]]>
+		substring(D.shift_3,9,5) COLLATE utf8mb3_unicode_ci THEN (CASE 
+            WHEN substring(D.shift_3,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci AND substring(D.shift_3,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+            ELSE 0 END)
+        ELSE         
+            ((CASE 
+            WHEN substring(D.shift_3,1,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci OR substring(D.shift_3,9,5) COLLATE utf8mb3_unicode_ci
+		<![CDATA[>]]>
+		substring(A.view_time,12,5) COLLATE utf8mb3_unicode_ci THEN A.ep
+        ELSE 0 END)) END
+    ELSE 0 END) AS valueShift3
+    FROM ${schema}s3m_data_pqs A
+    LEFT JOIN s3m_plus.s3m_device B ON B.device_id = A.device_id
+    LEFT JOIN s3m_plus.s3m_project C ON C.project_id = B.project_id
+    LEFT JOIN s3m_plus.s3m_shift_history D ON D.project_id = B.project_id AND D.system_type_id = B.system_type_id
+    AND CASE 
+        WHEN D.to_date IS NOT NULL THEN (A.view_time COLLATE utf8mb3_unicode_ci
+		<![CDATA[>=]]>
+		D.from_date COLLATE utf8mb3_unicode_ci AND A.view_time COLLATE utf8mb3_unicode_ci
+		<![CDATA[<]]>
+		D.to_date COLLATE utf8mb3_unicode_ci)
+        ELSE D.from_date COLLATE utf8mb3_unicode_ci
+		<![CDATA[<=]]>
+		A.view_time COLLATE utf8mb3_unicode_ci
+    END
+    where B.project_id = #{project}
+		<if test="deviceId != null">
+        AND 
+            A.device_id IN (${deviceId})
+        </if>
+		AND A.view_type = 5
+		<if test="typeTime == 1">
+    AND
+           DATE_FORMAT(A.view_time, "%Y-%m-%d") BETWEEN #{fromDate} AND  #{toDate}
+            GROUP BY DATE_FORMAT(A.view_time, "%Y-%m-%d")
+    </if>
+		<if test="typeTime == 2">
+    AND
+           DATE_FORMAT(A.view_time, "%Y-%m") BETWEEN #{fromDate} AND #{toDate}
+            GROUP BY DATE_FORMAT(A.view_time, "%Y-%m")
+    </if>
+		<if test="typeTime == 3">
+    AND
+           DATE_FORMAT(A.view_time, "%Y") BETWEEN #{fromDate} AND #{toDate}
+            GROUP BY DATE_FORMAT(A.view_time, "%Y")
+    </if>
+		order by view_time
+	</select>
+
+<!--	<select id="getStrengthTotal" parameterType="map" resultMap="dataResult">-->
+<!--		SELECT -->
+<!--        A.view_time, -->
+<!--        A.device_id, -->
+<!--        D.device_ids,  -->
+<!--        SUM(A.ep) AS ep, -->
+<!--        (D.total_unit) AS total_unit-->
+<!--        FROM ${schema}s3m_data_pqs A-->
+<!--        LEFT JOIN s3m_plus.s3m_device B ON B.device_id = A.device_id-->
+<!--        LEFT JOIN s3m_project C ON C.project_id = C.project_id-->
+<!--        LEFT JOIN ${schema}s3m_manufacture D ON D.project_id = C.project_id-->
+<!--        AND A.view_time = D.view_time AND A.view_type = D.view_type-->
+<!--        WHERE-->
+<!--        D.device_ids = #{deviceId}-->
+<!--        AND A.device_id IN (${deviceId})-->
+<!--        AND A.view_time BETWEEN #{fromDate} AND  #{toDate}-->
+<!--		<if test="typeTime == 1">-->
+<!--        AND A.view_type = 3-->
+<!--        </if>-->
+<!--		<if test="typeTime == 2">-->
+<!--        AND A.view_type = 2-->
+<!--        </if>-->
+<!--		<if test="typeTime == 3">-->
+<!--        AND A.view_type = 1-->
+<!--        </if>-->
+<!--		GROUP BY A.view_time-->
+<!--        ORDER BY A.view_time-->
+<!--	</select>-->
+    <select id="getStrengthTotal" parameterType="map" resultMap="dataResult">
+        SELECT A.ep, A.view_time, B.total_unit FROM
+            ${schema}s3m_data_pqs A
+                join ${schema}s3m_manufacture B on A.view_time = B.view_time
+        where A.device_id in(${deviceId}) and B.device_ids like ${deviceId}  and A.view_type = 3
+          and
+            <if test="typeTime == 1">
+            A.view_time between "${fromDate}" and "${toDate}"
+            </if>
+        <if test="typeTime == 2">
+            date_format(A.view_time, "%Y-%m") between "${fromDate}" and "${toDate}"
+        </if>
+        <if test="typeTime == 3">
+            date_format(A.view_time," %Y") between "${fromDate}" and "${toDate}"
+        </if>
+        group by A.view_time;
+	</select>
+
+<!--	<select id="getUseEnergyCompare" parameterType="map" resultMap="dataResult">-->
+<!--		SELECT A.view_time-->
+<!--		<if test="typeInfor == 21">-->
+<!--			<if test="compare1 != null">-->
+<!--                , SUM(CASE WHEN B.area LIKE '${compare1}' THEN A.ep ELSE 0 END) AS ep1-->
+<!--            </if>-->
+<!--			<if test="compare2 != null">-->
+<!--                , SUM(CASE WHEN B.area LIKE '${compare2}' THEN A.ep ELSE 0 END) AS ep2-->
+<!--            </if>-->
+<!--			<if test="compare3 != null">-->
+<!--                , SUM(CASE WHEN B.area LIKE '${compare3}' THEN A.ep ELSE 0 END) AS ep3-->
+<!--            </if>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 22">-->
+<!--			<if test="compare1 != null">-->
+<!--                , SUM(CASE WHEN B.loadType = #{compare1} THEN A.ep ELSE 0 END) AS ep1-->
+<!--            </if>-->
+<!--			<if test="compare2 != null">-->
+<!--                , SUM(CASE WHEN B.loadType = #{compare2} THEN A.ep ELSE 0 END) AS ep2-->
+<!--            </if>-->
+<!--			<if test="compare3 != null">-->
+<!--                , SUM(CASE WHEN B.loadType = #{compare3} THEN A.ep ELSE 0 END) AS ep3-->
+<!--            </if>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 23">-->
+<!--			<if test="compare1 != null">-->
+<!--                , SUM(CASE WHEN B.object_type_id = #{compare1} THEN A.ep ELSE 0 END) AS ep1-->
+<!--            </if>-->
+<!--			<if test="compare2 != null">-->
+<!--                , SUM(CASE WHEN B.object_type_id = #{compare2} THEN A.ep ELSE 0 END) AS ep2-->
+<!--            </if>-->
+<!--			<if test="compare3 != null">-->
+<!--                , SUM(CASE WHEN B.object_type_id = #{compare3} THEN A.ep ELSE 0 END) AS ep3-->
+<!--            </if>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 24">-->
+<!--			<if test="compare1 != null">-->
+<!--                , SUM(CASE WHEN B.device_id = #{compare1} THEN A.ep ELSE 0 END) AS ep1-->
+<!--            </if>-->
+<!--			<if test="compare2 != null">-->
+<!--                , SUM(CASE WHEN B.device_id = #{compare2} THEN A.ep ELSE 0 END) AS ep2-->
+<!--            </if>-->
+<!--			<if test="compare3 != null">-->
+<!--                , SUM(CASE WHEN B.device_id = #{compare3} THEN A.ep ELSE 0 END) AS ep3-->
+<!--            </if>-->
+<!--		</if>-->
+<!--		FROM ${schema}s3m_data_pqs A-->
+<!--        LEFT JOIN s3m_plus.s3m_device B ON A.device_id = B.device_id-->
+<!--        WHERE A.view_time BETWEEN #{fromDate} AND  #{toDate}-->
+<!--		<if test="typeInfor == 21">-->
+<!--			AND B.area IN-->
+<!--			<foreach item="compare" collection="listCompare" open="(" separator="," close=")">-->
+<!--                #{compare}-->
+<!--            </foreach>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 22">-->
+<!--			AND B.loadType IN-->
+<!--			<foreach item="compare" collection="listCompare" open="(" separator="," close=")">-->
+<!--                #{compare}-->
+<!--            </foreach>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 23">-->
+<!--			AND B.object_type_id IN-->
+<!--			<foreach item="compare" collection="listCompare" open="(" separator="," close=")">-->
+<!--                #{compare}-->
+<!--            </foreach>-->
+<!--		</if>-->
+<!--		<if test="typeInfor == 24">-->
+<!--			AND B.device_id IN-->
+<!--			<foreach item="compare" collection="listCompare" open="(" separator="," close=")">-->
+<!--                #{compare}-->
+<!--            </foreach>-->
+<!--		</if>-->
+<!--		<if test="typeTime == 1">-->
+<!--        AND A.view_type = 3-->
+<!--        </if>-->
+<!--		<if test="typeTime == 2">-->
+<!--        AND A.view_type = 2-->
+<!--        </if>-->
+<!--		<if test="typeTime == 3">-->
+<!--        AND A.view_type = 1-->
+<!--        </if>-->
+<!--		GROUP BY A.view_time-->
+<!--	</select>-->
+    <select id="getUseEnergyCompare" parameterType="map" resultMap="dataResult">
+        SELECT A.view_time
+             , SUM(CASE WHEN A.device_id = #{device1} THEN A.ep ELSE 0 END) AS ep1
+        <if test="device2 != null and device2 != '' ">
+             , SUM(CASE WHEN A.device_id = #{device2} THEN A.ep ELSE 0 END) AS ep2
+        </if>
+        <if test="device3 != null and device3 != '' ">
+             , SUM(CASE WHEN A.device_id = #{device3} THEN A.ep ELSE 0 END) AS ep3
+        </if>
+        <if test="device4 != null and device4 != '' ">
+             , SUM(CASE WHEN A.device_id = #{device4} THEN A.ep ELSE 0 END) AS ep4
+        </if>
+        <if test="device5 != null and device5 != '' ">
+             , SUM(CASE WHEN A.device_id = #{device5} THEN A.ep ELSE 0 END) AS ep5
+        </if>
+        FROM ${schema}s3m_data_pqs A
+        WHERE A.view_time BETWEEN #{fromDate} AND  #{toDate}
+        <if test="typeTime == 1">
+            AND A.view_type = 3
+        </if>
+        <if test="typeTime == 2">
+            AND A.view_type = 2
+        </if>
+        <if test="typeTime == 3">
+            AND A.view_type = 1
+        </if>
+        GROUP BY A.view_time;
+    </select>
+
+	<select id="getDeviceByWarningType" parameterType="map" resultMap="dataResult">
+		SELECT A.warning_id, A.device_id, B.device_name, count(A.warning_id) as "quantity_warning"
+ 		FROM ${schema}s3m_warning A
+		LEFT JOIN s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN s3m_project C ON B.project_id = C.project_id
+		WHERE  
+		A.warning_type = #{warningType}
+		AND
+         A.device_id IN (${deviceId})
+        AND
+		    C.project_id = #{projectId}
+        AND
+		    B.system_type_id = #{systemTypeId}
+		AND
+		<if test="typeTime == 1"> 
+		A.from_date BETWEEN  #{fromDate} AND #{toDate}
+		</if>
+		<if test="typeTime == 2"> 
+		date_format(A.from_date, "%Y-%m") BETWEEN  #{fromDate} AND #{toDate}
+		</if>
+		<if test="typeTime == 3"> 
+		date_format(A.from_date, "%Y") BETWEEN  #{fromDate} AND #{toDate}
+		</if>
+		group by A.device_id;
+	</select>
+
+	<select id="getPTotalByDeviceId" parameterType="map" resultMap="dataResult">
+        SELECT A.view_time, SUM(A.p_total)/24 AS p_total
+        FROM ${schema}s3m_data_pqs A
+        WHERE  
+        A.device_id = #{deviceId}
+        AND DATE_FORMAT(A.view_time, "%Y-%m-%d") BETWEEN #{fromDate} AND #{toDate}
+        AND A.view_type = 4
+        GROUP BY DATE_FORMAT(A.view_time, "%Y-%m-%d")
+    </select>
+    
+    <select id = "getListPTotalByDeviceIds" parameterType="map" resultMap="dataResult">
+        SELECT A.view_time, SUM(A.p_total) AS p_total AS ptotal
+        FROM ${schema}s3m_data_pqs A
+        where A.device_id IN (${deviceId})
+        AND view_type = 4
+        AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+        group by DATE_FORMAT(A.view_time, '%Y-%m-%d %H');
+    </select>
+    
+    <select id = "getMaxPTotalByDeviceIds" parameterType="map" resultMap="dataResult">
+        SELECT MAX(sum_column) AS p_total, DATE_FORMAT(view_time, '%Y-%m-%d') AS view_time
+        FROM ( 
+          SELECT A.view_time, SUM(p_total) AS sum_column 
+          FROM ${schema}s3m_data_pqs A
+          where device_id IN (${deviceId})
+        AND view_type = 4
+        AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+          GROUP BY DATE_FORMAT(A.view_time, '%Y-%m-%d %H')
+        ) AS subquery
+        GROUP BY DATE_FORMAT(view_time, '%Y-%m-%d');
+    </select>
+    
+    <select id = "getMinPTotalByDeviceIds" parameterType="map" resultMap="dataResult">
+        SELECT MIN(sum_column) AS p_total, DATE_FORMAT(view_time, '%Y-%m-%d') AS view_time
+        FROM ( 
+          SELECT A.view_time, SUM(p_total) AS sum_column 
+          FROM ${schema}s3m_data_pqs A
+          where device_id IN (${deviceId})
+        AND view_type = 4
+        AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+          GROUP BY DATE_FORMAT(A.view_time, '%Y-%m-%d %H')
+        ) AS subquery
+        GROUP BY DATE_FORMAT(view_time, '%Y-%m-%d');
+    </select>
+    <select id="getCostForCycle" parameterType="map" resultMap="dataResult">
+        SELECT sum(A.high_ep) as high_ep, sum(A.normal_ep) as normal_ep, sum(A.low_ep) as low_ep,sum(A.ep) as ep
+        FROM ${schema}s3m_data_pqs A
+        where A.device_id in (${devices}) and A.view_type = 3
+        and date_format(A.view_time, '%Y-%m-%d') between "${fromDate}" and "${toDate}"
+<!--        <if test="viewTime == 1">-->
+<!--            and date_format(A.view_time, '%Y-%m-%d') between "${fromDate}" and "${toDate}"-->
+<!--        </if>-->
+<!--        <if test="viewTime == 2">-->
+<!--            and date_format(A.view_time, '%Y-%m') between "${fromDate}" and "${toDate}"-->
+<!--        </if>-->
+<!--        <if test="viewTime == 3">-->
+<!--            and date_format(A.view_time, '%Y') between "${fromDate}" and "${toDate}"-->
+<!--        </if>-->
+    </select>
+
+    <select id="getEpByShiftAndViewTime" resultType="SettingShiftEp" parameterType="map" >
+        select sum(A.ep) as epTotal, A.view_time as viewTime, C.id as shiftId, sum(A.low_cost_in) as lowCost, sum(A.normal_cost_in) as normalCost, sum(A.high_cost_in) as highCost
+        from ${schema}s3m_data_pqs A
+                 join s3m_device B on B.device_id = A.device_id
+                 join s3m_setting_shift C on C.project_id = B.project_id
+        where A.device_id in (${devices})
+          and C.id = #{shiftId}
+          and C.project_id = #{project}
+          and A.view_type = 5
+          and A.view_time <![CDATA[>=]]> #{fromDate}
+          and A.view_time <![CDATA[<=]]> #{toDate}
+        group by C.id;
+    </select>
+
+    <select id="getEpByDevicesAndViewTime" parameterType="map" resultMap="dataResult" >
+        select sum(ep) as ep,view_time
+        from ${schema}s3m_data_pqs A
+        where A.device_id in (#{devices})
+        and  A.view_type = 3
+        <if test="typeTime == 1">
+            and A.view_time <![CDATA[>=]]> #{fromDate}
+            and A.view_time <![CDATA[<=]]> #{toDate}
+            group by A.view_time
+        </if>
+        <if test="typeTime == 2">
+            and date_format(A.view_time, '%Y-%m') <![CDATA[>=]]> "${fromDate}"
+            and date_format(A.view_time, '%Y-%m') <![CDATA[<=]]> "${toDate}"
+            group by date_format(A.view_time, '%Y-%m')
+        </if>
+        <if test="typeTime == 3">
+            and date_format(A.view_time, '%Y') <![CDATA[>=]]> "${fromDate}"
+            and date_format(A.view_time, '%Y') <![CDATA[<=]]> "${toDate}"
+            group by date_format(A.view_time, '%Y')
+        </if>
+
+
+    </select>
+    <select id="getComparingEnergyUsageByLoadType" resultMap="dataResult" parameterType="map" >
+        SELECT sum(A.ep) as ep, date_format(A.view_time, "%d-%m-%Y") as view_time, C.id as load_type_id, C.name as load_type_name
+        FROM ${schema}s3m_data_pqs A
+                 JOIN s3m_device B on A.device_id = B.device_id
+                 JOIN s3m_load_type_mst C on C.id = B.load_type_id
+        where B.load_type_id in (${loadType}) and A.view_type = 3 and A.view_time between "${fromDate}" and "${toDate}" group by A.view_time, C.id order by A.view_time asc;
+    </select>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ObjectTypeMapper">
+    <resultMap id="listDataResult" type="ObjectType">
+        <result column="systemTypeId" property="systemTypeId"/>
+        <result column="objectTypeName" property="objectTypeName"/>
+        <result column="img" property="img"/>
+        <result column="createDate" property="createDate"/>
+        <result column="updateDate" property="updateDate"/>
+    </resultMap>
+    
+    <resultMap id="objectTypeMstResult" type="ObjectTypeMst">
+         <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="img" property="img"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+
+    <select id="getAllObjectType"  parameterType="map" resultMap="listDataResult">
+        SELECT
+            A.id AS objectTypeId,
+            A.name AS objectTypeName
+--             A.img AS img,
+--             A.type_default AS typeDefault,
+--             A.create_date AS createDate,
+--             A.update_date AS updateDate,
+--             A.system_type_id AS systemTypeId,
+--             A.delete_flag AS deleteFlag
+        FROM
+           s3m_object_type_mst A
+
+--         WHERE A.img IS NULL
+    </select>
+
+    <select id="getListObjectTypeMst" resultMap="objectTypeMstResult">
+        SELECT * FROM s3m_object_type_mst
+    </select>
+    
+    <select id="searchObjectType" parameterType="map" resultMap="objectTypeMstResult">
+        SELECT * FROM s3m_object_type_mst 
+        WHERE name LIKE  "%${keyword}%"
+    </select>
+    
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO s3m_object_type_mst (
+        <if test="name != null and name != '' ">
+            `name`,
+        </if>
+        <if test="img != null and img != '' ">
+            `img`
+        </if>
+        )VALUES (
+         <if test="name != null and name != '' ">
+            #{name},
+        </if>
+        <if test="img != null and img != '' ">
+            #{img}
+        </if>
+        )
+    </insert>
+    
+    <update id="update" parameterType="ObjectTypeMst">
+        UPDATE s3m_object_type_mst SET
+         <if test="name != null and name != '' ">
+            name = #{name},
+        </if>
+        <if test="img != null and img != '' ">
+            img = #{img},
+        </if>
+        update_date = NOW()
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="deleteObjectTypeMstById" parameterType="java.lang.Integer">
+        DELETE FROM s3m_object_type_mst
+        WHERE id = #{id}
+    </delete>
+    
+    <select id="getObjectTypeById" resultMap="objectTypeMstResult">
+        SELECT
+            id,
+            name,
+            img
+        FROM
+            s3m_object_type_mst
+        WHERE
+            id = #{objectTypeId}        
+    </select>
+    
+    <select id="getObjectTypeByName" parameterType="map" resultMap="objectTypeMstResult">
+        SELECT
+            id,
+            name,
+            img
+        FROM
+            s3m_object_type_mst
+        WHERE
+            name = #{name}
+    </select>
+    
+    <select id="getObjectTypeByIds" parameterType="map" resultMap="objectTypeMstResult">
+        SELECT 
+            id, 
+            name
+        FROM 
+            s3m_object_type_mst
+        WHERE 
+            id IN (${objectTypeIds})
+        ;
+    
+    </select>
+
+</mapper>

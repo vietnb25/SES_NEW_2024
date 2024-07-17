@@ -1,0 +1,128 @@
+.opt-header {
+    width: 100%;
+    margin-left: 1%;
+}
+
+.opt-sel {
+    width: 22%;
+    margin-right: 2%;
+    box-sizing: border-box;
+    position: relative;
+    height: 39px !important;
+}
+
+.btn-add-sim {
+    position: absolute;
+    left: 95%;
+}
+
+.opt-fz {
+    font-size: 18px !important;
+    font-weight: bold !important;
+}
+
+.main-content-sim {
+    width: 100%;
+}
+
+.content-btn-sim {
+    width: 100%;
+    display: flex;
+}
+
+
+.content-btn-radio-sim {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.content-btn-radio-sim:not(:last-child) {
+    margin-right: 12px;
+}
+
+
+.content-btn-input-sim {
+    position: absolute;
+    appearance: none;
+    transition: 0.5s;
+}
+
+.content-btn-input-sim:checked+.content-btn-text {
+    background-color: var(--ses-orange-100-color);
+    transition: 0.5s;
+    color: #fff;
+}
+
+.content-btn-input-sim-sim:checked+.content-btn-text:hover {
+    color: #fff;
+    transition: 0.3s;
+}
+
+.content-btn-input-sim+.content-btn-text:hover {
+    background-color: var(--ses-blue-80-color);
+    transition: 0.3s;
+}
+
+.content-btn-text-sim {
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 150%;
+    color: white;
+    background-color: var(--ses-blue-20-color);
+    user-select: none;
+    border-radius: 100px;
+    border: 1px solid #D7DADD;
+    transition: 0.3s;
+    /* width: 130px; */
+}
+
+
+
+input#slider {
+    visibility: hidden;
+}
+#bar {
+    width: 70px;
+    height: 35px;
+    border: solid 3px var(--ses-blue-20-color);
+    border-radius: 40px;
+    position: relative;
+}
+#bar > label {
+    background-color:var(--ses-blue-100-color);
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border-radius : 50%;
+    position: relative;
+    top: -10%;
+    left: 30%;
+    transition: all 0.5s;
+}
+input#slider:checked + label#lable-silder {
+    transform: translateX(20%);
+}
+input#slider:not(:checked) + label#lable-silder {
+    transform: translateX(-120%);
+}
+label#lable-silder::before {
+    position: relative;
+    bottom: 100%;
+    color: #D7DADD;
+    
+}
+label#lable-silder {
+    margin-top: 5px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 8%;
+    padding-left: 10%;
+    box-sizing: border-box;
+
+}

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataRmuDrawer1Mapper">
+
+    <resultMap id="dataRmuDrawer1Result1" type="DataRmuDrawer1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceType" column="device_type" />
+        <result property="sawId1" column="SAW_ID1"/>
+        <result property="sawId2" column="SAW_ID2"/>
+        <result property="sawId3" column="SAW_ID3"/>
+        <result property="sawId4" column="SAW_ID4"/>
+        <result property="sawId5" column="SAW_ID5"/>
+        <result property="sawId6" column="SAW_ID6"/>
+        <result property="gAMean" column="GROUPA_MEAN_MEANSUREMENT"/>
+        <result property="gAAlarm" column="GROUPA_ALARM_STATUS"/>
+        <result property="gBMean" column="GROUPB_MEAN_MEANSUREMENT"/>
+        <result property="gBAlarm" column="GROUPB_ALARM_STATUS"/>
+        <result property="alarmStatus" column="ALARM_STATUS_BIT"/>
+        <result property="lfbRatio" column="LFB_RATIO"/>
+        <result property="lfbEppc" column="LFB_EPPC"/>
+        <result property="mfbRatio" column="MFB_RATIO"/>
+        <result property="mlfbEppc" column="MLFB_EPPC"/>
+        <result property="hlfbRatio" column="HLFB_RATIO"/>
+        <result property="hlfbEppc" column="HLFB_EPPC"/>
+        <result property="meanRatio" column="MEAN_RATIO"/>
+        <result property="meanEppc" column="MEAN_EPPC"/>
+        <result property="rxEHi" column="RATIOxEPPC_Hi"/>
+        <result property="rxELo" column="RATIOxEPPC_Lo"/>
+        <result property="indicator" column="INDICATOR"/>
+        <result property="t" column="T"/>
+        <result property="h" column="H"/>
+        <result property="uab" column="Uab"/>
+        <result property="ubc" column="Ubc"/>
+        <result property="uca" column="Uca"/>
+        <result property="ull" column="Ull"/>
+        <result property="uan" column="Uan"/>
+        <result property="ubn" column="Ubn"/>
+        <result property="ucn" column="Ucn"/>
+        <result property="uln" column="Uln"/>
+        <result property="ia" column="Ia"/>
+        <result property="ib" column="Ib"/>
+        <result property="ic" column="Ic"/>
+        <result property="in" column="In"/>
+        <result property="ig" column="Ig"/>
+        <result property="iavg" column="Iavg"/>
+        <result property="pa" column="Pa"/>
+        <result property="pb" column="Pb"/>
+        <result property="pc" column="Pc"/>
+        <result property="pTotal" column="P_Total"/>
+        <result property="qa" column="Qa"/>
+        <result property="qb" column="Qb"/>
+        <result property="qc" column="Qc"/>
+        <result property="qTotal" column="Q_Total"/>
+        <result property="sa" column="Sa"/>
+        <result property="sb" column="Sb"/>
+        <result property="sc" column="Sc"/>
+        <result property="sTotal" column="S_Total"/>
+        <result property="pfa" column="PFa"/>
+        <result property="pfb" column="PFb"/>
+        <result property="pfc" column="PFc"/>
+        <result property="pfavg" column="PFavg"/>
+        <result property="f" column="F"/>
+        <result property="ep" column="EP"/>
+        <result property="eq" column="EQ"/>
+        <result property="es" column="ES"/>
+        <result property="thdIa" column="THD_Ia"/>
+        <result property="thdIb" column="THD_Ib"/>
+        <result property="thdIc" column="THD_Ic"/>
+        <result property="thdIn" column="THD_In"/>
+        <result property="thdIg" column="THD_Ig"/>
+        <result property="thdVab" column="THD_Vab"/>
+        <result property="thdVbc" column="THD_Vbc"/>
+        <result property="thdVca" column="THD_Vca"/>
+        <result property="thdVll" column="THD_Vll"/>
+        <result property="thdVan" column="THD_Van"/>
+        <result property="thdVbn" column="THD_Vbn"/>
+        <result property="thdVcn" column="THD_Vcn"/>
+        <result property="thdVln" column="THD_Vln"/>
+        <result property="viewTime" column="view_time" />
+        <result property="sentDate" column="sent_date" />
+        <result property="time" column="time" />
+        <result property="transactionDate" column="transaction_date" />
+        <result property="projectName" column="project_name" />
+    </resultMap>
+    
+     <select id="getPowerDeviceByProjectId" resultMap="dataRmuDrawer1Result1" parameterType="map">
+       SELECT
+           P_Total,
+           EP AS ep
+       FROM
+           ${schema}s3m_data_rmu_drawer_1_view A
+       LEFT JOIN
+           s3m_device B ON A.device_id = B.device_id    
+       WHERE
+           A.device_id IN (${deviceId})
+       <if test="view != null">
+            AND A.view_type = #{view}
+       </if>
+       <if test="date != null">
+            AND A.view_time = #{date}
+       </if>
+       <if test="fromDate != null and toDate != null">
+            AND (A.view_time BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        AND
+            B.project_id = #{projectId}
+    </select>
+    
+    <select id="getSumEpInDay" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.EP)
+        FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 3
+            AND A.view_time = #{date}    
+    </select>
+    
+    <select id="getSumEpInMonth" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.EP)
+         FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 2
+            AND A.view_time = #{month}    
+    </select>
+    
+    <select id="getSumEp" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.EP)
+         FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 1   
+    </select>
+
+    <select id="getPtotalInDay" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(P_Total)
+         FROM
+            ${schema}s3m_instant_data 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            sent_date BETWEEN #{startDate} AND #{now}    
+    </select>
+    
+    <select id="getMaxTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            max(p_total)
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="getMinTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            min(p_total)
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="getAvgTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            avg(p_total)
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <!-- Lấy dữ liệu bị cảnh báo khoang tủ RMU -->
+    <select id="getWarningDataRMUByDeviceId" resultMap="dataRmuDrawer1Result" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.power,
+            C.imccb
+        FROM
+            ${schema}s3m_warning B
+        JOIN 
+            ${schema}s3m_data_rmu_drawer_1${year} A ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+         WHERE
+            B.from_date <![CDATA[>=]]>  #{fromDate}
+        AND
+            B.to_date <![CDATA[<=]]>  #{toDate}
+        AND
+            A.sent_date BETWEEN B.from_date AND B.to_date
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND 
+                B.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.id 
+        ORDER BY
+            A.sent_date DESC
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+    
+    <!-- Lấy dữ liệu để hiển thị chart -->
+    <select id="getChartRmuByCustomerId" resultMap="dataRmuDrawer1Result" parameterType="map">
+        SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+             <if test="typeTime == null and viewType == 5">             
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+            <if test="typeTime == null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 2">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+              <if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 5">
+                 view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+            A.p_total AS p_total,
+            A.ep AS ep,
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+            view_type = #{viewType}
+        AND B.calculate_flag = 1 
+        <if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+          <if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+        <if test="typeTime == null and viewType == 5">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+        <if test="typeTime == null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 3">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+          <if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+        <if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+         </if>
+         ORDER BY view_time ASC
+        
+    </select>
+    
+    <!-- Lấy thông số bị cảnh báo -->
+    <select id="getInforDataGridByTime" resultMap="dataRmuDrawer1Result1" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.power,
+            C.imccb,
+            D.current
+        FROM
+            ${schema}s3m_data_rmu_drawer_1${year} A 
+        JOIN 
+            ${schema}s3m_warning B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+        LEFT JOIN
+            s3m_cable D ON D.cable_id = C.cable_id_a1
+         WHERE
+            A.sent_date =  #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        GROUP BY
+            A.id 
+    </select>
+    
+    <!-- Lấy dữ liệu bị cảnh báo -->
+    <select id="getListWarnedData" resultMap="dataRmuDrawer1Result1" parameterType="map">
+        SELECT
+            A.*,
+            DATE_FORMAT(A.sent_date, "%Y-%m-%d %H:%i:%s") AS view_time
+        FROM
+            ${schema}s3m_data_rmu_drawer_1${year} A 
+         WHERE
+            A.sent_date <![CDATA[<=]]>  #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        ORDER BY
+            A.id DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>

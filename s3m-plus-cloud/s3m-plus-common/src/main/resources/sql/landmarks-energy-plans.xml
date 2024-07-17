@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.LandmarksPlansEnergyMapper">
+    <resultMap id="landmarksAndPlans" type="LandmarksPlansEnergy">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="jan" jdbcType="INTEGER" column="jan" />
+        <result property="mar" jdbcType="INTEGER" column="mar" />
+        <result property="may" jdbcType="INTEGER" column="may" />
+        <result property="feb" jdbcType="INTEGER" column="feb" />
+        <result property="apr" jdbcType="INTEGER" column="apr" />
+        <result property="jun" jdbcType="INTEGER" column="jun" />
+        <result property="jul" jdbcType="INTEGER" column="jul" />
+        <result property="aug" jdbcType="INTEGER" column="aug" />
+        <result property="sep" jdbcType="INTEGER" column="sep" />
+        <result property="oct" jdbcType="INTEGER" column="oct" />
+        <result property="nov" jdbcType="INTEGER" column="nov" />
+        <result property="dec" jdbcType="INTEGER" column="dec" />
+        <result property="status" jdbcType="INTEGER" column="status" />
+        <result property="dateOfWeek" jdbcType="VARCHAR" column="date_of_month" />
+        <result property="year" jdbcType="VARCHAR" column="year" />
+        <result property="updateDate" jdbcType="VARCHAR" column="update_date" />
+        <result property="sumT1" jdbcType="VARCHAR" column="sumT1" />
+        <result property="sumT2" jdbcType="VARCHAR" column="sumT2" />
+        <result property="sumT3" jdbcType="VARCHAR" column="sumT3" />
+        <result property="sumT4" jdbcType="VARCHAR" column="sumT4" />
+        <result property="sumT5" jdbcType="VARCHAR" column="sumT5" />
+        <result property="sumT6" jdbcType="VARCHAR" column="sumT6" />
+        <result property="sumT7" jdbcType="VARCHAR" column="sumT7" />
+        <result property="sumT8" jdbcType="VARCHAR" column="sumT8" />
+        <result property="sumT9" jdbcType="VARCHAR" column="sumT9" />
+        <result property="sumT10" jdbcType="VARCHAR" column="sumT10" />
+        <result property="sumT11" jdbcType="VARCHAR" column="sumT11" />
+        <result property="sumT12" jdbcType="VARCHAR" column="sumT12" />
+
+        <result property="sumT1Plan" jdbcType="VARCHAR" column="sumT1Plan" />
+        <result property="sumT2Plan" jdbcType="VARCHAR" column="sumT2Plan" />
+        <result property="sumT3Plan" jdbcType="VARCHAR" column="sumT3Plan" />
+        <result property="sumT4Plan" jdbcType="VARCHAR" column="sumT4Plan" />
+        <result property="sumT5Plan" jdbcType="VARCHAR" column="sumT5Plan" />
+        <result property="sumT6Plan" jdbcType="VARCHAR" column="sumT6Plan" />
+        <result property="sumT7Plan" jdbcType="VARCHAR" column="sumT7Plan" />
+        <result property="sumT8Plan" jdbcType="VARCHAR" column="sumT8Plan" />
+        <result property="sumT9Plan" jdbcType="VARCHAR" column="sumT9Plan" />
+        <result property="sumT10Plan" jdbcType="VARCHAR" column="sumT10Plan" />
+        <result property="sumT11Plan" jdbcType="VARCHAR" column="sumT11Plan" />
+        <result property="sumT12Plan" jdbcType="VARCHAR" column="sumT12Plan" />
+
+        <result property="sumLandmark" jdbcType="VARCHAR" column="sumLandmark" />
+        <result property="sumEnergy" jdbcType="VARCHAR" column="sumEnergy" />
+    </resultMap>
+
+<!--   Diem moc nang luong-->
+    <select id="getListDataLandmarks" resultMap="landmarksAndPlans" parameterType="map">
+        Select * from ${schema}s3m_landmarks_energy A
+             where A.year LIKE #{year}
+              and `device_id` = #{deviceId}
+              and `status` = 1
+              and A.project_id = #{project}
+            and A.system_type_id = #{system} order by A.type asc;
+    </select>
+    <select id="updateLandmarks" parameterType="vn.ses.s3m.plus.form.LandmarksPlansEnergyForm">
+        UPDATE ${schema}s3m_landmarks_energy
+        SET
+            <if test="jan != null and jan !='' ">
+                `jan` = ${jan},
+            </if>
+        <if test="feb != null and feb !='' ">
+            `feb` = ${feb},
+        </if>
+        <if test="mar != null and mar !='' ">
+            `mar` = ${mar},
+        </if>
+        <if test="may != null and may !='' ">
+            `may` = ${may},
+        </if>
+        <if test="apr != null and apr !='' ">
+            `apr` = ${apr},
+        </if>
+        <if test="jun != null and jun !='' ">
+            `jun` = ${jun},
+        </if>
+        <if test="jul != null and jul !='' ">
+            `jul` = ${jul},
+        </if>
+        <if test="aug != null and aug !='' ">
+            `aug` = ${aug},
+        </if>
+        <if test="sep != null and sep !='' ">
+            `sep` =${sep},
+        </if>
+        <if test="oct != null and oct !='' ">
+            `oct` = ${oct},
+        </if>
+        <if test="nov != null and nov !='' ">
+            `nov` = ${nov},
+        </if>
+        <if test="dec != null and dec !='' ">
+            `dec` = ${dec},
+        </if>
+            `update_date` =  current_date()
+        WHERE
+            `id` = ${id};
+    </select>
+
+
+<!--    Ke hoach nang luong-->
+    <select id="getListDataPlans" resultMap="landmarksAndPlans" parameterType="map">
+        Select * from ${schema}s3m_plans_energy A
+            where A.year LIKE #{year} and `status` = 1
+              and `device_id` = #{deviceId}
+            and A.project_id = #{project}
+            and A.system_type_id = #{system} order by A.type asc;
+    </select>
+<!--    update-->
+    <select id="updatePlans" parameterType="vn.ses.s3m.plus.form.LandmarksPlansEnergyForm">
+        UPDATE ${schema}s3m_plans_energy
+        SET
+        <if test="jan != null and jan !='' ">
+            `jan` = ${jan},
+        </if>
+        <if test="feb != null and feb !='' ">
+            `feb` = ${feb},
+        </if>
+        <if test="mar != null and mar !='' ">
+            `mar` = ${mar},
+        </if>
+        <if test="may != null and may !='' ">
+            `may` = ${may},
+        </if>
+        <if test="apr != null and apr !='' ">
+            `apr` = ${apr},
+        </if>
+        <if test="jun != null and jun !='' ">
+            `jun` = ${jun},
+        </if>
+        <if test="jul != null and jul !='' ">
+            `jul` = ${jul},
+        </if>
+        <if test="aug != null and aug !='' ">
+            `aug` = ${aug},
+        </if>
+        <if test="sep != null and sep !='' ">
+            `sep` =${sep},
+        </if>
+        <if test="oct != null and oct !='' ">
+            `oct` = ${oct},
+        </if>
+        <if test="nov != null and nov !='' ">
+            `nov` = ${nov},
+        </if>
+        <if test="dec != null and dec !='' ">
+            `dec` = ${dec},
+        </if>
+        `update_date` =  current_date()
+        WHERE
+        `id` = ${id};
+    </select>
+    <select id="insertLandmarks" parameterType="map">
+        INSERT INTO ${schema}s3m_landmarks_energy
+        (`date_of_month`, `create_date`, `update_date`, `year`, `status`, `project_id`, `system_type_id`, `device_id`, `type`, `jan`, `feb`, `mar`, `apr`, `may`, `jun`, `jul`, `aug`, `sep`, `oct`, `nov`, `dec`)
+        VALUES
+            ('01', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('02', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('03', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('04', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('05', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('06', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('07', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('08', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('09', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('10', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('11', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('12', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('13', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('14', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('15', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('16', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('17', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('18', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('19', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('20', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('21', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('22', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('23', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('24', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('25', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('26', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('27', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('28', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('29', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('30', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('31', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    </select>
+    <select id="insertPlans" parameterType="map">
+        Insert Into ${schema}s3m_plans_energy
+        (`date_of_month`, `create_date`, `update_date`, `year`, `status`, `project_id`, `system_type_id`, `device_id`, `type`, `jan`, `feb`, `mar`, `apr`, `may`, `jun`, `jul`, `aug`, `sep`, `oct`, `nov`, `dec`)
+        VALUES
+            ('01', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('02', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('03', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('04', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('05', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('06', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('07', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('08', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('09', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('10', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('11', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('12', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('13', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('14', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('15', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('16', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('17', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('18', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('19', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('20', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('21', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('22', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('23', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('24', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('25', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('26', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('27', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('28', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('29', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('30', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            ('31', current_date(), current_date(), ${year}, 1, ${project}, ${system}, ${deviceId}, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    </select>
+
+
+<!--    Lấy theo ngày-->
+    <select id="getEnergyByDayAndMonth" parameterType="map" resultType="java.lang.Double">
+        SELECT
+            SUM(A.${currentMonth})
+        FROM
+            ${schema}s3m_plans_energy A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.date_of_month LIKE #{currDayOfWeek}
+            AND A.project_id = #{projectId}
+            AND A.system_type_id = #{systemTypeId}
+         <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+         AND A.update_date LIKE '${year}%'
+
+    </select>
+    
+     <select id="getLandmarksEnergyByDayAndMonth" parameterType="map" resultType="java.lang.Double">
+        SELECT
+            SUM(A.${currentMonth})
+        FROM
+            ${schema}s3m_landmarks_energy A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.date_of_month LIKE #{currDayOfWeek}
+            AND A.project_id = #{projectId}
+            AND A.system_type_id = #{systemTypeId}
+ 		<if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+          AND A.update_date LIKE '${year}%'
+           </if>
+
+    </select>
+
+
+<!--    Lấy theo tháng-->
+     <select id="getEnergyMonth" resultMap="landmarksAndPlans" parameterType="map">
+         WITH CumulativeData AS (
+             SELECT
+                 date_of_month,
+                 SUM(A.${currentMonth}) OVER (ORDER BY date_of_month) AS valueEnergy
+             FROM
+                 ${schema}s3m_landmarks_energy A
+                     JOIN
+                 s3m_device B ON A.device_id = B.device_id
+             WHERE
+                A.project_id = #{projectId}
+               AND A.system_type_id = #{systemTypeId}
+               AND A.update_date LIKE '${year}%'
+         <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+         )
+         SELECT
+             date_of_month,
+             MAX(valueEnergy) AS valueEnergy
+         FROM
+             CumulativeData
+         GROUP BY
+             date_of_month
+    </select>
+
+    <select id="getEnergyMonthByDataPower" resultMap="landmarksAndPlans" parameterType="map">
+         WITH CumulativeData AS (
+             SELECT
+                 date_of_month,
+                 SUM(A.${currentMonth}) OVER (ORDER BY date_of_month) AS valueEnergy
+             FROM
+                 ${schema}s3m_landmarks_energy A
+                     JOIN
+                 s3m_device B ON A.device_id = B.device_id
+             WHERE
+                A.project_id = #{projectId}
+               AND A.system_type_id = #{systemTypeId}
+             AND A.update_date LIKE '${year}%'
+          <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+         )
+         SELECT
+             date_of_month,
+             MAX(valueEnergy) AS valueEnergy
+         FROM
+             CumulativeData
+         GROUP BY
+             date_of_month
+    </select>
+    
+     <select id="getEnergyMonthPlan" resultMap="landmarksAndPlans" parameterType="map">
+         WITH CumulativeData AS (
+             SELECT
+                 date_of_month,
+                 SUM(A.${currentMonth}) OVER (ORDER BY date_of_month) AS valueEnergy
+             FROM
+                 ${schema}s3m_plans_energy A
+                     JOIN
+                 s3m_device B ON A.device_id = B.device_id
+             WHERE
+                 A.project_id = #{projectId}
+               AND A.system_type_id = #{systemTypeId}
+               AND A.update_date LIKE '${year}%'
+         <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+         )
+         SELECT
+             date_of_month,
+             MAX(valueEnergy) AS valueEnergy
+         FROM
+             CumulativeData
+         GROUP BY
+             date_of_month
+    </select>
+
+
+<!--    Lấy theo năm-->
+    <select id="getEnergyYear" resultMap="landmarksAndPlans" parameterType="map">
+        SELECT
+            sum(A.jan) AS sumT1,
+            (sum(A.feb)+ sum(A.jan)) AS sumT2,
+            (sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT3,
+            (sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT4,
+            (sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT5,
+            (sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT6,
+            (sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT7,
+            (sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT8,
+            (sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT9,
+            (sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT10,
+            (sum(A.nov)+sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT11,
+            (sum(A.dec)+sum(A.nov)+sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT12
+        FROM
+            ${schema}s3m_landmarks_energy A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.project_id = #{projectId}
+          AND A.system_type_id = #{systemTypeId}
+          AND A.update_date LIKE '${year}%'
+         <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+    </select>
+
+    <select id="getEnergyYearPlan" resultMap="landmarksAndPlans" parameterType="map">
+        SELECT
+             sum(A.jan) AS sumT1Plan,
+            (sum(A.feb)+ sum(A.jan)) AS sumT2Plan,
+            (sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT3Plan,
+            (sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT4Plan,
+            (sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT5Plan,
+            (sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT6Plan,
+            (sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT7Plan,
+            (sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT8Plan,
+            (sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT9Plan,
+            (sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT10Plan,
+            (sum(A.nov)+sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT11Plan,
+            (sum(A.dec)+sum(A.nov)+sum(A.oct)+sum(A.sep)+sum(A.aug)+sum(A.jul)+sum(A.jun)+sum(A.may)+sum(A.apr)+sum(A.mar)+sum(A.feb)+ sum(A.jan)) AS sumT12Plan
+        FROM
+            ${schema}s3m_plans_energy A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.project_id = #{projectId}
+          AND A.system_type_id = #{systemTypeId}
+          AND A.update_date LIKE '${year}%'
+         <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+    </select>
+</mapper>

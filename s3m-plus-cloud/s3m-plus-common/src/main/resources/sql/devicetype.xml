@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DeviceTypeMapper">
+    <resultMap id="deviceTypeResult" type="DeviceTypeMst"></resultMap>
+    <resultMap id="deviceType" type="DeviceTypeMst">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="object_type_ids" property="objectTypeIds"></result>
+        <result column="img" property="img"></result>
+        <result column="description" property="description"></result>
+        <result column="description" property="description"></result>
+        <result column="create_date" property="createDate"></result>
+        <result column="update_date" property="updateDate"></result>
+    </resultMap>
+
+    <!-- Lấy danh sách systemType. -->
+    <select id="getDeviceTypes" resultMap="deviceType">
+        SELECT
+            *
+        FROM
+            s3m_device_type_mst
+    </select>
+
+    <select id="getDeviceTypesBySystemTypeId" parameterType="map" resultMap="deviceTypeResult">
+        SELECT
+            B.id, 
+            B.name
+        FROM
+            s3m_device_system A
+            LEFT JOIN s3m_device_type_mst B ON A.device_type_id = B.id
+            LEFT JOIN s3m_system_type C ON C.system_type_id = A.system_type_id
+            WHERE C.system_type_id = #{systemTypeId}
+    </select>
+    <select id="getDeviceTypesBySystemTypeAndCustomerAndProject" parameterType="map" resultMap="deviceType">
+        SELECT
+            A.name, A.id, A.create_date, A.update_date, A.description
+        FROM
+            s3m_plus.s3m_device_type_mst A
+        JOIN
+            s3m_plus.s3m_device B on B.device_type_id = A.id
+        JOIN
+            s3m_plus.s3m_project C on B.project_id = C.project_id
+        WHERE
+            B.system_type_id = ${systemType}
+          AND
+            C.customer_id = ${customer}
+          <if test="project != null and project != ''">
+            AND
+                B.project_id = ${project}
+          </if>
+        GROUP BY
+            B.device_type_id;
+    </select>
+    
+    <select id="searchDeviceType" parameterType="map" resultMap="deviceType">
+        SELECT * FROM s3m_device_type_mst 
+        WHERE name LIKE  "%${keyword}%"
+    </select>
+    
+    <delete id="deleteDeviceType" parameterType="java.lang.Integer">
+        DELETE FROM s3m_device_type_mst
+        WHERE id = #{id}
+    </delete>
+    
+    <insert id="add">
+        INSERT INTO s3m_device_type_mst (
+        <if test="name != null and name != '' ">
+            `name`,
+        </if>
+        <if test="objectTypeIds != null and objectTypeIds != '' ">
+            `object_type_ids`,
+        </if>
+        <if test="img != null and img != '' ">
+            `img`
+        </if>
+        )VALUES (
+         <if test="name != null and name != '' ">
+            #{name},
+        </if>
+        <if test="objectTypeIds != null and objectTypeIds != '' ">
+            #{objectTypeIds},
+        </if>
+        <if test="img != null and img != '' ">
+            #{img}
+        </if>
+        )
+    </insert>
+    
+    <update id="update" parameterType="DeviceTypeMst">
+        UPDATE s3m_device_type_mst SET
+         <if test="name != null and name != '' ">
+            name = #{name},
+        </if>
+        <if test="objectTypeIds != null and objectTypeIds != '' ">
+            object_type_ids = #{objectTypeIds},
+        </if>
+        <if test="img != null and img != '' ">
+            img = #{img},
+        </if>
+        update_date = NOW()
+        WHERE
+            id = #{id}
+    </update>
+    
+    <select id="getDeviceTypeById" parameterType="map" resultMap="deviceType">
+        SELECT
+            *
+        FROM
+            s3m_device_type_mst
+        WHERE
+           id = #{id}
+    </select>
+    
+    <select id="getDeviceTypeByName" parameterType="map" resultMap="deviceType">
+        SELECT
+            *
+        FROM
+            s3m_device_type_mst
+        WHERE
+            name = #{name}
+    </select>
+</mapper>

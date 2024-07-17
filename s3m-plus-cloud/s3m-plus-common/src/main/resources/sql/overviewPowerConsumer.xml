@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.OverviewPowerConsumerMapper">
+
+    <resultMap id="warningResult" type="Warning">
+        <result column="id" property="id" />
+        <result column="warning_id" property="warningId" />
+        <result column="warning_type" property="warningType" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="total" property="totalDevice" />
+        <result column="system_type_id" property="systemTypeId" />
+        <result column="from_date" property="fromDate" />
+        <result column="to_date" property="toDate" />
+        <result column="handle_flag" property="handleFlag" />
+        <result column="project_name" property="projectName" />
+        <result column="project_id" property="projectId" />
+        <result column="handle_name" property="handleName" />
+        <result column="staff_name" property="staffName" />
+        <result column="setting_history_id" property="settingHistoryId" />
+        <result column="description" property="description" />
+        <result column="create_id" property="createId" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_id" property="updateId" />
+        <result column="update_date" property="updateDate" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="system_map_name" property="systemMapName" />
+    </resultMap>
+
+    <resultMap id="overviewPower" type="OverviewLoadPower">
+        <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="p_total" property="pTotal" />
+        <result column="ep" property="eP" />
+        <result column="warningCount" property="warningCount" />
+        <result column="id" property="id"/>
+        <result column="sent_date" property="sentDate" />
+    </resultMap>
+
+    <resultMap id="overviewPowerPV" type="OverviewPVPower">
+       <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="warningCount" property="warningCount" />
+    </resultMap>
+    
+    
+    <resultMap id="overviewPowerGrid" type="OverviewGridPower">
+        <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="device_status" property="deviceStatus" />
+        <result column="p_total" property="pTotal" />
+        <result column="INDICATOR" property="indicator" />
+        <result column="T" property="temp" />
+        <result column="H" property="humidity" />
+        <result column="warningCount" property="warningCount" />
+    </resultMap>
+
+    <resultMap id="overviewPowerInDay" type="OverviewLoadTotalPower"></resultMap>
+
+    <resultMap id="overviewPowerPVInDay" type="OverviewPVTotalPower"></resultMap>
+    
+    <resultMap id="overviewPowerGridInDay" type="OverviewGridTotalPower"></resultMap>
+    
+    <select id="getSumEnergy" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time <![CDATA[<=]]> #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByYear" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time = #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByMonth" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if> 
+                AND B.calculate_flag = 1
+                AND A.view_type = 2
+                AND A.view_time = #{month}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByDay" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 3
+                AND date(A.view_time) = date(#{day})
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+     <select id="getCountWarningLoad" parameterType="map" resultType="java.lang.Integer">
+        SELECT 
+        COUNT(A.warning_id)
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.system_type_id = 1
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+    </select>
+    
+    
+<select id="getSumEnergyPV" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.Ep)
+        FROM ${schema}s3m_data_inverter_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_inverter_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time <![CDATA[<=]]> #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByYearPV" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.Ep)
+        FROM ${schema}s3m_data_inverter_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_inverter_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time = #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByMonthPV" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.Ep)
+        FROM ${schema}s3m_data_inverter_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_inverter_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if> 
+                AND B.calculate_flag = 1
+                AND A.view_type = 2
+                AND A.view_time = #{month}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByDayPV" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.Ep)
+        FROM ${schema}s3m_data_inverter_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_inverter_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 3
+                AND date(A.view_time) = date(#{day})
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+     <select id="getCountWarningPV" parameterType="map" resultType="java.lang.Integer">
+        SELECT 
+        COUNT(A.warning_id)
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.system_type_id = 2
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+    </select>
+    
+    
+    <select id="getSumEnergyGrid" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.EP)
+        FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_rmu_drawer_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time <![CDATA[<=]]> #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByYearGrid" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.EP)
+        FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_rmu_drawer_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time = #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByMonthGrid" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.EP)
+        FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_rmu_drawer_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if> 
+                AND B.calculate_flag = 1
+                AND A.view_type = 2
+                AND A.view_time = #{month}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByDayGrid" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.EP)
+        FROM ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_rmu_drawer_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                <if test="deviceIds != null">
+                    A.device_id  IN
+                    <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                            #{deviceIds}
+                        </foreach>
+                </if>
+                AND B.calculate_flag = 1
+                AND A.view_type = 3
+                AND date(A.view_time) = date(#{day})
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+     <select id="getCountWarningGrid" parameterType="map" resultType="java.lang.Integer">
+        SELECT 
+        COUNT(A.warning_id)
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.system_type_id = 5
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+    </select>
+    
+</mapper>

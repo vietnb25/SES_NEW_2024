@@ -1,0 +1,33 @@
+.background-ses .pickericon {
+  border: 1px solid #FFA87D !important;
+  color: #FFA87D !important;
+  background-color: var(--ses-orange-60-color) !important;
+}
+
+.border {
+  border: 1px solid #f37021 !important;
+}
+
+div.level1 {
+  width: 20px;
+  background-color: yellow;
+  height: 20px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+div.level2 {
+  width: 20px;
+  background-color: #f37021;
+  height: 20px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+div.level3 {
+  width: 20px;
+  background-color: red;
+  height: 20px;
+  border-radius: 50%;
+  margin: auto;
+}

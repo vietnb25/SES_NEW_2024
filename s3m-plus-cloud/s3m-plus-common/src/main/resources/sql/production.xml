@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ProductionMapper">
+    <resultMap id="listDataResult" type="Production">
+        <result column="production_id" property="productionId"/>
+        <result column="production_step_id" property="productionStepId"/>
+        <result column="production_name" property="productionName"/>
+        <result column="production_step_name" property="productionStepName"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="project_id" property="projectId"/>
+        <result column="unit" property="unit"/>
+    </resultMap>
+
+    <select id="getListProduction" parameterType="map" resultMap="listDataResult">
+        SELECT
+            A.*
+        FROM
+            ${schema}s3m_production A
+        WHERE
+            A.production_id IS NOT NULL
+        <if test="projectId != null">
+            AND A.project_id = #{projectId}
+        </if>
+    </select>
+
+    <select id="getListProductionStep"  parameterType="map" resultMap="listDataResult">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_production_step A
+        LEFT JOIN ${schema}s3m_production B ON A.production_id = B.production_id
+        WHERE
+            A.production_id = #{productionId}
+    </select>
+    
+    <insert id="addProduction" parameterType="Production" >
+        INSERT INTO ${schema}s3m_production(
+            production_name,
+            project_id,
+            unit
+        )
+        VALUES(
+            #{production.productionName},
+            #{production.projectId},
+            #{production.unit}
+           
+            )
+    </insert>
+    
+    <insert id="addProductionStep" parameterType="Production" >
+        INSERT INTO ${schema}s3m_production_step(
+            production_step_name,
+            production_id)
+        VALUES(
+            #{production.productionStepName},
+            #{production.productionId}
+            )
+    </insert>
+
+    <select id="getNewProductionStep" resultMap="listDataResult" parameterType="map">
+        SELECT * FROM ${schema}s3m_production_step A order by A.create_date desc limit 1;
+    </select>
+
+</mapper>

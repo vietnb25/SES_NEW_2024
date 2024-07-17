@@ -1,0 +1,946 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataLoadFrame1Mapper">
+    <resultMap id="dataLoadFrame" type="DataLoadFrame1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="power" column="power" />
+        <result property="voltage" column="voltage" />
+        <result property="address" column="address" />
+        <result property="uab" column="uab" />
+        <result property="ubc" column="ubc" />
+        <result property="uca" column="uca" />
+        <result property="ull" column="ull" />
+        <result property="uan" column="uan" />
+        <result property="ubn" column="ubn" />
+        <result property="ucn" column="ucn" />
+        <result property="uln" column="uln" />
+        <result property="ia" column="ia" />
+        <result property="ib" column="ib" />
+        <result property="ic" column="ic" />
+        <result property="in" column="in" />
+        <result property="ig" column="ig" />
+        <result property="iavg" column="iavg" />
+        <result property="pa" column="pa" />
+        <result property="pb" column="pb" />
+        <result property="pc" column="pc" />
+        <result property="pTotal" column="p_total" />
+        <result property="qa" column="qa" />
+        <result property="qb" column="qb" />
+        <result property="qc" column="qc" />
+        <result property="qTotal" column="q_total" />
+        <result property="sa" column="sa" />
+        <result property="sb" column="sb" />
+        <result property="sc" column="sc" />
+        <result property="sTotal" column="s_total" />
+        <result property="pfa" column="pfa" />
+        <result property="pfb" column="pfb" />
+        <result property="pfc" column="pfc" />
+        <result property="pfavg" column="pfavg" />
+        <result property="f" column="f" />
+        <result property="ep" column="ep" />
+        <result property="epR" column="ep_r" />
+        <result property="epDr" column="ep_dr" />
+        <result property="epDrr" column="ep_drr" />
+        <result property="eq" column="eq" />
+        <result property="eqR" column="eq_r" />
+        <result property="eqDr" column="eq_dr" />
+        <result property="eqDrr" column="eq_drr" />
+        <result property="es" column="es" />
+        <result property="esR" column="es_r" />
+        <result property="esDr" column="es_dr" />
+        <result property="esDrr" column="es_drr" />
+        <result property="t1" column="t1" />
+        <result property="t2" column="t2" />
+        <result property="t3" column="t3" />
+        <result property="commandData1" column="command_data1" />
+        <result property="commandData2" column="command_data2" />
+        <result property="commandData3" column="command_data3" />
+        <result property="commandData4" column="command_data4" />
+        <result property="commandData5" column="command_data5" />
+        <result property="commandData6" column="command_data6" />
+        <result property="thdIa" column="thd_ia" />
+        <result property="thdIb" column="thd_ib" />
+        <result property="thdIc" column="thd_ic" />
+        <result property="thdIn" column="thd_in" />
+        <result property="thdIg" column="thd_ig" />
+        <result property="thdVab" column="thd_vab" />
+        <result property="thdVbc" column="thd_vbc" />
+        <result property="thdVca" column="thd_vca" />
+        <result property="thdVll" column="thd_vll" />
+        <result property="thdVan" column="thd_van" />
+        <result property="thdVbn" column="thd_vbn" />
+        <result property="thdVcn" column="thd_vcn" />
+        <result property="thdVln" column="thd_vln" />
+        <result property="sentDate" column="sent_date" />
+        <result property="viewTime" column="view_time" />
+        <result property="settingValueHistory" column="settingValueHistory" />
+        <result property="time" column="time" />
+        <result property="current" column="current" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+
+    <resultMap id="dataPQSByMonth" type="DataLoadFrame1">
+        <result property="deviceId" column="device_id" />
+        <result property="ep" column="ep" />
+        <result property="viewTime" column="view_time" />
+    </resultMap>
+
+    <resultMap id="resultHarmonicPeriod" type="DataLoadFrame1">
+        <result property="deviceId" column="device_id" />
+        <result property="thdIa" column="thd_ib" />
+        <result property="thdIb" column="thd_ic" />
+        <result property="thdIc" column="thd_in" />
+        <result property="thdIg" column="thd_ig" />
+        <result property="thdVab" column="thd_vab" />
+        <result property="thdVbc" column="thd_vbc" />
+        <result property="thdVca" column="thd_vca" />
+        <result property="thdVan" column="thd_van" />
+        <result property="thdVbn" column="thd_vbn" />
+        <result property="thdVcn" column="thd_vcn" />
+        <result property="thdVln" column="thd_vln" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+    
+     <resultMap id="dataChartLoad" type="DataLoadFrame1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="pTotal" column="p_total" />
+        <result property="ep" column="ep" />
+        <result property="viewTime" column="view_time" />
+        <result property="time" column="time" />
+        <result property="projectName" column="project_name" />
+        <result property="projectId" column="project_id" />
+        <result property="deviceName" column="device_name" />
+    </resultMap>
+
+    <select id="getTotalPowerByProjectId" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            SUM(A.p_total) AS p_total,
+            SUM(A.q_total) AS q_total,
+            (SELECT
+                A.sent_date 
+            FROM
+                ${schema}s3m_instant_data A
+            WHERE
+                A.device_id IN (${deviceId})
+            AND
+                A.sent_date BETWEEN #{today} AND #{currentTime}
+            ORDER BY
+                A.sent_date
+            DESC LIMIT 1) AS sent_date
+        FROM
+            ${schema}s3m_instant_data A
+        WHERE
+            A.device_id IN (${deviceId})
+        AND
+            A.sent_date BETWEEN #{today} AND #{currentTime}
+    </select>
+
+    <select id="getDateNewDevice" resultMap="dataLoadFrame">
+        SELECT 
+            A.sent_date
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_plus.s3m_device B ON A.device_id = B.device_id
+        WHERE
+            B.calculate_flag = 1
+        ORDER BY
+            A.id DESC LIMIT 1
+    </select>
+    <select id="getInstantOperationInformation" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            B.device_name,
+            A.uab,
+            A.ubc,
+            A.uca,
+            A.ull,
+            A.uan,
+            A.ubn,
+            A.ucn,
+            A.uln,
+            A.ia,
+            A.ib,
+            A.ic,
+            A.in,
+            A.ig,
+            A.iavg,
+            A.pa,
+            A.pb,
+            A.pc,
+            A.p_total,
+            A.qa,
+            A.qb,
+            A.qc,
+            A.q_total,
+            A.sa,
+            A.sb,
+            A.sc,
+            A.s_total,
+            A.pfa,
+            A.pfb,
+            A.pfc,
+            A.pfavg,
+            A.f,
+            A.ep,
+            A.ep_r,
+            A.ep_dr,
+            A.ep_drr,
+            A.eq,
+            A.eq_r,
+            A.eq_dr,
+            A.eq_drr,
+            A.t1,
+            A.t2,
+            A.t3,
+            A.command_data1,
+            A.command_data2,
+            A.command_data3,
+            A.command_data4,
+            A.command_data5,
+            A.command_data6,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_in,
+            A.thd_ig,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.thd_vln,
+            A.sent_date,
+            A.transaction_date
+        FROM
+             ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = ${deviceId}
+    </select>
+
+    <select id="getOperationInformation" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            A.uab,
+            A.ubc,
+            A.uca,
+            A.ull,
+            A.uan,
+            A.ubn,
+            A.ucn,
+            A.uln,
+            A.ia,
+            A.ib,
+            A.ic,
+            A.in,
+            A.ig,
+            A.iavg,
+            A.pa,
+            A.pb,
+            A.pc,
+            A.p_total,
+            A.qa,
+            A.qb,
+            A.qc,
+            A.q_total,
+            A.sa,
+            A.sb,
+            A.sc,
+            A.s_total,
+            A.pfa,
+            A.pfb,
+            A.pfc,
+            A.pfavg,
+            A.f,
+            A.ep,
+            A.ep_r,
+            A.ep_dr,
+            A.ep_drr,
+            A.eq,
+            A.eq_r,
+            A.eq_dr,
+            A.eq_drr,
+            A.t1,
+            A.t2,
+            A.t3,
+            A.command_data1,
+            A.command_data2,
+            A.command_data3,
+            A.command_data4,
+            A.command_data5,
+            A.command_data6,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_in,
+            A.thd_ig,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.thd_vln,
+            A.sent_date,
+            A.transaction_date
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = ${deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${sort}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+    <select id="getDataLoadWarning" parameterType="map" resultMap="dataLoadFrame">
+        SELECT
+            A.uan,
+            A.ubn,
+            A.ucn,
+            A.ia,
+            A.ib,
+            A.ic,
+            A.pa,
+            A.pb,
+            A.pc,
+            A.qa,
+            A.qb,
+            A.qc,
+            A.sa,
+            A.sb,
+            A.sc,
+            A.pfa,
+            A.pfb,
+            A.pfc,
+            A.f,
+            A.in,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.ep,
+            A.t1,
+            A.t2,
+            A.t3,
+            A.sent_date,
+            B.power,
+            B.imccb
+        FROM
+            ${schema} A
+        JOIN
+            s3m_plus.s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+                AND
+                    A.device_id = #{deviceId}
+            </if>
+        AND
+                A.sent_date
+        <![CDATA[>=]]>
+        #{fromDate}
+            AND
+                A.sent_date
+        <![CDATA[<=]]>
+        #{toDate}
+        ORDER BY
+            A.sent_date DESC
+    </select>
+
+    <select id="getDataPQSByMonth" parameterType="map" resultMap="dataPQSByMonth">
+        SELECT
+            A.device_id,
+            A.ep,
+            A.view_time
+        FROM
+            ${schema}s3m_data_load_frame_1_view A
+        WHERE
+            A.id IS NOT NULL
+        AND
+            A.device_id = #{deviceId}
+        AND
+            A.view_type = 4 
+        AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+        AND 
+            A.view_time <![CDATA[<=]]> #{toDate}
+    </select>
+
+    <select id="countTotalData" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            ${schema} A
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = ${deviceId}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+
+    <select id="getDataChartPower" parameterType="map" resultMap="dataLoadFrame">
+        SELECT 
+            ep AS epTotal,
+            view_time 
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = #{viewType}
+        <if test="fromDate != null and toDate != null">
+            AND (view_time BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            device_id
+    </select>
+
+
+    <select id="getHarmonicPeriod" parameterType="map" resultMap="resultHarmonicPeriod">
+        SELECT
+            A.id,
+            A.device_id,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_in,
+            A.thd_ig,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.thd_vln,
+            A.sent_date,
+            A.transaction_date
+        FROM
+            ${tableName} A
+        WHERE
+            A.device_id = ${deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${soft}
+    </select>
+
+    <select id="getTotalPower" resultMap="dataLoadFrame">
+        SELECT
+            A.p_total,
+            A.ep AS epTotal
+        FROM
+            ${schema}s3m_data_load_frame_1_view A 
+        WHERE
+        A.device_id IN
+        <foreach item="item" index="index" collection="deviceIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND
+            A.view_type = 3
+        AND
+            A.view_time = #{today}
+        ORDER BY
+            A.device_id
+    </select>
+    
+    <select id="countCurrentData" resultType="java.lang.Integer" parameterType="map">
+        SELECT 
+            COUNT(*) 
+        FROM 
+            ${schema}s3m_instant_data A 
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            B.project_id = ${projectId}
+        AND
+            B.system_type_id = 1
+    </select>
+    
+    <select id="getMaxTotalPower" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            max(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+    
+    <select id="getMinTotalPower" resultType="java.lang.Float" parameterType="map">
+         SELECT 
+            min(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+    <select id="getAvgTotalPower" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            avg(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+	<select id="getSumTotalPower" resultType="java.lang.Float" parameterType="map">
+	   SELECT 
+            SUM(
+            CASE
+                WHEN
+                    p_total IS NOT null
+                THEN p_total ELSE 0 END
+            )
+        FROM
+            ${schema}s3m_instant_data 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            sent_date BETWEEN #{startDate} AND #{now}
+	</select>
+	
+	<!-- get power site -->
+	
+	<select id="getPowerDeviceByProjectId" resultMap="dataLoadFrame" parameterType="map">
+	   SELECT
+	       p_total,
+	       ep
+	   FROM
+	       ${schema}s3m_data_load_frame_1_view A
+	   LEFT JOIN
+           s3m_device B ON A.device_id = B.device_id    
+	   WHERE
+	       A.device_id IN (${deviceId})
+	   <if test="view != null">
+            AND A.view_type = #{view}
+       </if>
+       <if test="date != null">
+            AND A.view_time = #{date}
+       </if>
+       <if test="fromDate != null and toDate != null">
+            AND (A.view_time BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        AND
+            B.project_id = #{projectId}
+	</select>
+	
+	<select id="getSumEpInDay" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 3
+            AND A.view_time = #{date}    
+    </select>
+    
+    <select id="getSumEpInMonth" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 2
+            AND A.view_time = #{month}    
+    </select>
+    
+    <select id="getSumEp" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE 
+            A.device_id IN (${deviceId})
+            AND A.view_type = 1   
+    </select>
+
+    <select id="getPtotalInDay" parameterType="map" resultType="java.lang.Float">
+        SELECT 
+            SUM(p_total)
+        FROM
+            ${schema}s3m_instant_data 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            sent_date BETWEEN #{startDate} AND #{now}    
+    </select>
+    
+    <select id="getMaxTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            max(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="getMinTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            min(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="getAvgTotalPowerInDay" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            avg(p_total)
+        FROM
+            ${schema}s3m_data_load_frame_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 4
+        AND
+            view_time BETWEEN #{start} AND #{end}
+    </select>
+    
+    <!-- Lấy dữ liệu bị cảnh báo -->
+    <select id="getWarningDataLoadByDeviceId" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.power,
+            C.imccb
+        FROM
+            ${schema}s3m_warning B
+        JOIN 
+            ${schema}s3m_data_load_frame_1${year} A ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+         WHERE
+            B.from_date <![CDATA[>=]]>  #{fromDate}
+        AND
+            B.to_date <![CDATA[<=]]>  #{toDate}
+        AND
+            A.sent_date BETWEEN B.from_date AND B.to_date
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND 
+                B.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.id 
+        ORDER BY
+            A.sent_date DESC
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+    
+     <!-- Lấy dữ liệu để hiển thị chart -->
+    <select id="getChartLoadByCustomerId" resultMap="dataChartLoad" parameterType="map">
+        SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+             <if test="typeTime == null and viewType == 5">
+              	 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,             
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+            <if test="typeTime == null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 2">
+            	 SUBSTRING(view_time, 6, 7) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+              <if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 4) AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 5">
+                 view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 6">    
+           	 	 view_time,                   
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+        <if test="projectId != null">
+            A.p_total AS p_total,
+            A.ep AS ep,
+        </if>
+        <if test="projectId == null">
+            SUM(A.p_total) AS p_total,
+            SUM(A.ep) AS ep,
+        </if>
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+            s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+            view_type = #{viewType}
+         AND (ep IS NOT NULL )
+         <if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+          <if test="deviceId != null">
+              AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+             AND B.calculate_flag = 1
+        </if>
+         <if test="ids != null">
+            AND C.project_id IN (${ids})
+        </if>
+        <if test="typeTime == null and viewType == 5">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+        <if test="typeTime == null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 3">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+          <if test="typeTime == null and viewType == 1">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+        <if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+         </if>
+         <if test="fromDate != null and typeTime == 6">
+             AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+         </if>
+        <if test="projectId == null">
+            GROUP BY view_time, C.project_id
+        </if>
+         ORDER BY view_time ASC
+    </select>
+    
+    <select id="getChartLoadCompare" resultMap="dataChartLoad" parameterType="map">
+        SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+             <if test="typeTime == null and viewType == 5">
+              	 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,             
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+            <if test="typeTime == null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+           <if test="typeTime == null and viewType == 2">
+            	 SUBSTRING(view_time, 6, 7) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+              <if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 4) AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 5">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 6">    
+           	 	 view_time,                   
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+            SUM(A.p_total) AS p_total,
+            SUM(A.ep) AS ep,
+            A.sent_date,
+            C.project_id,
+            <if test="projectId == null">
+             	C.project_name AS name
+            </if>
+             <if test="projectId != null">
+             	B.device_name AS name
+            </if>
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+            s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+            view_type = #{viewType}
+         <if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+          <if test="deviceId != null">
+              AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+             AND B.calculate_flag = 1
+        </if>
+         <if test="ids != null">
+            AND C.project_id IN (${ids})
+        </if>
+        <if test="typeTime == null and viewType == 5">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+        <if test="typeTime == null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 3">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+         </if>
+         <if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+          <if test="typeTime == null and viewType == 1">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+        <if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+         </if>
+         <if test="fromDate != null and typeTime == 6">
+             AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+         </if>
+        <if test="projectId == null">
+            GROUP BY C.project_id
+            ORDER BY C.project_id ASC
+        </if>
+         <if test="projectId != null">
+            GROUP BY B.device_id
+            ORDER BY B.device_id ASC
+        </if>       
+    </select>
+    
+    <!-- Lấy thông số bị cảnh báo -->
+    <select id="getInforDataLoadByTime" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.pn AS power,
+            C.in AS imccb
+        FROM
+            ${schema}s3m_data_meter_1${year} A 
+        JOIN 
+            ${schema}s3m_warning B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+         WHERE
+            A.sent_date =  #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        GROUP BY
+            A.id 
+    </select>
+    
+    <!-- Lấy dữ liệu bị cảnh báo -->
+    <select id="getListWarnedData" resultMap="dataLoadFrame" parameterType="map">
+        SELECT
+            A.*,
+            DATE_FORMAT(A.sent_date, "%Y-%m-%d %H:%i:%s") AS view_time
+--                , SH.setting_value AS settingValueHistory
+        FROM
+            ${schema}s3m_data_meter_1${year} A
+--         LEFT JOIN s3m_setting S ON S.device_id = A.device_id
+--         LEFT JOIN s3m_setting_history SH ON SH.setting_id = S.id
+         WHERE
+           A.sent_date BETWEEN #{fromDate} AND #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="fiveMinute == true">
+            GROUP BY
+            UNIX_TIMESTAMP(A.sent_date) DIV 300
+        </if>
+        ORDER BY
+            A.id DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>

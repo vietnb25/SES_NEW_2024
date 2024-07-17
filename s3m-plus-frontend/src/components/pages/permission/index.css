@@ -1,0 +1,31 @@
+/* .p-component.p-panelmenu-header.p-highlight a.p-panelmenu-header-link{
+    background: #f79d65!important;
+    border-color: #dee2e6 !important;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-radius: 5px;
+}
+
+.p-toggleable-content-enter-done{
+    display: none;
+} */
+
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend{
+    width: 150px;
+}
+
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a{
+    padding: 10px;
+    color: #343a40;
+    border-radius: 6px;
+    transition: box-shadow 0.2s;
+    font-size: 15px;
+}
+
+.p-fieldset .p-fieldset-content{
+    padding: 5px;
+}
+
+.p-fieldset.p-component.p-fieldset-toggleable legend {
+    margin-left: 5px;
+}

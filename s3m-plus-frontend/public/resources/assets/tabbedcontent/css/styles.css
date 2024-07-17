@@ -1,0 +1,49 @@
+
+.wrapper-box ul {
+  margin: 0;
+  padding: 0;
+  border-bottom: 3px solid #15A0D6;
+  overflow: hidden;
+}
+.wrapper-box ul li {
+  list-style: none;
+  float: left;
+  margin-right: 4px;
+}
+.wrapper-box ul li a {
+  font-weight: bold;
+  display: inline-block;
+  padding: 6px 12px;
+  color: #888;
+  outline: 0;
+  text-decoration: none;
+  background: #F0F6E4;
+}
+
+.wrapper-box ul li.active a {
+  pointer-events: none;
+  color: white;
+  background: #15A0D6;
+}
+.wrapper-box div.tabscontent > div {
+  padding: 0;
+}
+.wrapper-box .lorem {
+  font-style: italic;
+}
+
+
+.zTreeDemoBackground {
+    width:300px;
+    float:left;   
+}
+.tabFright {
+	background-color: #FFFFFF !important;
+    width: calc(100% - 300px);
+    height: calc(100vh - 150px);
+    float:right;
+}
+
+#map {
+    height: 100% !important;
+}

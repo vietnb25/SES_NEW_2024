@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.evn.DataInverterMapperEVN">
+
+<resultMap id="dataInverter1Result" type="DataInverter1EVN">
+
+</resultMap>
+
+<select id="getDataInverter1ByDeviceIds" parameterType="map" resultMap="dataInverter1Result">
+    SELECT
+        A.device_id AS deviceId,
+        A.Ptotal,
+        A.sent_date AS sentDate,
+        F.id AS superManagerId
+    FROM ${schema}s3m_data_inverter_1_newdata A
+    	LEFT JOIN s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN s3m_project C ON B.project_id = C.project_id
+		LEFT JOIN s3m_area D ON C.area_id = D.area_id
+        LEFT JOIN s3m_manager E ON D.manager_id = E.manager_id
+        LEFT JOIN s3m_super_manager F ON E.super_manager_id = F.id
+        LEFT JOIN s3m_system_map G ON B.system_map_id = G.system_map_id
+    WHERE 
+        A.id IS NOT NULL
+        <if test="superManagerIds != null">
+        	AND F.id IN
+        		<foreach item="superManagerId" collection="superManagerIds" open="(" separator="," close=")">
+       			 	#{superManagerId}
+    			</foreach>
+        </if>
+        <if test="managerIds != null">
+        	AND E.manager_id IN
+        		<foreach item="managerIds" collection="managerIds" open="(" separator="," close=")">
+       			 	#{managerIds}
+    			</foreach>
+        </if>
+        <if test="areaIds != null">
+        	AND D.area_id IN
+        		<foreach item="areaIds" collection="areaIds" open="(" separator="," close=")">
+       			 	#{areaIds}
+    			</foreach>
+        </if>
+        <if test="projectIds != null">
+        	AND C.project_id IN
+        		<foreach item="projectIds" collection="projectIds" open="(" separator="," close=")">
+       			 	#{projectIds}
+    			</foreach>
+        </if>
+        <if test="deviceIds != null">
+            AND A.device_id IN 
+            <foreach item="sId" collection="deviceIds" separator="," open="(" close=")">
+                #{sId}
+            </foreach>
+        </if>
+        <!-- <if test="sentDate != null" >
+            AND A.sent_date LIKE 
+            <foreach item="sId" collection="sentDate" separator="," open="(" close=")">
+                '%${sId}%'
+            </foreach>
+        </if> -->
+</select>
+<select id="getListDataInverterByProjectId" parameterType="map" resultMap="dataInverter1Result">
+    SELECT
+        A.id AS id,
+        A.device_id AS deviceId,
+        A.Ptotal,
+        A.Pdc,
+        A.Ep,
+        B.device_name AS deviceName,
+        C.project_name AS projectName,
+        A.sent_date as sentDate,
+        A.transaction_date as transactionDate
+    FROM 
+        s3m_data_inverter_1_newdata A
+        LEFT JOIN s3m_device B on A.device_id = B.device_id
+        LEFT JOIN s3m_project C on B.project_id = C.project_id
+        LEFT JOIN s3m_area D on C.area_id = D.area_id
+        LEFT JOIN s3m_manager E on D.manager_id = E.manager_id
+        LEFT JOIN s3m_super_manager F on E.super_manager_id = F.id
+    WHERE 
+        A.id IS NOT NULL
+        <if test="projectId != null">
+            AND C.project_id = #{projectId}
+        </if>
+        <if test="superManagerId != null">
+            AND F.id = #{superManagerId}
+        </if>
+        <if test="managerId != null">
+            AND E.manager_id = #{managerId}
+        </if>
+        <if test="areaId != null">
+            AND D.area_id = #{areaId}
+        </if>
+        <if test="fromDate != null">
+           AND A.transaction_date <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{fromDate}, ' 00:00:00'))
+        </if>
+        <if test="toDate != null">
+           AND A.transaction_date <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{toDate}, ' 23:59:59'))
+        </if>
+</select>
+
+<select id="getLastDateInverterByProjectId" parameterType="map" resultMap="dataInverter1Result">
+    SELECT 
+        A.device_id AS deviceId, 
+        A.Ep , 
+        A.sent_date AS sentDate
+    FROM 
+        s3m_data_inverter_1_newdata A
+        INNER JOIN (
+        SELECT 
+            device_id, 
+            MAX(id) AS id
+        FROM 
+            s3m_data_inverter_1_newdata
+        WHERE 
+            id IS NOT NULL
+            <if test="fromDate != null">
+                AND transaction_date <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{fromDate}, ' 00:00:00'))
+            </if>
+            GROUP BY device_id) B ON A.id = B.id
+            LEFT JOIN s3m_device C ON A.device_id = C.device_id
+            LEFT JOIN s3m_project D ON C.project_id = D.project_id
+            LEFT JOIN s3m_area E on D.area_id = E.area_id
+            LEFT JOIN s3m_manager F on E.manager_id = F.manager_id
+            LEFT JOIN s3m_super_manager G on F.super_manager_id = G.id
+    WHERE 
+        A.id IS NOT NULL
+        <if test="projectId != null">
+            AND C.project_id = #{projectId}
+        </if>
+        <if test="superManagerId != null">
+            AND G.id = #{superManagerId}
+        </if>
+        <if test="managerId != null">
+            AND F.manager_id = #{managerId}
+        </if>
+        <if test="areaId != null">
+            AND E.area_id = #{areaId}
+        </if>
+</select>
+
+<select id="getDataInverter1s" parameterType="map" resultMap="dataInverter1Result">
+	SELECT
+		A.device_id AS deviceId,
+		A.Ptotal,
+        A.Ep,
+        A.sent_date AS sentDate,
+        A.transaction_date AS transactionDate
+	FROM 
+		${schema}s3m_data_inverter_1_newdata A
+	WHERE 
+	 	id IS NOT NULL
+        <if test="deviceIds != null">
+            AND A.device_id IN 
+            <foreach item="sId" collection="deviceIds" separator="," open="(" close=")">
+                #{sId}
+            </foreach>
+        </if>
+        <if test="fromDate != null">
+           AND A.transaction_date <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{fromDate}, ' 00:00:00'))
+        </if>
+        <if test="toDate != null">
+           AND A.transaction_date <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{toDate}, ' 23:59:59'))
+        </if>
+        ORDER BY A.transaction_date ASC
+</select>
+
+</mapper>

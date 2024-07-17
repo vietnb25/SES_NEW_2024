@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataTempHumidityMapper">
+<resultMap id="data" type="DataTempHumidity">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="power" column="power" />
+        <result property="voltage" column="voltage" />
+        <result property="address" column="address" />
+        <result property="f" column="f" />
+        <result property="ep" column="ep" />
+        <result property="sentDate" column="sent_date" />
+        <result property="viewTime" column="view_time" />
+        <result property="time" column="time" />
+        <result property="current" column="current" />
+        <result property="crc16" column="crc" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+    <!-- Lấy thông số bị cảnh báo -->
+    <select id="getInforDataTempHumidityByTime" resultMap="data" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.pn AS power,
+            C.in AS imccb
+        FROM
+            ${schema}s3m_data_temp_humidity_1${year} A 
+        JOIN 
+            ${schema}s3m_warning B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+         WHERE
+            A.sent_date =  #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        GROUP BY
+            A.id 
+    </select>
+    
+    <!-- Lấy dữ liệu bị cảnh báo -->
+    <select id="getListWarnedData" resultMap="data" parameterType="map">
+        SELECT
+            A.*,
+            DATE_FORMAT(A.sent_date, "%Y-%m-%d %H:%i:%s") AS view_time
+        FROM
+            ${schema}s3m_data_temp_humidity_1${year} A 
+         WHERE
+            A.sent_date BETWEEN #{fromDate} AND #{toDate}
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="fiveMinute == true">
+            GROUP BY
+            UNIX_TIMESTAMP(A.sent_date) DIV 300
+        </if>
+        ORDER BY
+            A.id DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.DataStringMapper">
+
+    <resultMap id="dataString1Result" type="DataString1"></resultMap>
+    
+    <resultMap id="dataString1ListResult" type="DataString1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="inId" column="in_id" />
+        <result property="inEvt" column="in_evt" />
+        <result property="lowVoltage" column="low_voltage" />
+        <result property="lowPower" column="low_power" />
+        <result property="lowEfficiency" column="low_efficiency" />
+        <result property="current" column="current" />
+        <result property="voltage" column="voltage" />
+        <result property="power" column="power" />
+        <result property="pr" column="pr" />
+        <result property="disconnected" column="disconnected" />
+        <result property="fuseFault" column="fuse_fault" />
+        <result property="combinerFuseFault" column="combiner_fuse_fault" />
+        <result property="combinerCabinetOpen" column="combiner_cabinet_open" />
+        <result property="temp" column="temp" />
+        <result property="groundfault" column="ground_fault" />
+        <result property="reversedPolarity" column="reversed_polarity" />
+        <result property="incompatible" column="incompatible" />
+        <result property="commError" column="comm_error" />
+        <result property="internalError" column="internal_error" />
+        <result property="theft" column="theft" />
+        <result property="arcDetected" column="arc_detected" />
+        <result property="inDca" column="in_dca" />
+        <result property="inDCAhr" column="in_dcahr" />
+        <result property="inDCV" column="in_dcv" />
+        <result property="inDCW" column="in_dcw" />
+        <result property="inDCWh" column="in_dcwh" />
+        <result property="inDCPR" column="in_dcpr" />
+        <result property="inN" column="in_n" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+
+    <!-- getInstantStringPV Lấy dữ liệu thông tin dây tức thời PV -->
+    <select id="getInstantOperationStringPV" resultMap="dataString1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            A.InID,
+            A.InEvt,
+            A.LOW_VOLTAGE,
+            A.LOW_POWER,
+            A.LOW_EFFICIENCY,
+            A.CURRENT,
+            A.VOLTAGE,
+            A.POWER,
+            A.PR,
+            A.DISCONNECTED,
+            A.FUSE_FAULT,
+            A.COMBINER_FUSE_FAULT,
+            A.COMBINER_CABINET_OPEN,
+            A.TEMP,
+            A.GROUNDFAULT,
+            A.REVERSED_POLARITY,
+            A.INCOMPATIBLE,
+            A.COMM_ERROR,
+            A.INTERNAL_ERROR,
+            A.THEFT,
+            A.ARC_DETECTED,
+            A.IdcStr,
+            A.InDCAhr,
+            A.VdcStr,
+            A.PdcStr,
+            A.EpStr,
+            A.InDCWh,
+            A.InDCPR,
+            A.InN,
+            A.Tstr,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_plus.s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="deviceType != null">
+            AND A.device_type = #{deviceType}
+        </if>
+    </select>
+
+    <!-- getOperationStringPV Lấy dữ liệu thông tin vận hành dây PV -->
+    <select id="getOperationStringPV" resultMap="dataString1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            B.device_type as deviceType,
+            A.InID,
+            A.InEvt,
+            A.LOW_VOLTAGE,
+            A.LOW_POWER,
+            A.LOW_EFFICIENCY,
+            A.CURRENT,
+            A.VOLTAGE,
+            A.POWER,
+            A.PR,
+            A.DISCONNECTED,
+            A.FUSE_FAULT,
+            A.COMBINER_FUSE_FAULT,
+            A.COMBINER_CABINET_OPEN,
+            A.TEMP,
+            A.GROUNDFAULT,
+            A.REVERSED_POLARITY,
+            A.INCOMPATIBLE,
+            A.COMM_ERROR,
+            A.INTERNAL_ERROR,
+            A.THEFT,
+            A.ARC_DETECTED,
+            A.IdcStr,
+            A.InDCAhr,
+            A.VdcStr,
+            A.PdcStr,
+            A.EpStr,
+            A.InDCWh,
+            A.InDCPR,
+            A.InN,
+            A.Tstr,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema} A
+        LEFT JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${soft}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+
+    <!-- countDataOperationStringPV Lấy tổng số dữ liệu thông tin vận hành dây PV -->
+    <select id="countDataOperationStringPV" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+                FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+    
+    <select id="getInstantOperationStringInCombinerPV" resultMap="dataString1ListResult" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            A.in_id,
+            A.in_evt,
+            A.low_voltage,
+            A.low_power,
+            A.low_efficiency,
+            A.current,
+            A.voltage,
+            A.power,
+            A.pr,
+            A.disconnected,
+            A.fuse_fault,
+            A.combiner_fuse_fault,
+            A.combiner_cabinet_open,
+            A.temp,
+            A.ground_fault,
+            A.reversed_polarity,
+            A.incompatible,
+            A.comm_error,
+            A.internal_error,
+            A.theft,
+            A.arc_detected,
+            A.in_dca,
+            A.in_dcahr,
+            A.in_dcv,
+            A.in_dcw,
+            A.in_dcwh,
+            A.in_dcpr,
+            A.in_n,
+            max(A.sent_date) as sent_date,
+            A.transaction_date
+        FROM
+            s3m_data_string_1 A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            B.parent_id = #{deviceId}
+        GROUP BY A.device_id
+    </select>
+    
+    <select id="getDataStringByDeviceIdInFifMinute" resultMap="dataString1Result">
+        SELECT
+            *
+        FROM
+            s3m_data_string_1 AS A
+        WHERE
+            A.device_id IS NOT NULL
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY sent_date DESC
+            LIMIT 1
+     </select>
+     
+     <select id="getInstantOperationStringInProjectId" resultMap ="dataString1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id    
+        WHERE
+            B.project_id = #{projectId} 
+        AND
+            B.device_type = 4
+        AND
+            B.system_type_id = 2    
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1
+    </select>
+
+</mapper>

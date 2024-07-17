@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataPlanEnergyMapper">
+
+<resultMap id="ListDeviceResult" type="Device"></resultMap>
+
+<resultMap id="DataPlanEnergyResult" type="DataPlanEnergy"></resultMap>
+
+    <select id="getListProjectId" parameterType="map" resultType="java.lang.String">
+        SELECT 
+            project_id 
+        FROM 
+            s3m_project A
+        WHERE
+            A.customer_id = #{customerId}
+    </select>
+    
+    <select id="getListDevice" parameterType="map" resultMap="ListDeviceResult">
+        SELECT 
+            A.device_id,
+            A.device_type_id AS deviceType
+        FROM 
+            s3m_device A
+        WHERE
+            A.project_id = #{projectId}
+            AND A.delete_flag = 0
+            AND A.calculate_flag = 1
+            AND A.system_type_id = #{systemTypeId}
+    </select>
+    
+    <select id="getLastListDeviceIdData" parameterType="map" resultType="java.lang.String">
+        SELECT 
+            device_id
+        FROM 
+            ${schema}.s3m_data_batch_plan_energy A
+        WHERE
+            A.project_id = #{projectId}
+            AND A.system_type_id = #{systemTypeId}
+    </select>
+    
+    <select id="getFirstDataLoad" parameterType="map" resultMap="DataPlanEnergyResult">
+        SELECT
+            A.sent_date AS timeStart,
+            A.ep AS ep
+        FROM
+            ${schema}.${table} A
+        WHERE
+            A.device_id = #{deviceId}
+        ORDER BY
+            A.sent_date ASC limit 1             
+    </select>
+
+    <select id="getLastDataLoad" parameterType="map" resultMap="DataPlanEnergyResult">
+        SELECT
+            A.sent_date AS timeEnd,
+            A.ep AS ep
+        FROM
+            ${schema}.${table} A
+        WHERE
+            A.device_id = #{deviceId}
+        ORDER BY
+            A.sent_date DESC limit 1              
+    </select>
+    
+    <select id="getData24Hours" parameterType="map" resultMap="DataPlanEnergyResult">
+        SELECT
+            A.Ep AS ep
+        FROM
+            ${schema}.${table} A
+        WHERE
+            A.device_id = #{deviceId}
+            AND
+            A.sent_date BETWEEN #{fromDate} AND #{toDate}
+        ORDER BY
+            A.sent_date DESC limit 1              
+    </select>
+    
+    <update id="saveData" parameterType="DataPlanEnergy">
+        INSERT INTO ${schema}.s3m_data_batch_plan_energy
+            (project_id, device_id, time_start, time_end, system_type_id, ep)
+        VALUES 
+            (#{data.projectId}, #{data.deviceId}, #{data.timeStart}, #{data.timeEnd}, #{data.systemTypeId}, #{data.ep})     
+    </update>
+    
+    <delete id="deleteData" parameterType="map">
+        DELETE FROM
+            ${schema}.s3m_data_batch_plan_energy A
+        WHERE
+           A.id IN (${data})   
+    </delete>
+    
+    <select id="getDeviceByDeviceId" resultMap="ListDeviceResult">
+        SELECT 
+            A.device_id,
+            A.device_type_id AS deviceType
+        FROM 
+            s3m_device A
+        WHERE
+            A.device_id = #{deviceId}        
+    </select>
+    
+    <select id="getIdData" parameterType="map" resultType="java.lang.String">
+        SELECT
+            A.id
+        FROM
+            ${schema}.s3m_data_batch_plan_energy A
+        WHERE
+            A.project_id = #{projectId}
+            AND A.device_id IN (${data})   
+    </select>
+    
+</mapper>

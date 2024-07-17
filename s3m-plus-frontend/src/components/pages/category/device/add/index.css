@@ -1,0 +1,32 @@
+.input-number-m {
+    font-family: 'OpenSansRegular', Helvetica, Arial, sans-serif !important;
+    font-size: 13px;
+}
+
+.lable-device-add {
+    background-color: #FFA87D;
+}
+
+.p-multiselect {
+    border-radius: 3px !important;
+    width: -webkit-fill-available;
+}
+
+.p-multiselect .p-multiselect-label {
+    padding: 8px 8px !important;
+    font-size: 13px !important;
+}
+
+.p-component {
+    font-family: "Montserrat" !important;
+}
+
+.timeSet input.p-inputtext {
+    background-color: white;
+    border: 1px solid #D8D9DA;
+    border-radius: 3px;
+}
+
+#stepper > div > div > div > div {
+    cursor: pointer;
+}

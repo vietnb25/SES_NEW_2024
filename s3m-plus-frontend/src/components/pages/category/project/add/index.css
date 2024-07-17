@@ -1,0 +1,14 @@
+.custom-checkbox-project {
+    border-width: 1px !important;
+    border-color: rgb(213, 212, 207) !important;
+    height: 25px !important;
+    width: 25px !important;
+}
+
+.form-control label {
+    margin-bottom: 0px !important;
+}
+.input-shift-project {
+    width: -webkit-fill-available;
+    text-align: center;
+}

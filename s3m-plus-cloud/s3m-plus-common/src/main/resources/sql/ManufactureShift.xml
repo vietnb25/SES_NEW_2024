@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ManufactureShiftMapper">
+    <resultMap id="dataManufactureShitf" type="ManufactureShift">
+        <result property="id" column="id" />
+        <result property="shiftId" column="shift_id" />
+        <result property="projectId" column="project_id" />
+        <result property="productionId" column="production_id" />
+        <result property="productionStepId" column="production_step_id" />
+        <result property="productionNumber" column="production_number" />
+        <result property="epTotal" column="ep_total" />
+        <result property="viewTime" column="view_time" />
+        <result property="updateDate" column="update_date" />
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    <resultMap id="dataManufactureShiftDevices" type="ManufactureShiftDevices">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="ep" column="ep" />
+        <result property="manufactureId" column="manufacture_id" />
+    </resultMap>
+    <resultMap id="dataManufactureShiftDetail" type="ManufactureShiftDetail">
+        <result property="id" column="id" />
+        <result property="epTotal" column="ep_total" />
+        <result property="manufactureId" column="manufacture_id" />
+        <result property="shiftId" column="shift_id" />
+        <result property="viewTime" column="view_time" />
+        <result property="productionNumber" column="production_number" />
+        <result property="totalRevenue" column="total_revenue" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+
+    <resultMap id="dataProductionStep" type="Production">
+        <result property="projectId" column="project_id" />
+        <result property="id" column="id" />
+        <result property="projectName" column="project_name" />
+        <result property="productionId" column="production_id" />
+        <result property="productionName" column="production_name" />
+        <result property="productionStepId" column="production_step_id" />
+        <result property="productionStepName" column="production_step_name" />
+        <result property="unit" column="unit" />
+        <result property="deviceIds" column="device_ids" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+    <select id="getListByProject" parameterType="map" resultMap="dataManufactureShitf">
+        SELECT * FROM ${schema}s3m_manufacture_shift A LEFT JOIN s3m_setting_shift B on A.project_id = B.project_id
+        where
+            B.project_id = #{project}
+          and A.production_id = #{production}
+          and A.production_step_id = #{productionStep}
+          and A.device_ids = "${devices}"
+          and date_format(A.view_time, "%Y-%m-%d") between "${fromDate}" and "${toDate}" group by A.id
+    </select>
+
+    <select id="getDeviceByManufactureShift" parameterType="map" resultMap="dataManufactureShiftDevices">
+        SELECT A.* FROM ${schema}s3m_manufacture_shift_device A
+        where A.manufacture_id = #{manufacture}
+    </select>
+
+    <select id="addManufacturre" resultMap="dataManufactureShitf" parameterType="map">
+        INSERT INTO ${schema}s3m_manufacture_shift
+        (`production_step_id`,`device_ids`)
+        VALUES (#{productionStepId},#{devices});
+    </select>
+    <select id="addManufacturreDevices" parameterType="map">
+        INSERT INTO ${schema}s3m_manufacture_shift_device(`device_id`, `ep`, `manufacture_id`)
+        VALUES (#{deviceId}, #{ep}, #{manufactureId});
+    </select>
+     <select id="getEpByShift" parameterType="map" resultMap="dataManufactureShiftDevices">
+         SELECT device_id,sum(ep) as ep
+         FROM s3m_plus_customer_1.s3m_data_pqs A
+         where device_id = #{device}
+           and view_type = 5
+           and A.view_time <![CDATA[>=]]> "${fromDate}"
+           and A.view_time <![CDATA[<=]]> "${toDate}"
+    </select>
+    <select id="getManufactureNew" parameterType="map" resultMap="dataManufactureShitf">
+        SELECT id FROM ${schema}s3m_manufacture_shift A
+        where
+            A.project_id = ${projectId}
+          and A.production_id = ${productionId}
+          and A.production_step_id = ${productionStepId}
+          and A.device_ids like "%${devices}"
+          and A.view_time = "${viewTime}"
+          and A.shift_id = ${shiftId}
+          and A.ep_total = ${epTotal}
+    </select>
+
+    <update id="updateProductionNumber" parameterType="map">
+        UPDATE ${schema}s3m_manufacture_shift A
+        set A.production_number = #{productionNumber}
+        Where A.id = #{id}
+    </update>
+
+    <select id="getListManufactureByProductionStep" parameterType="map" resultMap="dataProductionStep">
+        SELECT
+        D.id,
+        A.project_id,
+        A.project_name,
+        B.production_id,
+        B.production_name,
+        B.unit,
+        D.production_step_id,
+        C.production_step_name,
+        D.device_ids,
+        D.update_date
+        FROM  s3m_project A
+        join ${schema}s3m_production B on A.project_id = B.project_id
+        join ${schema}s3m_production_step C on B.production_id = C.production_id
+        join ${schema}s3m_manufacture_shift D on D.production_step_id = C.production_step_id
+        where
+            A.project_id = #{project}
+          <if test="production != null and production != ''">
+            and C.production_id = #{production}
+          </if>
+        <if test="productionStep != null and production != ''">
+            and C.production_step_id = #{productionStep}
+        </if>
+            and status = 1
+        group by  D.production_step_id, D.device_ids
+    </select>
+    <select id="getListManufactureDetailByViewTimeAndManufacture" parameterType="map" resultMap="dataManufactureShiftDetail">
+        SELECT * FROM ${schema}s3m_manufacture_shift_detail A
+                 where A.manufacture_id = #{manufactureId}
+                   and A.view_time between "${fromDate}" and "${toDate}" group by A.view_time, A.manufacture_id,A.shift_id;
+    </select>
+    <insert id="insertManufactureDetail" parameterType="ManufactureShiftDetail">
+        INSERT INTO ${schema}s3m_manufacture_shift_detail
+            (`ep_total`, `manufacture_id`, `shift_id`, `view_time`, `production_number`, `total_revenue`)
+            VALUES( #{manufactureShiftDetail.epTotal}, #{manufactureShiftDetail.manufactureId}, #{manufactureShiftDetail.shiftId}, #{manufactureShiftDetail.viewTime}, #{manufactureShiftDetail.productionNumber}, #{manufactureShiftDetail.totalRevenue});
+    </insert>
+    <update id="updateManufactureDetail" parameterType="map">
+        UPDATE ${schema}s3m_manufacture_shift_detail A
+        SET
+            <if test="productionNumber != null">
+                A.production_number = #{productionNumber},
+            </if>
+        <if test="totalRevenue != null">
+            A.total_revenue = #{totalRevenue}
+        </if>
+        WHERE (A.id = #{id} );
+    </update>
+    <update id="deleteManufacture" parameterType="map">
+        UPDATE ${schema}s3m_manufacture_shift A SET A.status = 0
+        WHERE (`id` = #{id});
+    </update>
+
+    <select id="getReportManufacture" parameterType="map" resultMap="dataManufactureShiftDetail">
+        SELECT sum(A.ep_total) as ep_total, sum(A.production_number) as production_number, A.view_time, A.total_revenue, B.id FROM
+        ${schema}s3m_manufacture_shift_detail A
+        join ${schema}s3m_manufacture_shift B on  A.manufacture_id = B.id
+        where B.id = #{manufactureId}
+          <if test="typeTime == 1">
+              and A.view_time <![CDATA[>=]]> "${fromDate}"
+              and A.view_time <![CDATA[<=]]> "${toDate}"
+              group by A.view_time
+          </if>
+        <if test="typeTime == 2">
+            and date_format(A.view_time, '%Y-%m') <![CDATA[>=]]> "${fromDate}"
+            and date_format(A.view_time, '%Y-%m') <![CDATA[<=]]> "${toDate}"
+            group by date_format(A.view_time, '%Y-%m')
+        </if>
+        <if test="typeTime == 3">
+            and date_format(A.view_time, '%Y') <![CDATA[>=]]> "${fromDate}"
+            and date_format(A.view_time, '%Y') <![CDATA[<=]]> "${toDate}"
+            group by date_format(A.view_time, '%Y')
+        </if>
+    </select>
+
+    <update id="updateManufactureDetailRevenue" parameterType="map">
+        update  ${schema}s3m_manufacture_shift_detail
+        set total_revenue = #{revenue}
+        where date_format(view_time, '%Y-%m-%d') = "${viewTime}" and manufacture_id = #{manufacture}
+    </update>
+</mapper>

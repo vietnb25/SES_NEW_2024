@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.ControlMapper">
+
+    <resultMap id="systemMapResult" type="SystemMap">
+        <result property="id" column="system_map_id" />
+        <result property="name" column="system_map_name" />
+        <result property="projectId" column="project_id" />
+        <result property="systemTypeId" column="system_type_id" />
+        <result property="layer" column="layer" />
+        <result property="jsonData" column="data_json" />
+        <result property="mainFlag" column="main_flag" />
+        <result property="color" column="color" />
+        <result property="connectTo" column="connect_to" />
+        <result property="description" column="description" />
+        <result property="createDate" column="create_date" />
+        <result property="updateDate" column="update_date" />
+        <result property="createId" column="create_id" />
+        <result property="updateId" column="update_id" />
+    </resultMap>
+
+    <resultMap id="scheduleResult" type="SchedulePV"></resultMap>
+
+    <select id="getSystemMapPVByProject" resultMap="systemMapResult" parameterType="map">
+        SELECT
+            *
+        FROM
+            s3m_system_map
+        WHERE
+            project_id = #{projectId}
+        AND
+            system_type_id = 2
+        AND
+            delete_flag != 1
+    </select>
+
+    <select id="getHistories" parameterType="map" resultType="History">
+        SELECT
+            A.history_id AS historyId,
+            A.from_date AS fromDate,
+            A.to_date AS toDate,
+            A.time_frame AS timeFrame,
+            A.time_insert AS timeInsert,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.cong_suat_dinh_muc AS congSuatDinhMuc,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.stt,
+            A.type_scrop as typeScrop,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.parent_id AS parentId,
+            A.update_flag AS updateFlag,
+            A.delete_date AS deleteDate
+        FROM
+            s3m_history A
+        WHERE
+            A.history_id IS NOT NULL
+        <if test="timeview != null">
+            AND (DATE(A.to_date)
+            <![CDATA[>=]]>
+            STR_TO_DATE(#{timeview}, '%Y-%m-%d') AND A.delete_flag = '0')
+        </if>
+        <if test="fromDate != null">
+            AND (DATE(A.to_date)
+            <![CDATA[>=]]>
+            STR_TO_DATE(#{fromDate}, '%Y-%m-%d') AND A.delete_flag = '0')
+        </if>
+        <if test="toDate != null">
+            AND (DATE(A.to_date)
+            <![CDATA[<=]]>
+            STR_TO_DATE(#{toDate}, '%Y-%m-%d') AND A.delete_flag = '0')
+        </if>
+        <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+        <if test="parentId != null">
+                AND A.parent_id = #{parentId}
+            </if>
+        <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+        <if test="stt != null">
+                AND A.stt = #{stt}
+            </if>
+        ORDER BY time_insert DESC
+    </select>
+
+    <select id="getHistoryLastestById" parameterType="map" resultType="History">
+    SELECT
+        A.history_id AS historyId,
+        A.from_date AS fromDate,
+        A.to_date AS toDate,
+        A.time_frame AS timeFrame,
+        A.time_insert AS timeInsert,
+        A.cong_suat_cho_phep AS congSuatChoPhep,
+        A.cong_suat_dinh_muc AS congSuatDinhMuc,
+        A.cong_suat_tiet_giam AS congSuatTietGiam,
+        A.delete_flag AS deleteFlag,
+        A.status AS status
+    FROM
+        s3m_history A
+    WHERE
+        A.history_id IS NOT NULL
+       
+        AND A.history_id = #{historyId}
+        
+        ORDER BY time_insert DESC limit 1
+</select>
+
+    <select id="getHistory" parameterType="map" resultType="History">
+        SELECT
+            A.history_id AS historyId,
+            A.from_date AS fromDate,
+            A.to_date AS toDate,
+            A.time_frame AS timeFrame,
+            A.time_insert AS timeInsert,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.cong_suat_dinh_muc AS congSuatDinhMuc,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.stt,
+            A.type_scrop as typeScrop,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.parent_id AS parentId,
+            A.update_flag AS updateFlag,
+            A.delete_date AS deleteDate
+        FROM
+            s3m_history A
+        WHERE
+            A.history_id IS NOT NULL
+        <if test="timeview != null">
+            AND (DATE(A.to_date)
+            <![CDATA[<=]]>
+            STR_TO_DATE(#{timeview}, '%Y-%m-%d') AND delete_flag = '0')
+        </if>
+        <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+        <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+        <if test="parentId != null">
+                AND A.parent_id = #{parentId} 
+            </if>
+        <if test="stt != null">
+                AND A.stt = #{stt}
+            </if>
+        ORDER BY time_insert DESC
+            LIMIT 1
+    </select>
+
+    <insert id="add" parameterType="map" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO
+    s3m_history(
+        from_date,
+        to_date,
+        time_frame,
+        time_insert,
+        cong_suat_cho_phep,
+        cong_suat_dinh_muc,
+        cong_suat_tiet_giam,
+        delete_flag,
+        type_scrop,
+        stt,
+        status,
+        parent_id,
+        update_flag)
+    VALUES (
+        #{fromDate},
+        #{toDate},
+        #{timeFrame},
+        NOW(),
+        #{congSuatChoPhep},
+        #{congSuatDinhMuc},
+        #{congSuatTietGiam},
+        #{deleteFlag},
+        #{typeScrop},
+        #{stt},
+        #{status},
+        #{parentId},
+        0)
+    </insert>
+
+    <update id="update" parameterType="map">
+        UPDATE
+            s3m_history
+        SET
+        <if test="timeFrame != null"> 
+                time_frame = #{timeFrame},
+            </if>
+        <if test="fromDate != null"> 
+                from_date = #{fromDate},
+            </if>
+        <if test="toDate != null"> 
+                to_date = #{toDate},
+            </if>
+        <if test="congSuatTietGiam != null"> 
+                cong_suat_tiet_giam = #{congSuatTietGiam},
+            </if>
+        <if test="congSuatChoPhep != null"> 
+                cong_suat_cho_phep = #{congSuatChoPhep},
+            </if>
+        time_insert = NOW()
+        WHERE
+            history_id = #{historyId}
+    </update>
+
+    <insert id="addSchedule" parameterType="map">
+        INSERT INTO
+        s3m_schedule(
+            stt,
+            address,
+            type_scrop,
+            cong_suat_tiet_giam,
+            from_time,
+            to_time,
+            time_view,
+            cong_suat_cho_phep,
+            history_id,
+            delete_flag,
+            parent_id,
+            status,
+            create_date)
+        VALUES (
+            #{stt},
+            #{addRess},
+            #{scrop},
+            #{congSuatTietGiam},
+            #{fromTime},
+            #{toTime},
+            #{timeView},
+            #{congSuatChoPhep},
+            #{historyId},
+            #{deleteFlag},
+            #{parentId},
+            #{status},
+            NOW())
+    </insert>
+
+    <update id="updateSchedule" parameterType="map">
+        UPDATE
+            s3m_schedule
+        SET
+        <if test="congSuatChoPhep != null"> 
+                cong_suat_cho_phep = #{congSuatChoPhep},
+            </if>
+        <if test="toTime != null"> 
+                to_time = #{toTime},
+            </if>
+        <if test="fromTime != null"> 
+                from_time = #{fromTime},
+            </if>
+        <if test="historyId != null"> 
+                history_id = #{historyId},
+            </if>
+        <if test="congSuatTietGiam != null"> 
+                cong_suat_tiet_giam = #{congSuatTietGiam},
+            </if>
+        <if test="timeView != null"> 
+                time_view = #{timeView},
+            </if>
+        update_date = NOW()
+        WHERE
+            id IS NOT NULL
+        <if test="id != null">
+                AND id = #{id}
+            </if>
+        <if test="stt != null">
+                AND stt = #{stt}
+            </if>
+        <if test="timeView != null">
+                AND time_view = #{timeView}
+            </if>
+        <if test="typeScrop != null">
+                AND type_scrop = #{typeScrop}
+            </if>
+        <if test="historyIdAfter != null">
+                AND history_id = #{historyIdAfter}
+            </if>
+    </update>
+
+    <update id="updateSendStatusById" parameterType="map">
+        UPDATE
+        s3m_history
+    SET
+        <if test="status != null"> 
+            send_status = #{status}
+        </if>
+        WHERE
+        <if test="id != null">
+            history_id = #{id}
+        </if>
+    </update>
+
+    <update id="updateStatus" parameterType="map">
+        UPDATE
+        s3m_history
+    SET
+        <if test="status != null"> 
+            status = #{status}
+        </if>
+        WHERE
+        <if test="id != null">
+            history_id = #{id}
+        </if>
+    </update>
+
+    <select id="getSchedules" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.time_view AS timeSet,
+            A.delete_flag AS deleteFlag,
+            A.status,
+            A.create_date AS createDate
+        FROM 
+            s3m_schedule A
+            LEFT JOIN s3m_device B ON A.stt = B.device_id 
+            LEFT JOIN s3m_system_map C ON B.system_map_id = C.system_map_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+        <if test="stt != null">
+                AND A.stt = #{stt} 
+            </if>
+        <if test="historyId != null">
+                AND A.history_id = #{historyId} 
+            </if>
+        <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+        <if test="systemMapId != null">
+                AND C.system_map_id = #{systemMapId} 
+            </if>
+        <if test="timeview != null and toTime != null">
+                AND (DATE(time_view) = STR_TO_DATE(#{timeview}, '%Y-%m-%d') 
+                AND (STR_TO_DATE(to_time, '%H:%i') >= STR_TO_DATE(#{toTime}, '%H:%i')) Or DATE(time_view) > STR_TO_DATE(#{timeview}, '%Y-%m-%d') )
+                order by time_view + STR_TO_DATE(to_time, '%H:%i') 
+            </if>
+        <if test="fromDate != null">
+            AND DATE(time_view)
+            <![CDATA[>=]]>
+            STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+        </if>
+        <if test="toDate != null">
+            AND DATE(time_view)
+            <![CDATA[<=]]>
+            STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+        </if>
+    </select>
+    
+    <select id="getDeviceControl" parameterType="map" resultType="History">
+        SELECT 
+            B.device_id as deviceId,
+            A.response_value as congSuatChoPhep,
+            A.status,
+            A.times_sent as stt,
+            A.sent_date as createDate
+        FROM 
+            s3m_device_control A 
+            LEFT JOIN s3m_device B ON A.device_code = B.device_code
+            LEFT JOIN s3m_schedule C ON A.schedule_id = C.id
+        WHERE 
+            A.id IS NOT NULL
+            <if test="deviceId != null">
+                AND B.device_id = ${deviceId} 
+            </if>
+            <if test="response != null">
+                AND A.response_value IS NOT NULL
+            </if>
+            <if test="historyId != null">
+                AND C.history_id = ${historyId}
+            </if>
+            <if test="scheduleId != null">
+                AND C.id = ${scheduleId}
+            </if>
+            <if test="timeSent != null">
+                AND A.times_sent = ${timeSent} 
+            </if>
+            <if test="status != null">
+                AND A.status = ${status} 
+            </if>
+            <if test="fromDate != null">
+                AND A.sent_date <![CDATA[>=]]> STR_TO_DATE(#{fromDate},'%Y-%m-%d %H:%i')
+            </if>
+            <if test="toDate != null">
+                AND A.sent_date <![CDATA[<=]]> STR_TO_DATE(#{toDate},'%Y-%m-%d %H:%i')
+            </if>
+        ORDER BY A.sent_date DESC 
+    </select>
+
+
+</mapper>

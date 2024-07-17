@@ -1,0 +1,210 @@
+.countView {
+    background-color: red;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 5px;
+    border-radius: 12px;
+}
+
+#deviceDetail tr th:nth-child(2),
+#deviceDetail tr td:nth-child(2) {
+    color: #FF0000;
+}
+
+#deviceDetail tr th:nth-child(3),
+#deviceDetail tr td:nth-child(3) {
+    color: #FFCA00;
+}
+
+#deviceDetail tr th:nth-child(4),
+#deviceDetail tr td:nth-child(4) {
+    color: #53A1EA;
+}
+
+#deviceDetail tr td {
+    text-align: right;
+}
+
+#window-id {
+    position: relative;
+    float: right;
+    top: 10px;
+    right: 10px;
+    text-align: end;
+    width: 200px;
+}
+
+.gm-style-iw-d {
+    overflow: hidden !important;
+}
+
+.gm-style-iw-c {
+    padding: 13px !important;
+}
+
+.gmnoprint {
+    display: none;
+}
+
+.select-tab .selected {
+    background-color: #28377a !important;
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+.select-tab button:hover {
+    background-color: #FFA87D !important;
+}
+
+/* div.p-datepicker.p-component.p-connected-overlay-enter-done{
+    top: 126px !important;
+    width: 207px !important; 
+} */
+
+div.p-datepicker-header {
+    padding: 0 !important;
+}
+
+.p-datepicker table td {
+    padding: 0 !important;
+}
+
+.p-datepicker table td>span {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 13.5px;
+    font-weight: 400;
+}
+
+.p-datepicker table th {
+    padding: 0 !important;
+    text-align: center;
+    font-size: 9px;
+}
+
+.p-datepicker table th span {
+    color: #999 !important;
+    font-weight: 700;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+    padding: 0 !important;
+    font-size: 13.5px;
+    font-weight: 300 !important;
+    color: rgb(153, 153, 153) !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+    padding: 0 !important;
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.selected-node {
+    font-weight: bold;
+    color: #FFA87D !important;
+}
+
+#project-list .p-tree {
+    padding: 0;
+    border-radius: 0;
+}
+
+#project-list .p-tree .p-tree-container .p-treenode .p-treenode-content {
+    border-radius: 0;
+    padding: 0;
+}
+
+
+#project-list span.tree-superManager {
+    content: url('/public/resources/image/icon-super-manager.png');
+}
+
+#project-list span.tree-manager {
+    content: url('/public/resources/image/icon-manager.png');
+}
+
+#project-list span.tree-area {
+    content: url('/public/resources/image/icon-area.png');
+}
+
+#project-list span.tree-project {
+    content: url('/public/resources/image/icon-project.png');
+}
+
+#project-list span.tree-load {
+    content: url('/public/resources/image/icon-load.png');
+}
+
+#project-list span.tree-solar {
+    content: url('/public/resources/image/icon-solar.png');
+}
+
+#project-list span.tree-wind {
+    content: url('/public/resources/image/icon-wind.png');
+}
+
+#project-list span.tree-battery {
+    content: url('/public/resources/image/icon-ev.png');
+}
+
+#project-list span.tree-grid {
+    content: url('/public/resources/image/icon-utility.png');
+}
+
+#project-list .p-treenode-content.p-treenode-selectable.p-highlight {
+    border: 1px solid #052274 !important;
+    background-color: #052274;
+    color: #fff;
+}
+
+#project-list .p-treenode-content.p-treenode-selectable.p-highlight span {
+    color: #fff;
+}
+
+#project-list .p-treenode-content.p-treenode-selectable.p-highlight span.p-treenode-label {
+    color: #fff;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#project-list .p-tree .p-tree-container .p-treenode {
+    padding: 0;
+}
+
+#project-list #project-tree .p-tree-filter-container .p-tree-filter {
+    background-color: #fff;
+    border: 1px solid #D8D9DA;
+    border-radius: 3px;
+    color: #575655;
+}
+
+.p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+    box-shadow: none !important;
+}
+
+#project-list #project-tree .p-tree-container {
+    height: 100%;
+}
+
+#project-tree div:has(span.tree-customer) {
+    border: 1px solid #dbdad5;
+    margin-bottom: 3px;
+}
+
+.tab-project-info {
+    position: absolute;
+    width: 87% !important;
+    height: 830px !important;
+}
+
+.grid-canvas-home {
+    width: calc(100vw - 490px) !important;
+    height: 765px !important;
+}
+
+.grid-utility-home {
+    height: 765px !important;
+}

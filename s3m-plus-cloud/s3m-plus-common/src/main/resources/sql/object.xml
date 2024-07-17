@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ObjectMapper">
+
+	<resultMap id="objectTypeResult" type="ObjectType">
+		<result property="objectTypeId" column="object_type_id" />
+		<result property="objectTypeName" column="name" />
+		<result property="typeClass" column="type_class" />
+		<result property="systemTypeId" column="system_type_id" />
+		<result property="area" column="area" />
+	</resultMap>
+
+    <resultMap id="listCheckObjectIdLinkToDevice" type="Device">
+    </resultMap>
+
+	<resultMap id="objectResult" type="ObjectName">
+		<result property="objectTypeName" column="name" />
+		<result property="objectTypeId" column="object_type_id" />
+		<result property="projectId" column="project_id" />
+		<result column="id" property="id"/>
+	</resultMap>
+
+	<resultMap id="listObjectTypeResult" type="ObjectType"></resultMap>
+
+	<resultMap id="listObjectResult" type="ObjectName"></resultMap>
+	
+	<resultMap id="objectTypeMstResult" type="ObjectTypeMst"></resultMap>
+
+    <resultMap id="listDataResult" type="ObjectName">
+        <result column="objectTypeId" property="objectTypeId"/>
+        <result column="objectTypeName" property="objectTypeName"/>
+        <result property="projectId" column="projectId" />
+        <result property="projectName" column="projectName" />
+        <result column="id" property="id"/>
+        <result column="objectName" property="objectName"/>
+        <result column="createDate" property="createDate"/>
+        <result column="updateDate" property="updateDate"/>
+    </resultMap>
+
+    <select id="getAllObjectType" resultMap="listDataResult">
+        SELECT
+            B.id AS objectTypeId,
+            B.name AS objectTypeName,
+            A.id AS id,
+            A.name AS objectName,
+            A.create_date AS createDate,
+            A.update_date AS updateDate,
+            C.project_name AS projectName
+        FROM
+            s3m_object A
+                LEFT JOIN
+            s3m_object_type_mst B ON A.object_type_id = B.id
+            LEFT JOIN s3m_project C ON A.project_id = C.project_id
+    </select>
+
+    <select id="getObjectById" parameterType="java.lang.Integer" resultMap="listDataResult">
+        SELECT
+            A.id AS id,
+            A.name AS objectName,
+            B.name AS objectTypeName,
+            A.object_type_id AS objectTypeId,
+            A.project_id AS projectId,
+            C.project_name AS projectName
+        FROM
+            s3m_object A
+        LEFT JOIN
+            s3m_object_type_mst B ON A.object_type_id = B.id
+            LEFT JOIN s3m_project C ON A.project_id = C.project_id
+        WHERE
+            A.id = #{id}
+    </select>
+
+    <insert id="addObjectType" parameterType="ObjectName" >
+        INSERT INTO s3m_object(
+            name,
+            object_type_id,
+            project_id
+        )
+            VALUES(
+            #{objectName},
+            #{objectTypeId},
+            #{projectId}
+            )
+    </insert>
+
+    <insert id="addObjectName">
+        INSERT INTO
+        s3m_object(
+        <if test="objectTypeId != null and objectTypeId != '' ">
+            `id`,
+        </if>
+        <if test="objectName != null and objectName != '' ">
+            `name`
+        </if>
+        )
+        VALUES (
+        <if test="objectTypeId != null and objectTypeId != '' ">
+            #{objectTypeId},
+        </if>
+        <if test="objectName != null and objectName != '' ">
+            #{objectName}
+        </if>
+        )
+    </insert>
+
+    <update id="updateObjectType" parameterType="ObjectName">
+        UPDATE
+            s3m_object
+        SET
+            name = #{objectName},
+            <if test="objectTypeId != null and objectTypeId != '' ">
+                object_type_id = #{objectTypeId},
+            </if>
+            <if test="projectId != null and projectId != '' ">
+                project_id =  #{projectId},
+            </if>
+            update_date = NOW()
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="deleteObjectById" parameterType="java.lang.Integer">
+        DELETE FROM s3m_object
+        WHERE id = #{id}
+    </delete>
+
+    <select id="checkObjectIdLinkToDevice" parameterType="java.lang.Integer" resultMap="listCheckObjectIdLinkToDevice">
+      SELECT * FROM s3m_device
+        WHERE object_id = #{id}
+    </select>
+
+	<select id="getListObject" resultMap="listObjectTypeResult">
+		SELECT
+        object_type_id AS objectTypeId,
+        object_type_name AS objectTypeName,
+        type_class AS typeClass,
+        system_type_id AS systemTypeId
+    FROM 
+        s3m_object_type_mst
+		<if test="systemTypeId != null">
+      WHERE
+        system_type_id = #{systemTypeId}
+     </if>
+
+	</select>
+
+	<select id="getObjectByName" resultMap="objectResult">
+    SELECT
+        name,
+        object_type_id
+    FROM
+        s3m_object
+    WHERE
+        name = #{objectName}
+</select>
+
+	<select id="getListObjectOneLevelByCustomerId" resultMap="listObjectTypeResult">
+    SELECT
+        count(A.device_id) as countDevice,
+        A.object_type_id as objectTypeId
+    FROM
+        s3m_device A
+    JOIN s3m_project B ON A.project_id = B.project_id  
+    JOIN s3m_object_type_mst C ON A.object_type_id = C.object_type_id  
+    WHERE
+        B.customer_id = #{customerId}
+        AND A.object_type_id IS NOT NULL
+        AND A.delete_flag = 0
+        AND C.type_class = 0
+    GROUP BY A.object_type_id
+
+</select>
+
+	<select id="getListObjectTwoLevelByCustomerId" resultMap="listObjectTypeResult">
+    SELECT
+        count(A.device_id) as countDevice,
+        A.object_type_id as objectTypeId
+    FROM
+        s3m_device A
+    JOIN s3m_project B ON A.project_id = B.project_id
+    JOIN s3m_object_type_mst C ON A.object_type_id = C.object_type_id
+    WHERE
+        B.customer_id = #{customerId}
+        AND A.object_id IS NOT NULL
+        AND A.delete_flag = 0
+    GROUP BY A.object_id    
+          
+</select>
+
+	<select id="getObjectTypeById" resultMap="objectTypeResult">
+    SELECT
+        id,
+        name,
+        img
+    FROM
+        s3m_object_type_mst
+    WHERE
+        id = #{objectTypeId}        
+</select>
+
+	<select id="getObjectsByObjectTypeId" resultMap="listObjectResult">
+		SELECT
+        A.name as objectName
+    FROM
+        s3m_object A
+        JOIN s3m_device B ON A.name = B.name
+        JOIN s3m_project C ON B.project_id = C.project_id
+    WHERE
+        A.object_type_id = #{objectTypeId}
+        AND C.customer_id = #{customerId}
+		<if test="projectId != null">
+            AND B.project_id = #{projectId}
+        </if>
+		group by A.name
+	</select>
+
+	<select id="getListObjectOneLevelByProjectId" resultMap="listObjectTypeResult">
+    SELECT
+        count(A.device_id) as countDevice,
+        A.object_type_id as objectTypeId
+    FROM
+        s3m_device A
+    JOIN s3m_object_type_mst C ON A.object_id = C.id     
+    WHERE
+        A.project_id = #{projectId}
+        AND A.object_id IS NOT NULL
+        AND A.delete_flag = 0
+    GROUP BY A.object_id    
+          
+</select>
+
+	<select id="getListObjectTwoLevelByProjectId" resultMap="listObjectTypeResult">
+    SELECT
+        count(A.device_id) as countDevice,
+        A.object_type_id as objectTypeId
+    FROM
+        s3m_device A
+    JOIN s3m_object_type_mst C ON A.object_id = C.id         
+    WHERE
+        A.project_id = #{projectId}
+        AND A.object_id IS NOT NULL
+        AND A.object_name IS NOT NULL
+        AND A.delete_flag = 0
+    GROUP BY A.object_id    
+          
+</select>
+
+	<select id="getListObjectTwoLevelByCusSys" resultMap="listObjectTypeResult">
+     SELECT
+        count(A.device_id) as countDevice,
+        A.object_name as objectTypeName,
+        A.object_id as objectTypeId,
+        A.system_type_id as systemTypeId
+    FROM 
+        s3m_device A
+    JOIN s3m_project B ON A.project_id = B.project_id   
+    JOIN s3m_object_type_mst C ON A.object_id = C.id 
+    WHERE
+        B.customer_id = #{customerId}
+        AND A.object_id = #{objectTypeId}
+        AND A.object_id IS NOT NULL
+        AND A.object_name IS NOT NULL
+        AND A.delete_flag = 0
+    GROUP BY A.name
+
+</select>
+
+	<select id="getListObjectTwoLevelByProSys" resultMap="listObjectTypeResult">
+     SELECT
+        count(A.device_id) as countDevice,
+        A.name as objectTypeName,
+        A.object_type_id as objectTypeId,
+        A.system_type_id as systemTypeId,
+    FROM 
+        s3m_device A
+    JOIN s3m_object_type_mst C ON A.object_id = C.id     
+    WHERE
+        A.project_id = #{projectId}
+        AND A.object_id = #{objectTypeId}
+        AND A.object_id IS NOT NULL
+        AND A.object_name IS NOT NULL
+        AND A.delete_flag = 0
+    GROUP BY A.name
+
+</select>
+
+	<select id="getListObjectTypeBySystemTypeIdAndProjectId" resultMap="objectTypeResult">
+     SELECT
+        A.id,
+        A.name
+    FROM 
+        s3m_object_type_mst A
+    LEFT JOIN s3m_device B ON B.object_id = A.id
+    WHERE
+        B.project_id = #{projectId}
+        AND B.system_type_id = #{systemTypeId}
+        AND B.object_id IS NOT NULL
+        AND A.name IS NOT NULL
+        AND B.delete_flag = 0
+    GROUP BY B.object_id
+</select>
+
+	<select id="getListAreaBySystemTypeIdAndProjectId" resultMap="objectTypeResult">
+     SELECT
+        B.location,
+        A.id
+    FROM 
+        s3m_object_type_mst A
+    LEFT JOIN s3m_device B ON B.object_id = A.id
+    WHERE
+        B.project_id = #{projectId}
+        AND B.system_type_id = #{systemTypeId}
+        AND B.object_id IS NOT NULL
+        AND B.delete_flag = 0
+        AND B.location IS NOT NULL
+    GROUP BY B.location
+</select>
+
+	<select id="getListObjectByListId" resultMap="listObjectTypeResult">
+		SELECT
+        id AS objectTypeId,
+        name AS objectTypeName
+    FROM 
+        s3m_object_type_mst
+		<if test="systemTypeIds != null">
+      WHERE
+        id IN (${systemTypeIds}) 
+     </if>
+
+	</select>
+	<select id="updateObjectTypeId" parameterType="map">
+		update s3m_object A
+		set A.object_type_id = #{objectTypeId}
+		where A.id = #{id};
+</select>
+
+<select id="getCountDeviceByObjectId" parameterType="map" resultMap="objectTypeResult">
+    SELECT
+        A.name,
+        count(B.object_id) AS countDevice
+    FROM
+        s3m_object A
+        JOIN s3m_device B ON A.id = B.object_id 
+    WHERE
+        A.id = #{objectTypeId}
+        AND B.project_id = #{projectId}           
+</select>
+    
+    <select id="getObjectTypeIds" parameterType="map" resultType="String">
+        SELECT object_type_ids FROM s3m_device_type_mst  WHERE id =  #{deviceTypeId} 
+    </select>
+    
+    <select id="getObjectTypeIdByObjectId" parameterType="java.lang.Integer" resultMap="objectTypeMstResult">
+        SELECT id, 
+            name,
+            object_type_id as objectTypeId
+        FROM s3m_object  WHERE id =  #{id} 
+    </select>
+
+    <select id="getListObjectByDeviceType" parameterType="map" resultMap="objectTypeMstResult">
+        SELECT 
+            B.id, 
+            B.name,
+            B.object_type_id as objectTypeId 
+        FROM 
+            s3m_device_type_mst A 
+        LEFT JOIN 
+            s3m_object B
+            ON B.object_type_id IN (${objectTypeIds})
+            WHERE A.id = #{deviceTypeId}
+            AND B.project_id = #{projectId}
+        ;
+    </select>
+
+    <select id="getListObjectMst" parameterType="map" resultMap="objectTypeMstResult">
+        SELECT 
+            id, 
+            name,
+            object_type_id as objectTypeId
+         FROM s3m_object
+    </select>
+    
+    <select id="getObjectLastest" resultMap="listDataResult">
+        SELECT 
+            *
+         FROM s3m_object
+         ORDER BY create_date DESC
+            LIMIT 1
+    </select>
+    
+</mapper>

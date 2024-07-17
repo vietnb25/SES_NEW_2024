@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataInverterMapper">
+<resultMap id="dataInverter1Result" type="DataInverter1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="a" column="A" />
+        <result property="aphaA" column="AphaA" />
+        <result property="aphaB" column="AphaB" />
+        <result property="aphaC" column="AphaC" />
+        <result property="pPVphAB" column="PPVphAB" />
+        <result property="pPVphBC" column="PPVphBC" />
+        <result property="pPVphCA" column="PPVphCA" />
+        <result property="pPVphA" column="PPVphA" />
+        <result property="pPVphB" column="PPVphB" />
+        <result property="pPVphC" column="PPVphC" />
+        <result property="w" column="W" />
+        <result property="hz" column="Hz" />
+        <result property="vA" column="VA" />
+        <result property="vAr" column="VAr" />
+        <result property="pF" column="PF" />
+        <result property="dCA" column="DCA" />
+        <result property="dCV" column="DCV" />
+        <result property="dCW" column="DCW" />
+        <result property="tmpCab" column="TmpCab" />
+        <result property="tmpSnk" column="TmpSnk" />
+        <result property="tmpTrns" column="TmpTrns" />
+        <result property="tmpOt" column="TmpOt" />
+        <result property="st" column="St" />
+        <result property="stVnd" column="StVnd" />
+        <result property="evt1" column="Evt1" />
+        <result property="evt2" column="Evt2" />
+        <result property="evtVnd1" column="EvtVnd1" />
+        <result property="evtVnd2" column="EvtVnd2" />
+        <result property="evtVnd3" column="EvtVnd3" />
+        <result property="evtVnd4" column="EvtVnd4" />
+        <result property="tmSrc" column="TmSrc" />
+        <result property="tms" column="Tms" />
+        <result property="cRC16" column="CRC16" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+        <result property="viewTime" column="view_time"/>
+    </resultMap>
+    
+    <resultMap id="instanceDataDeviceResult" type="Device">
+        <result property="id" column="id" />
+        <result property="deviceId" column="deviceId" />
+        <result property="deviceName" column="deviceName" />
+        <result property="deviceCode" column="deviceCode" />
+        <result property="deviceType" column="device_type" />
+        <result property="projectId" column="projectId" />
+        <result property="systemMapId" column="systemMapId" />
+        <result property="systemMapName" column="systemMapName" />
+        <result property="address" column="address" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="simNo" column="simNo" />
+        <result property="power" column="power" />
+        <result property="dcPower" column="dcPower" />
+        <result property="acPower" column="acPower" />
+        <result property="imccb" column="imccb" />
+        <result property="state" column="state" />
+        <result property="model" column="model" />
+        <result property="voltage" column="voltage" />
+        <result property="n" column="n" />
+        <result property="amperage" column="amperage" />
+        <result property="imaxString" column="imaxString" />
+        <result property="cableIdA1" column="cableIdA1" />
+        <result property="cableIdA2" column="cableIdA2" />
+        <result property="cableIdA3" column="cableIdA3" />
+        <result property="cableIdA4" column="cableIdA4" />
+        <result property="cableIdA5" column="cableIdA5" />
+        <result property="cableIdA6" column="cableIdA6" />
+        <result property="cableIdA7" column="cableIdA7" />
+        <result property="cableIdA8" column="cableIdA8" />
+        <result property="cableIdA9" column="cableIdA9" />
+        <result property="snGw" column="snGw" />
+        <result property="pa" column="pa" />
+        <result property="pb" column="pb" />
+        <result property="pc" column="pc" />
+        <result property="dbId" column="dbId" />
+        <result property="description" column="description" />
+        <result property="systemTypeId" column="systemTypeId" />
+        <result property="pMax" column="pMax" />
+        <result property="ip" column="ip" />
+        <result property="uid" column="uid" />
+        <result property="status" column="device_status" />
+        <result property="createDate" column="createDate" />
+        <result property="updateDate" column="updateDate" />
+        <result property="sendDate" column="sent_date" />
+        <result property="ppvPhA" column="PPVphA" />
+        <result property="ppvPhB" column="PPVphB" />
+        <result property="ppvPhC" column="PPVphC" />
+        <result property="aPhaA" column="AphaA" />
+        <result property="aPhaB" column="AphaB" />
+        <result property="aPhaC" column="AphaC" />
+        <result property="w" column="W" />
+        <result property="t" column="t" />
+        <result property="h" column="h" />
+        <result property="indicator" column="indicator" />
+    </resultMap>
+    
+    <select id="getDataChartPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+            Ep,
+            view_time
+        FROM
+            ${schema}s3m_data_inverter_1_view
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = #{viewType}
+        <if test="fromDate != null and toDate != null">
+            AND (view_time BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            device_id
+    </select>
+
+    
+    <select id="getTotalPowerPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+            A.Ptotal,
+            A.Ep
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IN 
+        <foreach item="item" index="index" collection="deviceIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND
+            A.view_type = 3
+        AND
+            A.view_time = #{today}
+        ORDER BY
+            A.device_id
+    </select>
+    
+     <select id="getTotalPowerByProjectId" parameterType="map" resultMap="instanceDataDeviceResult">
+        SELECT
+            SUM(A.p_total) AS PTotal,
+            SUM(A.q_total) AS QTotal,
+            SUM(A.PdcCombiner) AS PdcCombiner,
+            SUM(A.PdcStr) AS PdcStr,
+            (SELECT
+                A.sent_date 
+            FROM
+                ${schema}s3m_instant_data A
+            WHERE
+                A.device_id IN (${deviceId})
+            AND
+                A.sent_date BETWEEN #{today} AND #{currentTime}
+            ORDER BY
+                A.sent_date
+            DESC LIMIT 1) AS sent_date
+        FROM
+            ${schema}s3m_instant_data A
+        WHERE
+            A.device_id IN (${deviceId})
+        AND
+            A.sent_date BETWEEN #{today} AND #{currentTime}
+    </select>
+    
+    <select id="countCurrentData" resultType="java.lang.Integer" parameterType="map">
+        SELECT 
+            COUNT(*) 
+        FROM 
+            ${schema}s3m_instant_data A 
+       JOIN
+            s3m_plus.s3m_device B ON A.device_id = B.device_id
+        WHERE
+            B.project_id = ${projectId}
+        AND
+            B.system_type_id = 2
+    </select>
+    
+    <select id="getMaxTotalPower" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            max(Ptotal)
+        FROM
+            ${schema}s3m_data_inverter_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+    
+    <select id="getMinTotalPower" resultType="java.lang.Float" parameterType="map">
+         SELECT 
+            min(Ptotal)
+        FROM
+            ${schema}s3m_data_inverter_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+    <select id="getAvgTotalPower" resultType="java.lang.Float" parameterType="map">
+        SELECT 
+            avg(Ptotal)
+        FROM
+            ${schema}s3m_data_inverter_1_view 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            view_type = 3
+        AND
+            view_time = #{today}
+    </select>
+    <select id="getSumTotalPower" resultType="java.lang.Float" parameterType="map">
+       SELECT 
+            SUM(p_total)
+        FROM
+            ${schema}s3m_instant_data 
+        WHERE
+            device_id IN (${deviceId})
+        AND
+            sent_date BETWEEN #{startDate} AND #{now}
+    </select>
+</mapper>

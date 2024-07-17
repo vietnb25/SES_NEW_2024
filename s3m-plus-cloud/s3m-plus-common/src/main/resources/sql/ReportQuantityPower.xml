@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ReportQuantityPowerMapper">
+    <resultMap id="dataReportFrame1" type="ReportQuantityPower">
+        <result property="thdIa" column="thd_ia"/>
+        <result property="thdIb" column="thd_ib"/>
+        <result property="thdIc" column="thd_ic"/>
+        <result property="thdVan" column="thd_van"/>
+        <result property="thdVbn" column="thd_vbn"/>
+        <result property="thdVcn" column="thd_vcn"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="sentDate" column="sent_date"/>
+    </resultMap>
+
+    <select id="getReportFrame1" parameterType="map" resultMap="dataReportFrame1">
+        SET @begin_datetime = '1000-01-01 00:00:00';
+        SET
+<!--        <if test="dateDiff == 1">-->
+<!--            @interval_mins = 15;-->
+<!--        </if>-->
+<!--        <if test="dateDiff == 2 || dateDiff == 3" >-->
+<!--            @interval_mins = 15;-->
+<!--        </if>-->
+        @interval_mins = 15;
+        SELECT
+        A.id,
+        A.device_id,
+        B.device_name,
+        A.thd_van,
+        A.thd_vbn,
+        A.thd_vcn,
+        A.thd_ia,
+        A.thd_ib,
+        A.thd_ic,
+        A.sent_date,
+        DATE_ADD(@begin_datetime, Interval FLOOR(TIMESTAMPDIFF(MINUTE, @begin_datetime, sent_date) / @interval_mins) * @interval_mins minute) AS sendDate
+        FROM
+        ${schema}s3m_data_meter_1_${year} A
+        JOIN
+        s3m_plus.s3m_device B on B.device_id = A.device_id
+        WHERE
+             A.device_id = ${device}
+        <if test="typeTime == 1">
+            AND
+            DATE_FORMAT(A.sent_date, '%Y-%m-%d') BETWEEN "${fromDate}" AND "${toDate}"
+        </if>
+        <if test="typeTime == 2">
+            AND
+            DATE_FORMAT(A.sent_date, '%Y-%m') like "${fromDate}"
+        </if>
+       GROUP BY sendDate;
+    </select>
+
+    <select id="getReportFrame2" parameterType="map" resultType="ReportQuantityPower">
+        SET @begin_datetime = '1000-01-01 00:00:00';
+        SET
+            @interval_mins = 15;
+<!--        </if>-->
+<!--        <if test="dateDiff == 2 || dateDiff == 3" >-->
+<!--            @interval_mins = 15;-->
+<!--        </if>-->
+        SELECT
+        A.IB_H2,
+        A.IB_H3,
+        A.IB_H4,
+        A.IB_H5,
+        A.IB_H6,
+        A.IB_H7,
+        A.IB_H8,
+        A.IB_H9,
+        A.IB_H10,
+        A.IB_H11,
+        A.IB_H12,
+        A.IB_H13,
+        A.IB_H14,
+        A.IB_H15,
+        A.IB_H16,
+        A.IB_H17,
+        A.IB_H18,
+        A.IB_H19,
+        A.IB_H20,
+        A.IB_H21,
+        A.IB_H22,
+        A.IB_H23,
+        A.IB_H24,
+        A.IB_H25,
+        A.IB_H26,
+        A.IB_H27,
+        A.IB_H28,
+        A.IB_H29,
+        A.IB_H30,
+        A.IB_H31,
+        A.IA_H2,
+        A.IA_H3,
+        A.IA_H4,
+        A.IA_H5,
+        A.IA_H6,
+        A.IA_H7,
+        A.IA_H8,
+        A.IA_H9,
+        A.IA_H10,
+        A.IA_H11,
+        A.IA_H12,
+        A.IA_H13,
+        A.IA_H14,
+        A.IA_H15,
+        A.IA_H16,
+        A.IA_H17,
+        A.IA_H18,
+        A.IA_H19,
+        A.IA_H20,
+        A.IA_H21,
+        A.IA_H22,
+        A.IA_H23,
+        A.IA_H24,
+        A.IA_H25,
+        A.IA_H26,
+        A.IA_H27,
+        A.IA_H28,
+        A.IA_H29,
+        A.IA_H30,
+        A.IA_H31,
+        A.IC_H2,
+        A.IC_H3,
+        A.IC_H4,
+        A.IC_H5,
+        A.IC_H6,
+        A.IC_H7,
+        A.IC_H8,
+        A.IC_H9,
+        A.IC_H10,
+        A.IC_H11,
+        A.IC_H12,
+        A.IC_H13,
+        A.IC_H14,
+        A.IC_H15,
+        A.IC_H16,
+        A.IC_H17,
+        A.IC_H18,
+        A.IC_H19,
+        A.IC_H20,
+        A.IC_H21,
+        A.IC_H22,
+        A.IC_H23,
+        A.IC_H24,
+        A.IC_H25,
+        A.IC_H26,
+        A.IC_H27,
+        A.IC_H28,
+        A.IC_H29,
+        A.IC_H30,
+        A.IC_H31,
+        A.VAN_H2,
+        A.VBN_H2,
+        A.VCN_H2,
+        A.VAN_H3,
+        A.VBN_H3,
+        A.VCN_H3,
+        A.VAN_H4,
+        A.VBN_H4,
+        A.VCN_H4,
+        A.VAN_H5,
+        A.VBN_H5,
+        A.VCN_H5,
+        A.VAN_H6,
+        A.VBN_H6,
+        A.VCN_H6,
+        A.VAN_H7,
+        A.VBN_H7,
+        A.VCN_H7,
+        A.VAN_H8,
+        A.VBN_H8,
+        A.VCN_H8,
+        A.VAN_H9,
+        A.VBN_H9,
+        A.VCN_H9,
+        A.VAN_H10,
+        A.VBN_H10,
+        A.VCN_H10,
+        A.VAN_H11,
+        A.VBN_H11,
+        A.VCN_H11,
+        A.VAN_H12,
+        A.VBN_H12,
+        A.VCN_H12,
+        A.VAN_H13,
+        A.VBN_H13,
+        A.VCN_H13,
+        A.VAN_H14,
+        A.VBN_H14,
+        A.VCN_H14,
+        A.VAN_H15,
+        A.VBN_H15,
+        A.VCN_H15,
+        A.VAN_H16,
+        A.VBN_H16,
+        A.VCN_H16,
+        A.VAN_H17,
+        A.VBN_H17,
+        A.VCN_H17,
+        A.VAN_H18,
+        A.VBN_H18,
+        A.VCN_H18,
+        A.VAN_H19,
+        A.VBN_H19,
+        A.VCN_H19,
+        A.VAN_H20,
+        A.VBN_H20,
+        A.VCN_H20,
+        A.VAN_H21,
+        A.VBN_H21,
+        A.VCN_H21,
+        A.VAN_H22,
+        A.VBN_H22,
+        A.VCN_H22,
+        A.VAN_H23,
+        A.VBN_H23,
+        A.VCN_H23,
+        A.VAN_H24,
+        A.VBN_H24,
+        A.VCN_H24,
+        A.VAN_H25,
+        A.VBN_H25,
+        A.VCN_H25,
+        A.VAN_H26,
+        A.VBN_H26,
+        A.VCN_H26,
+        A.VAN_H27,
+        A.VBN_H27,
+        A.VCN_H27,
+        A.VAN_H28,
+        A.VBN_H28,
+        A.VCN_H28,
+        A.VAN_H29,
+        A.VBN_H29,
+        A.VCN_H29,
+        A.VAN_H30,
+        A.VBN_H30,
+        A.VCN_H30,
+        A.VAN_H31,
+        A.VBN_H31,
+        A.VCN_H31,
+        DATE_ADD(@begin_datetime, Interval FLOOR(TIMESTAMPDIFF(MINUTE, @begin_datetime, sent_date) / @interval_mins) *
+        @interval_mins minute) AS sendDate
+        FROM
+        s3m_plus_customer_1.s3m_data_meter_2_${year} A
+        WHERE
+        A.device_id = ${device}
+        <if test="typeTime == 1">
+            AND
+            DATE_FORMAT(A.sent_date, '%Y-%m-%d') BETWEEN "${fromDate}" AND "${toDate}"
+        </if>
+        <if test="typeTime == 2">
+            AND
+            DATE_FORMAT(A.sent_date, '%Y-%m') = "${fromDate}"
+        </if>
+        GROUP BY sendDate;
+    </select>
+    <select id="iEEELimit" parameterType="map" resultType="vn.ses.s3m.plus.dto.Setting">
+        SELECT
+
+            A.id as settingId,
+            A.setting_value as settingValue,
+            A.warning_type as warningType,
+            A.description as description
+        FROM
+            s3m_plus.s3m_setting A
+        where A.device_id = #{device}
+          and A.warning_type in (108, 109,110,111);
+    </select>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.DataWeatherMapper">
+
+    <resultMap id="dataWeather1Result" type="DataWeather1"></resultMap>
+
+    <resultMap id="operationWeatherResult" type="DataWeather1">
+
+    </resultMap>
+
+    <!-- getInstantWeatherPV Lấy dữ liệu thông tin thời tiết tức thời PV -->
+    <select id="getInstantOperationWeatherPV" resultMap="operationWeatherResult" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            A.Wind_sp,
+            A.Wind_dir,
+            A.Rad,
+            A.Temp,
+            A.H,
+            A.Rain,
+            A.Atmos,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_plus.s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = #{deviceId}
+        ORDER BY
+            A.sent_date DESC
+        LIMIT 1
+    </select>
+
+    <!-- getOperationWeatherPV Lấy dữ liệu thông tin vận hành thời tiết PV -->
+    <select id="getOperationWeatherPV" resultMap="operationWeatherResult" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            A.Wind_sp,
+            A.Wind_dir,
+            A.Rad,
+            A.Temp,
+            A.H,
+            A.Rain,
+            A.Atmos,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${soft}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+
+    <!-- countDataOperationWeatherPV Lấy tổng số dữ liệu thông tin vận hành thời tiết PV -->
+    <select id="countDataOperationWeatherPV" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+                FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+    
+    <select id="getInstantOperationWeatherInProjectId" resultMap ="dataWeather1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id    
+        WHERE
+            B.project_id = #{projectId} 
+        AND
+            B.device_type = 2
+        AND
+            B.system_type_id = 2    
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1
+    </select>
+
+</mapper>

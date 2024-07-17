@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ProjectMapper">
+
+    <resultMap id="projectResult" type="Project">
+        <result property="projectId" column="project_id" />
+        <result property="projectName" column="project_name" />
+        <result property="projectCode" column="project_code" />
+        <result property="radiation" column="radiation" />
+        <result property="address" column="address" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="customerId" column="customer_id" />
+        <result property="areaId" column="area_id" />
+        <result property="managerId" column="manager_id" />
+        <result property="description" column="description" />
+        <result property="statusPower" column="status_power" />
+        <result property="isViewRadiation" column="is_view_radian" />
+        <result property="isViewForecast" column="is_view_forecast" />
+        <result property="createId" column="create_id" />
+        <result property="updateId" column="update_id" />
+        <result property="updateDate" column="update_date" />
+        <result property="customerName" column="customer_name" />
+        <result property="areaName" column="area_name" />
+        <result property="superManagerId" column="super_manager_id" />
+        <result property="superManagerName" column="super_manager_name" />
+        <result property="managerName" column="manager_name" />
+        <result property="systemTypeName" column="system_type_name"/>
+        <result property="imgLoad" column="img_load"/>
+        <result property="imgPv" column="img_pv"/>
+        <result property="imgGrid" column="img_grid"/>
+        <result property="imgBattery" column="img_battery"/>
+        <result property="imgWind" column="img_wind"/>
+        <result property="amountOfPeople" column="amount_of_people"/>
+        <result property="emissionFactorCo2Electric" column="emission_factor_co2_electric"/>
+        <result property="emissionFactorCo2Gasoline" column="emission_factor_co2_gasoline"/>
+        <result property="emissionFactorCo2Charcoal" column="emission_factor_co2_charcoal"/>
+        <result property="areaOfFloor" column="area_of_floor"/>
+
+    </resultMap>
+
+    <resultMap id="settingResult" type="Setting"></resultMap>
+
+
+    <!-- Lấy danh sách project theo customerId. -->
+    <select id="getListProjectByCustomerId" resultMap="projectResult">
+        SELECT
+            *,
+            B.customer_name
+        FROM
+              s3m_project A
+            JOIN s3m_customer B ON A.customer_id = B.customer_id
+        WHERE
+        	A.delete_flag = 0
+        <if test="customerId != null">
+            AND A.customer_id = #{customerId}
+        </if>
+        <if test="ids != null">
+            AND A.project_id IN (${ids})
+        </if>
+    </select>
+
+    <!-- Lấy danh sách project theo customerId & areaId. -->
+    <select id="getProjectList" parameterType="map" resultMap="projectResult">
+        SELECT
+            *,
+            B.customer_name,
+            E.name AS super_manager_name,
+            D.manager_name,
+            C.area_name
+        FROM
+            s3m_project A
+            JOIN s3m_customer B ON A.customer_id = B.customer_id
+            JOIN s3m_area C ON A.area_id = C.area_id
+            JOIN s3m_manager D ON C.manager_id = D.manager_id
+            JOIN s3m_super_manager E ON E.id = D.super_manager_id
+        WHERE
+            A.project_id IS NOT NULL
+        <if test="customerId != null">
+            AND B.customer_id = #{customerId}
+        </if>
+        <if test="areaId != null">
+            AND C.area_id = #{areaId}
+        </if>
+        <if test="superManagerId != null">
+            AND E.id = #{superManagerId}
+        </if>
+        <if test="managerId != null">
+            AND D.manager_id = #{managerId}
+        </if>
+        <if test="projectId != null">
+            AND A.project_id = #{projectId}
+        </if>
+           <if test="ids != null">
+            AND A.project_id IN (${ids})
+        </if>
+        AND A.delete_flag != 1
+        ORDER BY
+            B.customer_id ASC
+    </select>
+
+    <select id="checkProjectIdInDeviceTable" parameterType="map" resultMap="projectResult">
+        SELECT
+            project_id
+        FROM s3m_device
+        WHERE
+            project_id IS NOT NULL
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="checkProjectIdInUserTable" parameterType="map" resultMap="projectResult">
+        SELECT
+            project_id
+        FROM s3m_user
+        WHERE
+            project_id IS NOT NULL
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="checkProjectIdInSystemMapTable" parameterType="map" resultMap="projectResult">
+        SELECT
+            project_id
+        FROM s3m_system_map
+        WHERE
+            project_id IS NOT NULL
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="searchProject" parameterType="map" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project A
+            JOIN s3m_customer B ON A.customer_id = B.customer_id
+            JOIN s3m_area C ON A.area_id = C.area_id
+        WHERE (
+            A.project_name like "%${keyword}%"
+             
+            OR A.project_id like "%${keyword}%"
+            
+            OR A.project_code like "%${keyword}%"
+            
+            OR B.customer_name like "%${keyword}%"
+            
+            OR C.area_name like "%${keyword}%"
+            
+            OR A.address like "%${keyword}%"
+            
+            OR A.description like "%${keyword}%"
+            ) 
+        AND A.delete_flag != 1
+         
+            
+    </select>
+
+    <select id="getListProjectBySuperManagerId" resultMap="projectResult">
+        SELECT
+            A.project_id
+        FROM
+            s3m_project A
+            
+            JOIN s3m_area B ON B.area_id = A.area_id
+            
+            JOIN s3m_manager C ON C.manager_id = B.manager_id
+            
+            JOIN s3m_super_manager D ON D.id = C.super_manager_id
+            
+           WHERE D.id = #{superManagerId}
+    </select>
+
+    <select id="getIds" resultMap="projectResult">
+        SELECT
+           project_id,
+           project_name
+	    FROM
+	    	s3m_project
+	    WHERE
+	    	project_id IN
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+	        #{projectId}
+	    </foreach>
+    </select>
+
+    <select id="getListProjectByAreaId" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project
+        <if test="areaId != null">
+           WHERE area_id = #{areaId}
+        </if>
+    </select>
+
+    <select id="getListProjectByAreaIdAndCustomerId" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project
+        <if test="areaId != null">
+           WHERE area_id = #{areaId}
+        </if>
+        <if test="customerId != null">
+           AND customer_id = #{customerId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="getSystemType" resultType="hashmap">
+        SELECT
+            project_id,
+            GROUP_CONCAT(DISTINCT system_type_id SEPARATOR ',') AS systemTypes
+        FROM
+            s3m_system_map
+        WHERE
+        	project_id = #{projectId}
+
+    </select>
+
+    <select id="getProjectByUserIdORCustomerId" parameterType="map" resultMap="projectResult">
+        SELECT DISTINCT
+            A.project_id,
+            A.area_id,
+            A.project_name,
+            A.project_code,
+            A.address,
+            A.latitude,
+            A.longitude,
+            A.customer_id,
+            A.description
+        FROM
+            s3m_project A 
+            LEFT JOIN s3m_user B ON A.project_id = B.project_id
+            LEFT JOIN s3m_customer C ON A.customer_id = C.customer_id
+        WHERE
+            A.project_id IS NOT NULL
+        <if test="userId != null">
+                AND B.user_id = #{userId}
+            </if>
+        <if test="customerId != null">
+                AND C.customer_id = #{customerId}
+            </if>
+    </select>
+
+    <select id="getProjectByManagerId" parameterType="map" resultMap="projectResult">
+        SELECT
+            A.project_id,
+            A.project_name,
+            A.project_code,
+            A.address,
+            A.latitude,
+            A.longitude,
+            A.customer_id,
+            A.description
+        FROM 
+            s3m_project A LEFT JOIN s3m_customer B ON A.customer_id = B.customer_id
+                          LEFT JOIN s3m_manager C ON B.manager_id = C.manager_id
+        WHERE 
+            A.project_id IS NOT NULL
+        <if test="managerId != null">
+                AND C.manager_id = #{managerId}
+            </if>
+    </select>
+
+    <select id="getProjectByPower" parameterType="map" resultMap="projectResult">
+        SELECT 
+    		A.project_id,
+            A.project_name,
+            A.project_code,
+            A.address,
+            A.latitude,
+            A.longitude,
+            A.customer_id,
+            A.area_id,
+            A.description,
+            sum(B.ac_power) AS pMax
+        FROM s3m_project A left join s3m_device B on A.project_id = B.project_id
+        WHERE 
+        	A.project_id IS NOT NULL
+        <if test="projectId != null">
+                AND A.project_id = #{projectId}
+            </if>
+        group by A.project_id
+    </select>
+
+    <!-- Cập nhật thông project. -->
+    <update id="updateListProject">
+        UPDATE
+            s3m_project 
+        SET
+            project_name = #{project.projectName},
+            project_code = #{project.projectCode},
+            address = #{project.address},
+            atitude = #{project.latitude},
+            longitude = #{project.longitude},
+            customer_id = #{project.customerId},
+            description = #{project.description},
+            update_id = #{project.updateId},
+            update_date = NOW()
+        WHERE
+            project_id = #{project.projectId}
+    </update>
+
+    <!-- Cập nhật trạng thái project. -->
+    <update id="updateStatusPowerProject" parameterType="map">
+        UPDATE
+            s3m_project 
+        SET
+            status_power = #{status},
+            update_date = NOW()
+        WHERE
+            project_id = #{projectId}
+    </update>
+
+    <!-- Lấy danh sách cảnh báo. -->
+    <select id="getProjects" parameterType="map" resultMap="projectResult">
+        SELECT 
+			A.project_id, A.project_code, A.project_name, A.address, A.latitude, A.longitude, A.description, A.update_date, B.area_id, B.area_name
+		FROM 
+			s3m_project A JOIN s3m_area B ON A.area_id = B.area_id
+		WHERE 
+		A.project_id IS NOT NULL
+        <if test="projectName != ''">
+            AND A.project_name like '%${projectName}%'
+        </if>
+        <if test="projectCode != null">
+            AND A.project_id = #{projectCode}
+        </if>
+        <if test="areaName != ''">
+            AND B.area_name like '%${areaName}%'
+        </if>
+        <if test="areaId != null">
+            AND A.area_id = #{areaId}
+        </if>
+    </select>
+
+    <select id="getProjectById" resultMap="projectResult">  
+		SELECT project_id, project_name
+		FROM s3m_project
+		WHERE 
+			project_id = #{projectId}
+    </select>
+
+    <select id="getProject" parameterType="map" resultMap="projectResult">  
+		SELECT A.project_id, 
+			A.project_name, 
+			A.radiation, 
+			A.address, 
+			A.latitude, 
+			A.longitude, 
+			A.description, 
+			A.status_power, 
+			A.update_date, 
+			B.area_id, 
+			B.area_name, 
+			A.is_view_radian, 
+			A.is_view_forecast,
+			C.customer_id,
+			C.customer_name,
+            A.amount_of_people,
+            A.area_of_floor,
+            A.emission_factor_co2_charcoal,
+            A.emission_factor_co2_electric,
+            A.emission_factor_co2_gasoline
+            FROM s3m_project A JOIN s3m_area B ON A.area_id = B.area_id JOIN s3m_customer C ON A.customer_id = C.customer_id
+		WHERE 
+			A.project_id = #{projectId}
+    </select>
+
+    <insert id="addProject" parameterType="Project">
+		INSERT into s3m_project(project_name, address, area_id, latitude, longitude, customer_id, description, is_view_forecast, is_view_radian, create_date,emission_factor_co2_electric,emission_factor_co2_gasoline,emission_factor_co2_charcoal,area_of_floor,amount_of_people)
+		VALUES(#{projectName}, #{address}, #{areaId}, #{latitude}, #{longitude}, #{customerId}, #{description}, #{isViewForecast}, #{isViewRadiation}, NOW(),#{emissionFactorCo2Electric},#{emissionFactorCo2Gasoline},#{emissionFactorCo2Charcoal},#{areaOfFloor},#{amountOfPeople})
+    </insert>
+
+    <update id="updateProject" parameterType="Project">
+        Update s3m_project p SET
+        <if test="projectName != null">
+            p.project_name = #{projectName}, 
+        </if>
+        <if test="address != null">
+            p.address = #{address}, 
+        </if>
+        <if test="areaId != null">
+            p.area_id = #{areaId}, 
+        </if>
+        <if test="latitude != null">
+            p.latitude = #{latitude},
+        </if>
+        <if test="longitude != null">
+            p.longitude = #{longitude},
+        </if>
+        <if test="customerId != null">
+            p.customer_id = #{customerId},
+        </if>
+        <if test="areaId != null">
+            p.area_id = #{areaId},
+        </if>
+        <if test="isViewForecast != null">
+            p.is_view_forecast = #{isViewForecast},
+        </if>
+        <if test="isViewRadiation != null">
+            p.is_view_radian = #{isViewRadiation},
+        </if>
+        <if test="description != null">
+            p.description = #{description},
+        </if>
+        <if test="imgLoad != null">
+            p.img_load = #{imgLoad},
+        </if>
+        <if test="imgPv != null">
+            p.img_pv = #{imgPv},
+        </if>
+        <if test="imgGrid != null">
+            p.img_grid = #{imgGrid},
+        </if>
+        <if test="amountOfPeople != null">
+            p.amount_of_people = #{amountOfPeople},
+        </if>
+        <if test="emissionFactorCo2Electric != null">
+            p.emission_factor_co2_electric = #{emissionFactorCo2Electric},
+        </if>
+        <if test="emissionFactorCo2Gasoline != null">
+            p.emission_factor_co2_gasoline = #{emissionFactorCo2Gasoline},
+        </if>
+        <if test="emissionFactorCo2Charcoal != null">
+            p.emission_factor_co2_charcoal = #{emissionFactorCo2Charcoal},
+        </if>
+        <if test="areaOfFloor != null">
+            p.area_of_floor = #{areaOfFloor},
+        </if>
+        p.update_date = NOW()
+        WHERE
+            p.project_id = #{projectId}
+    </update>
+
+    <insert id="addSetting" parameterType="map">
+        INSERT INTO s3m_setting(project_id, customer_id, type, setting_mst_id, setting_value, warning_type, description, create_id) 
+        VALUES
+        <!-- LOAD-->
+        (#{projectId},#{customerId},'1','1','245','101','Ua || Ub || Uc
+        <![CDATA[>]]>
+        245','1'),
+              (#{projectId},#{customerId},'1','2','215','102','Ua || Ub || Uc
+        <![CDATA[<]]>
+        215','1'),
+              (#{projectId},#{customerId},'1','3','60','103','Nhiệt độ ngoài trời || Nhiệt độ thiết bị
+        <![CDATA[>]]>
+        60 °C','1'),
+              (#{projectId},#{customerId},'1','4','70,0.85','104','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        70
+        <![CDATA[&]]>
+        cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.85','1'),
+              (#{projectId},#{customerId},'1','5','0.95','105','Ia || Ib || Ic
+        <![CDATA[>=]]>
+        0.95 * Imccb','1'),
+              (#{projectId},#{customerId},'1','6','49.8','106','F
+        <![CDATA[<]]>
+        49.8','1'),
+              (#{projectId},#{customerId},'1','7','50.2','107','F
+        <![CDATA[>]]>
+        50.2','1'),
+              (#{projectId},#{customerId},'1','8','90','108','Ua || Ub || Uc
+        <![CDATA[<]]>
+        90','1'),
+              (#{projectId},#{customerId},'1','9','50,0.25','109','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        50
+        <![CDATA[&]]>
+        (Imax – Imin)/Imin
+        <![CDATA[>]]>
+        0.25','1'),
+              (#{projectId},#{customerId},'1','10','0.3','110','cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.3','1'),
+              (#{projectId},#{customerId},'1','11','','111','H_iA,iB, iC, uA-N, uB-N, uC-N
+        <![CDATA[>]]>
+        X (%)','1'),
+              (#{projectId},#{customerId},'1','12','10','112','THD_VA-N|| THD_VB-N || THD_VC-N
+        <![CDATA[>]]>
+        10 (%)','1'),
+              (#{projectId},#{customerId},'1','13','0.25','113','In
+        <![CDATA[>]]>
+        Icap x 0.25','1'),
+              (#{projectId},#{customerId},'1','14','','114',null,'1'),
+              (#{projectId},#{customerId},'1','15','','115',null,'1'),
+              (#{projectId},#{customerId},'1','16','','116',null,'1'),
+              (#{projectId},#{customerId},'1','17','20,90','117','Umax - Umin
+        <![CDATA[>]]>
+        20 (V)
+        <![CDATA[&]]>
+        (UA,B,C
+        <![CDATA[>]]>
+        90 (V))','1'),
+        (#{projectId},#{customerId},'1','49','1100',null,'Giá điện giờ thấp điểm: 1100','1'),
+        (#{projectId},#{customerId},'1','50','1685',null,'Giá điện giờ bình thường: 1685','1'),
+        (#{projectId},#{customerId},'1','51','3076',null,'Giá điện giờ cao điểm: 3076','1'),
+        <!-- PV-->
+        (#{projectId},#{customerId},'2','18','0','201',null,'1'),
+        (#{projectId},#{customerId},'2','19','1','202',null,'1'),
+        (#{projectId},#{customerId},'2','20','2','203',null,'1'),
+        (#{projectId},#{customerId},'2','21','3','204',null,'1'),
+        (#{projectId},#{customerId},'2','22','4','205',null,'1'),
+        (#{projectId},#{customerId},'2','23','5','206',null,'1'),
+        (#{projectId},#{customerId},'2','24','6','207',null,'1'),
+        (#{projectId},#{customerId},'2','25','7','208',null,'1'),
+        (#{projectId},#{customerId},'2','26','8','209',null,'1'),
+        (#{projectId},#{customerId},'2','27','9','210',null,'1'),
+        (#{projectId},#{customerId},'2','28','10','211',null,'1'),
+        (#{projectId},#{customerId},'2','29','11','212',null,'1'),
+        (#{projectId},#{customerId},'2','30','12','213',null,'1'),
+        (#{projectId},#{customerId},'2','31','13','214',null,'1'),
+        (#{projectId},#{customerId},'2','32','14','215',null,'1'),
+        (#{projectId},#{customerId},'2','33','15','216',null,'1'),
+        (#{projectId},#{customerId},'2','52','1100',null,'Tiền bán điện giờ thấp điểm: 1100','1'),
+        (#{projectId},#{customerId},'2','53','1685',null,'Tiền bán giờ bình thường: 1685','1'),
+        (#{projectId},#{customerId},'2','54','3076',null,'Tiền bán giờ cao điểm: 3076','1'),
+        <!-- GRID-->
+        (#{projectId},#{customerId},'5','34','245','522','Ua || Ub || Uc
+        <![CDATA[>]]>
+        245','1'),
+        (#{projectId},#{customerId},'5','35','215','523','Ua || Ub || Uc
+        <![CDATA[<]]>
+        215','1'),
+        (#{projectId},#{customerId},'5','36','60','514','Nhiệt độ ngoài trời || Nhiệt độ thiết bị
+        <![CDATA[>]]>
+        60 °C','1'),
+        (#{projectId},#{customerId},'5','37','50','514','SAW_ID1 || SAW_ID2...|| SAW_ID6
+        <![CDATA[>]]>
+        50 °C','1'),
+        (#{projectId},#{customerId},'5','38','70 ,0.85','530','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        70
+        <![CDATA[&]]>
+        cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.85','1'),
+        (#{projectId},#{customerId},'5','39','0.95','506','Ia || Ib || Ic
+        <![CDATA[>=]]>
+        0.95 * Imccb','1'),
+        (#{projectId},#{customerId},'5','40','49.8','503','F
+        <![CDATA[<]]>
+        49.8','1'),
+        (#{projectId},#{customerId},'5','41','50.2','504','F
+        <![CDATA[>]]>
+        50.2','1'),
+        (#{projectId},#{customerId},'5','42','90','517','Ua || Ub || Uc
+        <![CDATA[<]]>
+        90','1'),
+        (#{projectId},#{customerId},'5','43','50, 0.25','509','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        50
+        <![CDATA[&]]>
+        (Imax – Imin)/Imin
+        <![CDATA[>]]>
+        0.25','1'),
+        (#{projectId},#{customerId},'5','44','0.3',null,'cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.3','1'),
+        (#{projectId},#{customerId},'5','45','10','505','THD_VA-N|| THD_VB-N || THD_VC-N
+        <![CDATA[>]]>
+        10 (%)','1'),
+        (#{projectId},#{customerId},'5','46','1','502','Thanh ghi data mức chỉ thị
+        <![CDATA[>]]>
+        1','1'),
+        (#{projectId},#{customerId},'5','47','90','501','H
+        <![CDATA[>]]>
+        90 %','1'),
+        (#{projectId},#{customerId},'5','48','50','514','T
+        <![CDATA[>]]>
+        50 °C','1'),
+        (#{projectId},#{customerId},'5','55','1100',null,'Giá điện giờ thấp điểm: 1100','1'),
+        (#{projectId},#{customerId},'5','56','1685',null,'Giá điện giờ bình thường: 1685','1'),
+        (#{projectId},#{customerId},'5','57','3076',null,'Giá điện giờ cao điểm: 3076','1'),
+        (#{projectId},#{customerId},'5','58','1100',null,'Tiền bán điện giờ thấp điểm: 1100','1'),
+        (#{projectId},#{customerId},'5','59','1685',null,'Tiền bán giờ bình thường: 1685','1'),
+        (#{projectId},#{customerId},'5','60','3076',null,'Tiền bán giờ cao điểm: 3076','1')
+    </insert>
+
+    <insert id="addSettingLoad" parameterType="map">
+        INSERT INTO s3m_setting(project_id, customer_id, type, setting_mst_id, setting_value, warning_type, description, create_id) 
+        VALUES
+        <!-- LOAD-->
+        (#{projectId},#{customerId},'1','1','245','101','Ua || Ub || Uc
+        <![CDATA[>]]>
+        245','1'),
+              (#{projectId},#{customerId},'1','2','215','102','Ua || Ub || Uc
+        <![CDATA[<]]>
+        215','1'),
+              (#{projectId},#{customerId},'1','3','60','103','Nhiệt độ ngoài trời || Nhiệt độ thiết bị
+        <![CDATA[>]]>
+        60 °C','1'),
+              (#{projectId},#{customerId},'1','4','70,0.85','104','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        70
+        <![CDATA[&]]>
+        cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.85','1'),
+              (#{projectId},#{customerId},'1','5','0.95','105','Ia || Ib || Ic
+        <![CDATA[>=]]>
+        0.95 * Imccb','1'),
+              (#{projectId},#{customerId},'1','6','49.8','106','F
+        <![CDATA[<]]>
+        49.8','1'),
+              (#{projectId},#{customerId},'1','7','50.2','107','F
+        <![CDATA[>]]>
+        50.2','1'),
+              (#{projectId},#{customerId},'1','8','90','108','Ua || Ub || Uc
+        <![CDATA[<]]>
+        90','1'),
+              (#{projectId},#{customerId},'1','9','50,0.25','109','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        50
+        <![CDATA[&]]>
+        (Imax – Imin)/Imin
+        <![CDATA[>]]>
+        0.25','1'),
+              (#{projectId},#{customerId},'1','10','0.3','110','cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.3','1'),
+              (#{projectId},#{customerId},'1','11','','111','H_iA,iB, iC, uA-N, uB-N, uC-N
+        <![CDATA[>]]>
+        X (%)','1'),
+              (#{projectId},#{customerId},'1','12','10','112','THD_VA-N|| THD_VB-N || THD_VC-N
+        <![CDATA[>]]>
+        10 (%)','1'),
+              (#{projectId},#{customerId},'1','13','0.25','113','In
+        <![CDATA[>]]>
+        Icap x 0.25','1'),
+              (#{projectId},#{customerId},'1','14','','114',null,'1'),
+              (#{projectId},#{customerId},'1','15','','115',null,'1'),
+              (#{projectId},#{customerId},'1','16','','116',null,'1'),
+              (#{projectId},#{customerId},'1','17','20,90','117','Umax - Umin
+        <![CDATA[>]]>
+        20 (V)
+        <![CDATA[&]]>
+        (UA,B,C
+        <![CDATA[>]]>
+        90 (V))','1')
+    </insert>
+
+    <insert id="addSettingPV" parameterType="map">
+        INSERT INTO s3m_setting(project_id, customer_id, type, setting_mst_id, setting_value, warning_type, description, create_id) 
+        VALUES
+            (#{projectId},#{customerId},'2','18','0','201',null,'1'),
+            (#{projectId},#{customerId},'2','19','1','202',null,'1'),
+            (#{projectId},#{customerId},'2','20','2','203',null,'1'),
+            (#{projectId},#{customerId},'2','21','3','204',null,'1'),
+            (#{projectId},#{customerId},'2','22','4','205',null,'1'),
+            (#{projectId},#{customerId},'2','23','5','206',null,'1'),
+            (#{projectId},#{customerId},'2','24','6','207',null,'1'),
+            (#{projectId},#{customerId},'2','25','7','208',null,'1'),
+            (#{projectId},#{customerId},'2','26','8','209',null,'1'),
+            (#{projectId},#{customerId},'2','27','9','210',null,'1'),
+            (#{projectId},#{customerId},'2','28','10','211',null,'1'),
+            (#{projectId},#{customerId},'2','29','11','212',null,'1'),
+            (#{projectId},#{customerId},'2','30','12','213',null,'1'),
+            (#{projectId},#{customerId},'2','31','13','214',null,'1'),
+            (#{projectId},#{customerId},'2','32','14','215',null,'1'),
+            (#{projectId},#{customerId},'2','33','15','216',null,'1')
+    </insert>
+    
+    <insert id="addSettingGrid" parameterType="map">
+        INSERT INTO s3m_setting(project_id, customer_id, type, setting_mst_id, setting_value, warning_type, description, create_id) 
+        VALUES
+            (#{projectId},#{customerId},'5','34','245','522','Ua || Ub || Uc
+            <![CDATA[>]]>
+            245','1'),
+            (#{projectId},#{customerId},'5','35','215','523','Ua || Ub || Uc
+            <![CDATA[<]]>
+            215','1'),
+            (#{projectId},#{customerId},'5','36','60','514','Nhiệt độ ngoài trời || Nhiệt độ thiết bị
+            <![CDATA[>]]>
+            60 °C','1'),
+            (#{projectId},#{customerId},'5','37','50','514','SAW_ID1 || SAW_ID2...|| SAW_ID6
+            <![CDATA[>]]>
+            50 °C','1'),
+            (#{projectId},#{customerId},'5','38','70 ,0.85','530','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+            <![CDATA[>]]>
+            70
+            <![CDATA[&]]>
+            cosA || cosB || cosC
+            <![CDATA[<]]>
+            0.85','1'),
+            (#{projectId},#{customerId},'5','39','0.95','506','Ia || Ib || Ic
+            <![CDATA[>=]]>
+            0.95 * Imccb','1'),
+            (#{projectId},#{customerId},'5','40','49.8','503','F
+            <![CDATA[<]]>
+            49.8','1'),
+            (#{projectId},#{customerId},'5','41','50.2','504','F
+            <![CDATA[>]]>
+            50.2','1'),
+            (#{projectId},#{customerId},'5','42','90','517','Ua || Ub || Uc
+            <![CDATA[<]]>
+            90','1'),
+            (#{projectId},#{customerId},'5','43','50, 0.25','509','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+            <![CDATA[>]]>
+            50
+            <![CDATA[&]]>
+            (Imax – Imin)/Imin
+            <![CDATA[>]]>
+            0.25','1'),
+            (#{projectId},#{customerId},'5','44','0.3',null,'cosA || cosB || cosC
+            <![CDATA[<]]>
+            0.3','1'),
+            (#{projectId},#{customerId},'5','45','10','505','THD_VA-N|| THD_VB-N || THD_VC-N
+            <![CDATA[>]]>
+            10 (%)','1'),
+            (#{projectId},#{customerId},'5','46','1','502','Thanh ghi data mức chỉ thị
+            <![CDATA[>]]>
+            1','1'),
+            (#{projectId},#{customerId},'5','47','90','501','H
+            <![CDATA[>]]>
+            90 %','1'),
+            (#{projectId},#{customerId},'5','48','50','514','T
+            <![CDATA[>]]>
+            50 °C','1')
+    </insert>
+
+    <select id="getSettingByProjectId" parameterType="map" resultType="Setting">
+        SELECT
+            A.id AS settingId,
+            A.setting_value AS settingValue,
+            A.type AS type,
+            A.create_date AS settingDate
+        FROM
+            s3m_setting A
+        WHERE
+            A.project_id = #{projectId}
+        ORDER BY A.id DESC
+        LIMIT 48
+    </select>
+    
+    <select id="getSettingByProjectIdAndSystem" parameterType="map" resultType="Setting">
+        SELECT
+            A.id AS settingId,
+            A.setting_value AS settingValue,
+            A.type AS type,
+            A.create_date AS settingDate
+        FROM
+            s3m_setting A
+        WHERE
+            A.project_id = #{projectId}
+        AND
+            A.type = #{systemType}
+        ORDER BY A.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="getProjectIdToAddSetting" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project
+        WHERE
+            project_id IS NOT NULL
+        <if test="project_name != null">
+            AND project_name = #{projectName}
+            </if>
+        <if test="customer_id != null">
+            AND customer_id = #{customerId}
+            </if>
+        <if test="area_id != null">
+            AND area_id = #{areaId}</if>
+        ORDER BY project_id DESC
+            LIMIT 1
+    </select>
+
+    <insert id="addSettingHistory" parameterType="map">
+        INSERT INTO s3m_setting_history(setting_id, setting_value, type, setting_date) VALUES(#{settingId},#{settingValue},#{type},#{settingDate})
+    </insert>
+
+    <delete id="deleteProject" parameterType="map">  
+		UPDATE s3m_project SET delete_flag = 1 WHERE project_id = #{projectId}
+    </delete>
+
+    <select id="getAllProjects" resultMap="projectResult">
+        SELECT 
+           * 
+        FROM 
+               s3m_project
+        WHERE
+            delete_flag != 1
+        ORDER BY
+            customer_id
+    </select>
+
+    <select id="getPowerByProjectId" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            sum(A.p_total)
+         FROM
+            s3m_data_load_frame_1_2022 A
+            JOIN s3m_device B  ON A.device_id = B.device_id
+         WHERE
+            A.id IS NOT NULL
+        <if test="projectId != null">
+                AND B.project_id = #{projectId}
+            </if>
+    </select>
+
+
+    <select id="getProjectTool" resultMap="projectResult">
+        SELECT
+            project_id, project_name, project_code, address, latitude, longitude, areaId
+        FROM
+            s3m_project
+        WHERE
+            project_id = #{projectId}
+    </select>
+
+    <!-- Cập nhật thông project. -->
+    <update id="updateProjectTool">
+        UPDATE
+            s3m_project 
+        SET
+            project_name = #{project.projectName},
+            project_code = #{project.projectCode},
+            address = #{project.address},
+            latitude = #{project.latitude},
+            longitude = #{project.longitude},
+            description = #{project.description},
+            update_id = #{project.updateId},
+            update_date = NOW()
+        WHERE
+            project_id = #{project.projectId}
+    </update>
+
+    <!-- Thêm mới project. -->
+    <insert id="addProjectTool">
+        INSERT INTO s3m_project(project_name, project_code, address, latitude, longitude, customer_id, description, create_id, create_date)
+        VALUES(#{project.projectName}, #{project.projectCode}, #{project.address}, #{project.latitude}, #{project.longitude}, #{project.customerId}, #{project.description}, #{project.createId}, NOW())
+    </insert>
+
+    <delete id="deleteProjectTool">
+        DELETE FROM
+            s3m_project
+        WHERE 
+            project_id = #{projectId}
+    </delete>
+
+    <select id="getProjectByIds" parameterType="map" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON B.area_id = A.area_id
+            JOIN s3m_manager C ON C.manager_id = B.manager_id
+            JOIN s3m_super_manager D ON D.id = C.super_manager_id
+        WHERE
+            A.customer_id = #{customerId}
+            AND D.id = #{superManagerId}
+            AND C.manager_id = #{managerId}
+            AND B.area_id = #{areaId}
+    </select>
+
+    <select id="searchListProject" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project
+           where  project_name like "%${projectName}%"
+        <if test="customerId != ''">
+            AND customer_id = #{customerId}
+        </if>
+    </select>
+
+
+    <select id="getACPowerByProjectId" parameterType="map" resultType="Double">
+        SELECT 
+            SUM(E.ac_power) 
+        FROM 
+            s3m_project C 
+            LEFT JOIN s3m_system_map D ON C.project_id = D.project_id 
+            LEFT JOIN s3m_device E ON D.system_map_id = E.system_map_id 
+        WHERE 
+            C.project_id = ${projectId} 
+            AND D.system_type_id = 2
+    </select>
+
+    <select id="getProjectsByCustomerAndSuperManager" parameterType="map" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON B.area_id = A.area_id
+            JOIN s3m_manager C ON C.manager_id = B.manager_id
+            JOIN s3m_super_manager D ON D.id = C.super_manager_id
+        WHERE
+            A.customer_id = #{customerId}
+            AND D.id = #{superManagerId}
+            AND A.delete_flag != 1
+    </select>
+
+    <select id="getProjectsByManagerIdToCustomer" parameterType="map" resultMap="projectResult">
+        SELECT
+            *
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON B.area_id = A.area_id
+            JOIN s3m_manager C ON C.manager_id = B.manager_id
+            JOIN s3m_super_manager D ON D.id = C.super_manager_id
+        WHERE
+            A.customer_id = #{customerId}
+            AND D.id = #{superManagerId}
+            AND C.manager_id = #{managerId}
+            AND A.delete_flag != 1
+    </select>
+
+    <select id="getInformationProject" parameterType="map" resultType="map">
+        SELECT A.project_name AS projectName,
+               B.area_name AS areaName,
+               C.manager_name AS managerName,
+               D.name AS superManagerName,
+               E.customer_name AS customerName
+        FROM s3m_project A
+            JOIN s3m_area B ON A.area_id = B.area_id
+            JOIN s3m_manager C ON B.manager_id = C.manager_id
+            JOIN s3m_super_manager D ON C.super_manager_id = D.id
+            JOIN s3m_customer E ON A.customer_id = E.customer_id
+        WHERE A.project_id = #{projectId}
+    </select>
+
+    <select id="listProjectByCondition" parameterType="map" resultMap="projectResult">
+         SELECT
+            *,
+            B.customer_name,
+            B.customer_id,
+            E.name AS super_manager_name,
+            D.manager_name,
+            C.area_name
+        FROM
+            s3m_project A
+            JOIN s3m_customer B ON A.customer_id = B.customer_id
+            JOIN s3m_area C ON A.area_id = C.area_id
+            JOIN s3m_manager D ON C.manager_id = D.manager_id
+            JOIN s3m_super_manager E ON E.id = D.super_manager_id
+        WHERE
+            A.project_id IS NOT NULL
+        <if test="customerIds != null">
+            AND B.customer_id IN (${customerIds})
+        </if>
+        <if test="areaId != null">
+            AND C.area_id = #{areaId}
+        </if>
+        <if test="superManagerId != null">
+            AND E.id = #{superManagerId}
+        </if>
+        <if test="managerId != null">
+            AND D.manager_id = #{managerId}
+        </if>
+        <if test="projectId != null">
+            AND A.project_id = #{projectId}
+        </if>
+        AND A.delete_flag != 1
+        ORDER BY
+            B.customer_id ASC
+    </select>
+    
+    <select id="getProjectBySystemType" parameterType="map" resultMap="projectResult">
+        SELECT distinct
+           B.*,
+           C.customer_name,
+           F.name AS super_manager_name,
+           E.manager_name,
+           D.area_name,
+           G.system_type_name
+        FROM 
+            s3m_system_map A
+            JOIN s3m_project B ON A.project_id = B.project_id
+            JOIN s3m_customer C ON C.customer_id = B.customer_id
+            JOIN s3m_area D ON D.area_id = B.area_id
+            JOIN s3m_manager E ON E.manager_id = D.manager_id
+            JOIN s3m_super_manager F ON F.id = E.super_manager_id
+            JOIN s3m_system_type G ON G.system_type_id = A.system_type_id
+        WHERE 
+        <if test="systemTypeId != null">
+            A.system_type_id = #{systemTypeId}
+        </if>
+        AND
+        <if test="customerId != null">
+            B.customer_id = #{customerId}
+        </if>
+        AND
+            A.delete_flag != 1
+    </select>
+    
+    <select id="getProjectByDeviceId" parameterType="map" resultMap="projectResult">
+        SELECT
+            A.project_id,
+            A.address,
+            A.img_${module}
+        FROM
+            s3m_project A
+        JOIN s3m_device B ON B.project_id = A.project_id
+        WHERE
+            B.device_id = #{deviceId}        
+    </select>
+    
+    <select id="getDataPlanEnergyBatch" parameterType="map" resultType="java.lang.Double">
+        SELECT
+            sum(ep)
+        FROM
+            ${schema}s3m_data_batch_plan_energy
+        WHERE
+            project_id = #{projectId}
+            AND system_type_id = #{systemTypeId}
+        GROUP BY
+            project_id            
+    </select>
+    
+     <select id="getListProjectIds" resultType="java.lang.String">
+        SELECT
+            project_ids
+        FROM
+            s3m_user
+        WHERE
+            username = #{userName}        
+    </select>
+    
+    <select id="getListPro" resultMap="projectResult">  
+        SELECT
+            *,
+            B.customer_name
+        FROM
+            s3m_project A
+            JOIN s3m_customer B ON A.customer_id = B.customer_id
+        WHERE
+            A.delete_flag = 0
+            <if test="projectIds != null">
+                AND A.project_id IN (${projectIds})
+            </if>
+            <if test="customerIds != null">
+                AND A.customer_id IN (${customerIds})
+            </if>
+    </select>
+</mapper>

@@ -1,0 +1,28 @@
+.icon-aniamation-download {
+    animation: download;
+    color: white !important;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes download {
+    from {
+        transform: translateY(-15px);
+    }
+
+    to {
+        transform: translateY(20px);
+    }
+}
+
+.icon-aniamation-download:hover {
+    width: 8px;
+    height: 8px;
+    color: white;
+}
+
+.icon-aniamation-download {
+    width: 8px;
+    height: 8px;
+    color: white;
+}

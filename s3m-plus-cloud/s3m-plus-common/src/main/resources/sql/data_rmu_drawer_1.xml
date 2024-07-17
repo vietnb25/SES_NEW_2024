@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.grid.dao.DataRmuDrawer1Mapper">
+
+    <resultMap id="dataRmuDrawer1Result" type="DataRmuDrawer1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceType" column="device_type" />
+        <result property="sawId1" column="SAW_ID1"/>
+        <result property="sawId2" column="SAW_ID2"/>
+        <result property="sawId3" column="SAW_ID3"/>
+        <result property="sawId4" column="SAW_ID4"/>
+        <result property="sawId5" column="SAW_ID5"/>
+        <result property="sawId6" column="SAW_ID6"/>
+        <result property="gAMean" column="GROUPA_MEAN_MEANSUREMENT"/>
+        <result property="gAAlarm" column="GROUPA_ALARM_STATUS"/>
+        <result property="gBMean" column="GROUPB_MEAN_MEANSUREMENT"/>
+        <result property="gBAlarm" column="GROUPB_ALARM_STATUS"/>
+        <result property="alarmStatus" column="ALARM_STATUS_BIT"/>
+        <result property="lfbRatio" column="LFB_RATIO"/>
+        <result property="lfbEppc" column="LFB_EPPC"/>
+        <result property="mfbRatio" column="MFB_RATIO"/>
+        <result property="mlfbEppc" column="MLFB_EPPC"/>
+        <result property="hlfbRatio" column="HLFB_RATIO"/>
+        <result property="hlfbEppc" column="HLFB_EPPC"/>
+        <result property="meanRatio" column="MEAN_RATIO"/>
+        <result property="meanEppc" column="MEAN_EPPC"/>
+        <result property="rxEHi" column="RATIOxEPPC_Hi"/>
+        <result property="rxELo" column="RATIOxEPPC_Lo"/>
+        <result property="indicator" column="INDICATOR"/>
+        <result property="t" column="T"/>
+        <result property="h" column="H"/>
+        <result property="uab" column="Uab"/>
+        <result property="ubc" column="Ubc"/>
+        <result property="uca" column="Uca"/>
+        <result property="ull" column="Ull"/>
+        <result property="uan" column="Uan"/>
+        <result property="ubn" column="Ubn"/>
+        <result property="ucn" column="Ucn"/>
+        <result property="uln" column="Uln"/>
+        <result property="ia" column="Ia"/>
+        <result property="ib" column="Ib"/>
+        <result property="ic" column="Ic"/>
+        <result property="in" column="In"/>
+        <result property="ig" column="Ig"/>
+        <result property="iavg" column="Iavg"/>
+        <result property="pa" column="Pa"/>
+        <result property="pb" column="Pb"/>
+        <result property="pc" column="Pc"/>
+        <result property="pTotal" column="P_Total"/>
+        <result property="qa" column="Qa"/>
+        <result property="qb" column="Qb"/>
+        <result property="qc" column="Qc"/>
+        <result property="qTotal" column="Q_Total"/>
+        <result property="sa" column="Sa"/>
+        <result property="sb" column="Sb"/>
+        <result property="sc" column="Sc"/>
+        <result property="sTotal" column="S_Total"/>
+        <result property="pfa" column="PFa"/>
+        <result property="pfb" column="PFb"/>
+        <result property="pfc" column="PFc"/>
+        <result property="pfavg" column="PFavg"/>
+        <result property="f" column="F"/>
+        <result property="ep" column="EP"/>
+        <result property="eq" column="EQ"/>
+        <result property="es" column="ES"/>
+        <result property="thdIa" column="THD_Ia"/>
+        <result property="thdIb" column="THD_Ib"/>
+        <result property="thdIc" column="THD_Ic"/>
+        <result property="thdIn" column="THD_In"/>
+        <result property="thdIg" column="THD_Ig"/>
+        <result property="thdVab" column="THD_Vab"/>
+        <result property="thdVbc" column="THD_Vbc"/>
+        <result property="thdVca" column="THD_Vca"/>
+        <result property="thdVll" column="THD_Vll"/>
+        <result property="thdVan" column="THD_Van"/>
+        <result property="thdVbn" column="THD_Vbn"/>
+        <result property="thdVcn" column="THD_Vcn"/>
+        <result property="thdVln" column="THD_Vln"/>
+        <result property="viewTime" column="view_time" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+    
+    <resultMap id="dataPQSResult" type="DataRmuDrawer1">
+        <result property="deviceId" column="device_id" />
+        <result property="low" column="low" />
+        <result property="normal" column="normal" />
+        <result property="high" column="high" />
+        <result property="total" column="total" />
+        <result property="power" column="power"/>
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+    </resultMap>
+    
+    <!-- getInstantOperationRmuDrawerGrid Lấy dữ liệu thông tin tức thời khoang tủ RMU -->
+    <select id="getInstantOperationRmuDrawerGrid" resultMap="dataRmuDrawer1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            B.device_name,
+            A.SAW_ID1,
+            A.SAW_ID2,
+            A.SAW_ID3,
+            A.SAW_ID4,
+            A.SAW_ID5,
+            A.SAW_ID6,
+            A.uab,
+            A.ubc,
+            A.uca,
+            A.ull,
+            A.uan,
+            A.ubn,
+            A.ucn,
+            A.uln,
+            A.ia,
+            A.ib,
+            A.ic,
+            A.in,
+            A.ig,
+            A.iavg,
+            A.pa,
+            A.pb,
+            A.pc,
+            A.p_total,
+            A.qa,
+            A.qb,
+            A.qc,
+            A.q_total,
+            A.sa,
+            A.sb,
+            A.sc,
+            A.s_total,
+            A.pfa,
+            A.pfb,
+            A.pfc,
+            A.pfavg,
+            A.f,
+            A.ep,
+            A.eq,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_in,
+            A.thd_ig,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.thd_vln,
+            A.T,
+            A.H,
+            A.LFB_RATIO,
+            A.LFB_EPPC,
+            A.MFB_RATIO,
+            A.MLFB_EPPC,
+            A.HLFB_RATIO,
+            A.HLFB_EPPC,
+            A.MEAN_RATIO,
+            A.MEAN_EPPC,
+            A.INDICATOR,
+            A.sent_date,
+            A.transaction_date
+        FROM
+             ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = ${deviceId}
+    </select>
+    
+    <!-- getOperationRmuDrawerGrid Lấy dữ liệu thông tin khoang tủ RMU -->
+    <select id="getOperationRmuDrawerGrid" resultMap="dataRmuDrawer1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            A.SAW_ID1,
+            A.SAW_ID2,
+            A.SAW_ID3,
+            A.SAW_ID4,
+            A.SAW_ID5,
+            A.SAW_ID6,
+            A.uab,
+            A.ubc,
+            A.uca,
+            A.ull,
+            A.uan,
+            A.ubn,
+            A.ucn,
+            A.uln,
+            A.ia,
+            A.ib,
+            A.ic,
+            A.in,
+            A.ig,
+            A.iavg,
+            A.pa,
+            A.pb,
+            A.pc,
+            A.p_total,
+            A.qa,
+            A.qb,
+            A.qc,
+            A.q_total,
+            A.sa,
+            A.sb,
+            A.sc,
+            A.s_total,
+            A.pfa,
+            A.pfb,
+            A.pfc,
+            A.pfavg,
+            A.f,
+            A.ep,
+            A.eq,
+            A.thd_ia,
+            A.thd_ib,
+            A.thd_ic,
+            A.thd_in,
+            A.thd_ig,
+            A.thd_vab,
+            A.thd_vbc,
+            A.thd_vca,
+            A.thd_van,
+            A.thd_vbn,
+            A.thd_vcn,
+            A.thd_vln,
+            A.T,
+            A.H,
+            A.LFB_RATIO,
+            A.LFB_EPPC,
+            A.MFB_RATIO,
+            A.MLFB_EPPC,
+            A.HLFB_RATIO,
+            A.HLFB_EPPC,
+            A.MEAN_RATIO,
+            A.MEAN_EPPC,
+            A.INDICATOR,
+            A.sent_date,
+            A.transaction_date
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = ${deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${sort}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+    
+    <!-- countTotalDataRmuDrawerGrid Lấy dữ liệu thông tin tức thời khoang tủ RMU -->
+    <select id="countTotalDataRmuDrawerGrid" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            ${schema} A
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = ${deviceId}
+        </if>
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+    
+    <!-- getDataPQSByMonthRmuDrawerGrid Lấy liệu thông tin vận hành điện năng theo tháng PV -->
+    <select id="getDataPQSByMonthRmuDrawerGrid" parameterType="map" resultMap="dataPQSResult">
+        SELECT
+            A.device_id,
+            A.EP,
+            A.P_Total,
+            A.view_time
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        WHERE
+            A.id IS NOT NULL
+        AND
+            A.device_id = #{deviceId}
+        AND
+            A.view_type = 4 
+        AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+        AND 
+            A.view_time <![CDATA[<=]]> #{toDate}
+    </select>
+    
+    <select id="getRmuEveryYearByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 1   
+    </select>
+    
+    <select id="getRmuInDayByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 3
+        AND
+            A.view_time = #{day}       
+    </select>
+    
+    <select id="getRmuInMonthByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 2
+        AND
+            A.view_time = #{month}        
+    </select>
+    
+    <select id="getRmuInYearByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+       JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 1 
+        AND
+            A.view_time = #{year}       
+    </select>
+    
+    <select id="getRmuInPrevDayByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+       JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 3
+        AND
+            A.view_time = #{prevDay}       
+    </select>
+    
+    <select id="getRmuInPrevMonthByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 2
+        AND
+            A.view_time = #{prevMonth}        
+    </select>
+    
+    <select id="getRmuInPrevYearByDeviceId" resultMap="dataRmuDrawer1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+       JOIN
+            s3m_device B  ON A.device_id = B.device_id    
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            B.calculate_flag = 1    
+        AND
+            view_type = 1 
+        AND
+            A.view_time = #{prevYear}       
+    </select>
+    
+    <!-- getDataRmuDrawerGrid Lấy dữ liệu thông tin khoang tủ RMU -->
+    <select id="getDataRmuDrawerGrid" resultMap="dataRmuDrawer1Result" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.power,
+            C.imccb
+        FROM
+            ${schema}s3m_warning B
+        JOIN 
+            ${schema}s3m_data_rmu_drawer_1${year} A ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+         WHERE
+            B.from_date <![CDATA[>=]]>  #{fromDate}
+        AND
+            B.to_date <![CDATA[<=]]>  #{toDate}
+        AND
+            A.sent_date BETWEEN B.from_date AND B.to_date
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND 
+                B.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.id 
+        ORDER BY
+            A.sent_date DESC
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+    
+     <!-- get power site -->
+    
+    <select id="getPowerDeviceByProjectId" resultMap="dataRmuDrawer1Result" parameterType="map">
+       SELECT
+           P_Total AS pTotal,
+           EP AS ep
+       FROM
+           ${schema}s3m_data_rmu_drawer_1_view A
+       LEFT JOIN
+           s3m_device B ON A.device_id = B.device_id    
+       WHERE
+           A.device_id IN (${deviceId})
+       <if test="view != null">
+            AND A.view_type = #{view}
+       </if>
+       <if test="date != null">
+            AND A.view_time = #{date}
+       </if>
+       <if test="fromDate != null and toDate != null">
+            AND (A.view_time BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        AND
+            B.project_id = #{projectId}
+    </select>
+</mapper>

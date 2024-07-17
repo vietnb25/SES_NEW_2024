@@ -1,0 +1,184 @@
+{
+    "content": {
+        "profile": "Hồ sơ",
+        "customer": "Khách hàng",
+        "add_new_account": "THÊM MỚI TÀI KHOẢN",
+        "staff_name": "Họ tên",
+        "user_type": "Tài khoản",
+        "super_manager": "Khu vực",
+        "manager": "Tỉnh thành",
+        "area": "Quận huyện",
+        "project": "Dự án",
+        "role": "Quyền hạn",
+        "username": "Tên đăng nhập",
+        "email": "Email",
+        "password": "Mật khẩu",
+        "confirm_password": "Xác nhận",
+        "update_account": "CẬP NHẬT TÀI KHOẢN",
+        "status": "Trạng thái",
+        "lock": "Khóa",
+        "unlock": "Mở khóa",
+        "list_account": "DANH SÁCH TÀI KHOẢN",
+        "no": "TT",
+        "update_date": "Ngày cập nhật",
+        "home": "Trang chủ",
+        "no_data": "Không có dữ liệu",
+        "description": "Mô tả",
+        "cable_name": "Tên cáp",
+        "current": "Biến dòng",
+        "add_new_cable": "THÊM MỚI CÁP",
+        "update_cable" : "CẬP NHẬT CÁP",
+        "list_cable" : "DANH SÁCH CÁP",
+        "list_manager": "DANH SÁCH TỈNH THÀNH",
+        "add_new_manager": "THÊM MỚI TỈNH THÀNH",
+        "update_manager": "CẬP NHẬT TỈNH THÀNH",
+        "choose_super_manger": "Chọn khu vực",
+        "longtitude":"Kinh độ",
+        "latitude": "Vĩ độ",
+        "cable_id": "Mã cáp",
+        "category" : {
+            "user" : {
+
+            },
+            "super_manager": {
+
+            }
+        },
+
+        "auth": {
+            "forgot_password": {
+                "login": "Đăng nhập",
+                "submit": "Xác nhận",
+                "success_send_mail": "Vui lòng kiểm tra email",
+                "error": "Có lỗi xảy ra. Vui lòng thử lại.",
+                "processing": "Đang xử lý"
+            },
+            "login": {
+                "forgot_password": "Quên mật khẩu?",
+                "login": "Đăng nhập"
+            },
+            "reset_password": {
+                "new_password": "Mật khẩu mới",
+                "confirm_password": "Xác nhận mật khẩu",
+                "confirm": "Xác nhận",
+                "forgot_password": "Quên mật khẩu?",
+                "login": "Đăng nhập",
+                "change_password": "Thay đổi mật khẩu",
+                "change_password_success": "Cập nhật mật khẩu thành công.",
+                "change_password_failed": "Cập nhật mật khẩu ko thành công.",
+                "token_is_expired": "Yêu cầu đã hết hạn. Vui lòng thực hiện lại."
+            },
+            "first_login": {
+                "login": "Đăng nhập",
+                "current_password": "Mật khẩu hiện tại",
+                "new_password": "Mật khẩu mới",
+                "confirm_password": "Xác nhận mật khẩu",
+                "confirm": "Xác nhận",
+                "change_password_success": "Cập nhật mật khẩu thành công."
+            }
+        }
+    },
+    "validate": {
+        "user": {
+            "USERNAME_NOT_BLANK": "Tên đăng nhập không được bỏ trống.",
+            "USERNAME_MAX_SIZE_ERROR": "Tên đăng nhập chỉ có tối đa 20 ký tự.",
+            "PASSWORD_PATTERN_ERROR": "Mật khẩu phải có ít nhất 1 chữ số, 1 chữ cái thường, 1 chữ cái hoa và 1 kí tự đặc biệt.",
+            "PASSWORD_NOT_BLANK": "Mật khẩu không được bỏ trống.",
+            "PASSWORD_MIN_SIZE_ERROR": "Mật khẩu có ít nhất 8 ký tự.",
+            "PASSWORD_MAX_SIZE_ERROR": "Mật khẩu chỉ có tối đa 255 ký tự.",
+            "STAFF_NAME_NOT_BLANK": "Họ tên không được bỏ trống.",
+            "STAFF_NAME_MAX_SIZE_ERROR": "Họ tên chỉ có tối đa 100 ký tự.",
+            "EMAIL_NOT_BLANK": "Email không được bỏ trống.",
+            "EMAIL_MAX_SIZE_ERROR": "Email chỉ có tối đa 100 ký tự.",
+            "EMAIL_IS_INVALID": "Email phải có định dạng xxx@domain.y",
+            "CONFIRM_PASSWORD_NOT_BLANK": "Xác nhận mật khẩu không được bỏ trống.",
+            "CONFIRM_PASSWORD_NOT_MATCH": "Mật khẩu xác nhận không trùng với mật khẩu hiện tại.",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm khách hàng mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin khách hàng!",
+            "USERNAME_IS_EXIST": "Tên đăng nhập đã được sử dụng.",
+            "EMAIL_IS_EXIST": "Email đã được sử dụng."
+        },
+        "first_login": {
+            "CURRENT_PASSWORD_NOT_BLANK": "Mật khẩu cũ không được để bỏ trống.",
+            "PASSWORD_PATTERN_ERROR": "Mật khẩu phải có ít nhất 1 chữ số, 1 chữ cái thường, 1 chữ cái hoa và 1 kí tự đặc biệt.",
+            "PASSWORD_NOT_BLANK": "Mật khẩu không được bỏ trống.",
+            "PASSWORD_MIN_SIZE_ERROR": "Mật khẩu có ít nhất 8 ký tự.",
+            "PASSWORD_MAX_SIZE_ERROR": "Mật khẩu chỉ có tối đa 255 ký tự.",
+            "CONFIRM_PASSWORD_NOT_BLANK": "Xác nhận mật khẩu không được bỏ trống.",
+            "CONFIRM_PASSWORD_NOT_MATCH": "Mật khẩu xác nhận không trùng với mật khẩu hiện tại.",
+            "NEW_PASSWORD_SAME_CURRENT_PASSWORD": "Mật khẩu mới phải khác mật khẩu hiện tại.",
+            "CURRENT_PASSWORD_NOT_MATCH": "Mật khẩu hiện tại không chính xác.",
+            "ERROR_UPDATE_PASSWORD": "Cập nhật mật khẩu thất bại."
+        },
+        "cable":{
+            "CABLE_NAME_NOT_BLANK" : "Tên cáp không được bỏ trống",
+            "CABLE_NAME_MAX_LENGTH" : "Tên cáp chỉ có tối đa 255 kí tự",
+            "CURRENT_NOT_BLANK" : "Biến dòng không được bỏ trống",
+            "CURRENT_MAX_VALUE" : "Biến dòng phải nhỏ hơn 8388607",
+            "DESCRIPTION_MAX_LENGTH" : "Mô tả chỉ có tối đa 100 kí tự",
+            "CABLE_NAME_EXIST" : "Tên cáp đã tồn tại",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm cáp mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin cáp!"
+
+        },
+        "manager":{
+            "MANAGER_NAME_NOT_BLANK" : "Tên tỉnh thành không được bỏ trống",
+            "MANAGER_NAME_MAX_LENTH" : "Tên tỉnh thành chỉ có tối đa 100 kí tự",
+            "LONGTITUDE_NOT_BLANK" : "Kinh độ không được bỏ trống",
+            "LONGTITUDE_MIN_VALUE" : "Kinh độ phải lớn hơn -85.05112878",
+            "LONGTITUDE_MAX_VALUE" : "Kinh độ phải nhỏ hơn 85.05112878",
+            "LATITUDE_NOT_BLANK" : "Vĩ độ không được bỏ trống",
+            "LATITUDE_MIN_VALUE" : "Vĩ đô phải lớn hơn -180.00000000",
+            "LATITUDE_MAX_VALUE" : "Vĩ độ phải nhỏ hơn 180.00000000",
+            "DESCRIPTION_MAX_LENGTH" : "Mô tả chỉ có tối đa 100 kí tự",
+            "MANAGER_NAME_EXIST" : "Tên tỉnh thành đã tồn tại",
+            "MANAGER_NAME_DEPENDENT" : "Tên tỉnh thành đang sử dụng"
+        },
+        "customer": {
+            "CUSTOMER_NAME_NOT_BLANK": "Tên khách hàng không được bỏ trống.",
+            "CUSTOMER_NAME_MAX_SIZE_ERROR": "Tên khách hàng chỉ có tối đa 100 ký tự",
+            "CUSTOMER_CODE_NOT_BLANK": "Mã khách hàng không được bỏ trống",
+            "CUSTOMER_CODE_MAX_SIZE_ERROR": "Mã khách hàng chỉ có tối đa 8 ký tự",
+            "CUSTOMER_CODE_EXISTED": "Mã khách hàng đã tồn tại",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm khách hàng mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin khách hàng!"
+        },
+        "super_manager": {
+            "DESCRIPTION_MAX_SIZE_ERROR": "Mô tả chỉ tối đa 100 ký tự.",
+            "SUPER_MANAGER_NAME_EXIST": "Tên khu vực đã được sử dụng.",
+            "SUPER_MANAGER_NAME_NOT_BLANK": "Tên khu vực không được để trống.",
+            "LONGITUDE_NOT_BLANK": "Kinh độ không được để trống.",
+            "LATITUDE_NOT_BLANK": "Vĩ độ không được để trống.",
+            "SUPER_MANAGER_NAME_MAX_SIZE_ERROR": "Tên khu vực chỉ có tối đa 100 ký tự.",
+            "LONGITUDE_MIN_VALUE_ERROR": "Kinh độ phải lớn hơn -180.00000000.",
+            "LONGITUDE_MAX_VALUE_ERROR": "Kinh độ phải nhỏ hơn 180.00000000.",
+            "LATITUDE_MIN_VALUE_ERROR": "Vĩ phải lớn hơn -85.05112878.",
+            "LATITUDE_MAX_VALUE_ERROR": "Vĩ độ phải nhỏ hơn 85.05112878.",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm khu vực mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin khu vực!"
+        },
+        "device": {
+            "DESCRIPTION_MAX_SIZE_ERROR": "Mô tả chỉ tối đa 100 ký tự.",
+            "DEVICE_NAME_EXIST": "Tên thiết bị đã được sử dụng.",
+            "DEVICE_NAME_NOT_BLANK": "Tên thiết bị không được để trống.",
+            "SIM_NO_NOT_BLANK": "Số sim không được để trống.",
+            "NOT_BLANK_LONGITUDE": "Kinh độ không được để trống.",
+            "NOT_BLANK_LATITUDE": "Vĩ độ không được để trống.",
+            "SIM_NO_MAX_SIZE_ERROR": "Số sim chỉ có tối đa 20 ký tự.",
+            "MODEL_MAX_SIZE_ERROR": "Số sim chỉ có tối đa 255 ký tự.",
+            "DEVICE_NAME_MAX_SIZE_ERROR": "Tên thiết bị chỉ có tối đa 100 ký tự.",
+            "LONGITUDE_MIN_VALUE_ERROR": "Kinh độ phải lớn hơn -180.00000000.",
+            "LONGITUDE_MAX_VALUE_ERROR": "Kinh độ phải nhỏ hơn 180.00000000.",
+            "LATITUDE_MIN_VALUE_ERROR": "Vĩ phải lớn hơn -85.05112878.",
+            "LATITUDE_MAX_VALUE_ERROR": "Vĩ độ phải nhỏ hơn 85.05112878.",
+            "IP_NOT_BLANK": "IP không được để trống.",
+            "IP_NOT_PATTERN": "IP không đúng định dạng.",
+            "UID_NOT_BLANK": "UID khô được để trống.",
+            "UID_MIN_SIZE_ERROR": "UID phải có ít nhất 1 kí tự.",
+            "UID_MAX_SIZE_ERROR": "UID chỉ tối tối đa 255 kí tự.",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm thiết bị mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin thiết bị!"
+        }
+        
+    }
+}

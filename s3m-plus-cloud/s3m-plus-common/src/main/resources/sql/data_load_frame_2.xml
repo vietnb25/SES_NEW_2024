@@ -1,0 +1,1586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataLoadFrame2Mapper">
+    <resultMap id="dataLoadFrame2Warning" type="DataLoadFrame2">
+        <result property="id" column="id" />
+        <result property="deviceId" column="deviceId" />
+        <result property="deviceName" column="deviceName" />
+        <!--VAN_H-->
+        <result property="VAN_H1" column="VAN_H1" />
+        <result property="VAN_H2" column="VAN_H2" />
+        <result property="VAN_H3" column="VAN_H3" />
+        <result property="VAN_H4" column="VAN_H4" />
+        <result property="VAN_H5" column="VAN_H5" />
+        <result property="VAN_H6" column="VAN_H6" />
+        <result property="VAN_H7" column="VAN_H7" />
+        <result property="VAN_H8" column="VAN_H8" />
+        <result property="VAN_H9" column="VAN_H9" />
+        <result property="VAN_H10" column="VAN_H10" />
+        <result property="VAN_H11" column="VAN_H11" />
+        <result property="VAN_H12" column="VAN_H12" />
+        <result property="VAN_H13" column="VAN_H13" />
+        <result property="VAN_H14" column="VAN_H14" />
+        <result property="VAN_H15" column="VAN_H15" />
+        <result property="VAN_H16" column="VAN_H16" />
+        <result property="VAN_H17" column="VAN_H17" />
+        <result property="VAN_H18" column="VAN_H18" />
+        <result property="VAN_H19" column="VAN_H19" />
+        <result property="VAN_H20" column="VAN_H20" />
+        <result property="VAN_H21" column="VAN_H21" />
+        <result property="VAN_H22" column="VAN_H22" />
+        <result property="VAN_H23" column="VAN_H23" />
+        <result property="VAN_H24" column="VAN_H24" />
+        <result property="VAN_H25" column="VAN_H25" />
+        <result property="VAN_H26" column="VAN_H26" />
+        <result property="VAN_H27" column="VAN_H27" />
+        <result property="VAN_H28" column="VAN_H28" />
+        <result property="VAN_H29" column="VAN_H29" />
+        <result property="VAN_H30" column="VAN_H30" />
+        <result property="VAN_H31" column="VAN_H31" />
+        <!--VBN_H-->
+        <result property="VBN_H1" column="VBN_H1" />
+        <result property="VBN_H2" column="VBN_H2" />
+        <result property="VBN_H3" column="VBN_H3" />
+        <result property="VBN_H4" column="VBN_H4" />
+        <result property="VBN_H5" column="VBN_H5" />
+        <result property="VBN_H6" column="VBN_H6" />
+        <result property="VBN_H7" column="VBN_H7" />
+        <result property="VBN_H8" column="VBN_H8" />
+        <result property="VBN_H9" column="VBN_H9" />
+        <result property="VBN_H10" column="VBN_H10" />
+        <result property="VBN_H11" column="VBN_H11" />
+        <result property="VBN_H12" column="VBN_H12" />
+        <result property="VBN_H13" column="VBN_H13" />
+        <result property="VBN_H14" column="VBN_H14" />
+        <result property="VBN_H15" column="VBN_H15" />
+        <result property="VBN_H16" column="VBN_H16" />
+        <result property="VBN_H17" column="VBN_H17" />
+        <result property="VBN_H18" column="VBN_H18" />
+        <result property="VBN_H19" column="VBN_H19" />
+        <result property="VBN_H20" column="VBN_H20" />
+        <result property="VBN_H21" column="VBN_H21" />
+        <result property="VBN_H22" column="VBN_H22" />
+        <result property="VBN_H23" column="VBN_H23" />
+        <result property="VBN_H24" column="VBN_H24" />
+        <result property="VBN_H25" column="VBN_H25" />
+        <result property="VBN_H26" column="VBN_H26" />
+        <result property="VBN_H27" column="VBN_H27" />
+        <result property="VBN_H28" column="VBN_H28" />
+        <result property="VBN_H29" column="VBN_H29" />
+        <result property="VBN_H30" column="VBN_H30" />
+        <result property="VBN_H31" column="VBN_H31" />
+        <!--VCN_H-->
+        <result property="VCN_H1" column="VCN_H1" />
+        <result property="VCN_H2" column="VCN_H2" />
+        <result property="VCN_H3" column="VCN_H3" />
+        <result property="VCN_H4" column="VCN_H4" />
+        <result property="VCN_H5" column="VCN_H5" />
+        <result property="VCN_H6" column="VCN_H6" />
+        <result property="VCN_H7" column="VCN_H7" />
+        <result property="VCN_H8" column="VCN_H8" />
+        <result property="VCN_H9" column="VCN_H9" />
+        <result property="VCN_H10" column="VCN_H10" />
+        <result property="VCN_H11" column="VCN_H11" />
+        <result property="VCN_H12" column="VCN_H12" />
+        <result property="VCN_H13" column="VCN_H13" />
+        <result property="VCN_H14" column="VCN_H14" />
+        <result property="VCN_H15" column="VCN_H15" />
+        <result property="VCN_H16" column="VCN_H16" />
+        <result property="VCN_H17" column="VCN_H17" />
+        <result property="VCN_H18" column="VCN_H18" />
+        <result property="VCN_H19" column="VCN_H19" />
+        <result property="VCN_H20" column="VCN_H20" />
+        <result property="VCN_H21" column="VCN_H21" />
+        <result property="VCN_H22" column="VCN_H22" />
+        <result property="VCN_H23" column="VCN_H23" />
+        <result property="VCN_H24" column="VCN_H24" />
+        <result property="VCN_H25" column="VCN_H25" />
+        <result property="VCN_H26" column="VCN_H26" />
+        <result property="VCN_H27" column="VCN_H27" />
+        <result property="VCN_H28" column="VCN_H28" />
+        <result property="VCN_H29" column="VCN_H29" />
+        <result property="VCN_H30" column="VCN_H30" />
+        <result property="VCN_H31" column="VCN_H31" />
+        <!--IA_H-->
+        <result property="IB_H1" column="IB_H1" />
+        <result property="IB_H2" column="IB_H2" />
+        <result property="IB_H3" column="IB_H3" />
+        <result property="IB_H4" column="IB_H4" />
+        <result property="IB_H5" column="IB_H5" />
+        <result property="IB_H6" column="IB_H6" />
+        <result property="IB_H7" column="IB_H7" />
+        <result property="IB_H8" column="IB_H8" />
+        <result property="IB_H9" column="IB_H9" />
+        <result property="IB_H10" column="IB_H10" />
+        <result property="IB_H11" column="IB_H11" />
+        <result property="IB_H12" column="IB_H12" />
+        <result property="IB_H13" column="IB_H13" />
+        <result property="IB_H14" column="IB_H14" />
+        <result property="IB_H15" column="IB_H15" />
+        <result property="IB_H16" column="IB_H16" />
+        <result property="IB_H17" column="IB_H17" />
+        <result property="IB_H18" column="IB_H18" />
+        <result property="IB_H19" column="IB_H19" />
+        <result property="IB_H20" column="IB_H20" />
+        <result property="IB_H21" column="IB_H21" />
+        <result property="IB_H22" column="IB_H22" />
+        <result property="IB_H23" column="IB_H23" />
+        <result property="IB_H24" column="IB_H24" />
+        <result property="IB_H25" column="IB_H25" />
+        <result property="IB_H26" column="IB_H26" />
+        <result property="IB_H27" column="IB_H27" />
+        <result property="IB_H28" column="IB_H28" />
+        <result property="IB_H29" column="IB_H29" />
+        <result property="IB_H30" column="IB_H30" />
+        <result property="IB_H31" column="IB_H31" />
+        <result property="IA_H1" column="IA_H1" />
+        <result property="IA_H2" column="IA_H2" />
+        <result property="IA_H3" column="IA_H3" />
+        <result property="IA_H4" column="IA_H4" />
+        <result property="IA_H5" column="IA_H5" />
+        <result property="IA_H6" column="IA_H6" />
+        <result property="IA_H7" column="IA_H7" />
+        <result property="IA_H8" column="IA_H8" />
+        <result property="IA_H9" column="IA_H9" />
+        <result property="IA_H10" column="IA_H10" />
+        <result property="IA_H11" column="IA_H11" />
+        <result property="IA_H12" column="IA_H12" />
+        <result property="IA_H13" column="IA_H13" />
+        <result property="IA_H14" column="IA_H14" />
+        <result property="IA_H15" column="IA_H15" />
+        <result property="IA_H16" column="IA_H16" />
+        <result property="IA_H17" column="IA_H17" />
+        <result property="IA_H18" column="IA_H18" />
+        <result property="IA_H19" column="IA_H19" />
+        <result property="IA_H20" column="IA_H20" />
+        <result property="IA_H21" column="IA_H21" />
+        <result property="IA_H22" column="IA_H22" />
+        <result property="IA_H23" column="IA_H23" />
+        <result property="IA_H24" column="IA_H24" />
+        <result property="IA_H25" column="IA_H25" />
+        <result property="IA_H26" column="IA_H26" />
+        <result property="IA_H27" column="IA_H27" />
+        <result property="IA_H28" column="IA_H28" />
+        <result property="IA_H29" column="IA_H29" />
+        <result property="IA_H30" column="IA_H30" />
+        <result property="IA_H31" column="IA_H31" />
+        <!--IB_H-->
+        <result property="IB_H1" column="IB_H1" />
+        <result property="IB_H2" column="IB_H2" />
+        <result property="IB_H3" column="IB_H3" />
+        <result property="IB_H4" column="IB_H4" />
+        <result property="IB_H5" column="IB_H5" />
+        <result property="IB_H6" column="IB_H6" />
+        <result property="IB_H7" column="IB_H7" />
+        <result property="IB_H8" column="IB_H8" />
+        <result property="IB_H9" column="IB_H9" />
+        <result property="IB_H10" column="IB_H10" />
+        <result property="IB_H11" column="IB_H11" />
+        <result property="IB_H12" column="IB_H12" />
+        <result property="IB_H13" column="IB_H13" />
+        <result property="IB_H14" column="IB_H14" />
+        <result property="IB_H15" column="IB_H15" />
+        <result property="IB_H16" column="IB_H16" />
+        <result property="IB_H17" column="IB_H17" />
+        <result property="IB_H18" column="IB_H18" />
+        <result property="IB_H19" column="IB_H19" />
+        <result property="IB_H20" column="IB_H20" />
+        <result property="IB_H21" column="IB_H21" />
+        <result property="IB_H22" column="IB_H22" />
+        <result property="IB_H23" column="IB_H23" />
+        <result property="IB_H24" column="IB_H24" />
+        <result property="IB_H25" column="IB_H25" />
+        <result property="IB_H26" column="IB_H26" />
+        <result property="IB_H27" column="IB_H27" />
+        <result property="IB_H28" column="IB_H28" />
+        <result property="IB_H29" column="IB_H29" />
+        <result property="IB_H30" column="IB_H30" />
+        <result property="IB_H31" column="IB_H31" />
+        <!--IC_H-->
+        <result property="IC_H1" column="IC_H1" />
+        <result property="IC_H2" column="IC_H2" />
+        <result property="IC_H3" column="IC_H3" />
+        <result property="IC_H4" column="IC_H4" />
+        <result property="IC_H5" column="IC_H5" />
+        <result property="IC_H6" column="IC_H6" />
+        <result property="IC_H7" column="IC_H7" />
+        <result property="IC_H8" column="IC_H8" />
+        <result property="IC_H9" column="IC_H9" />
+        <result property="IC_H10" column="IC_H10" />
+        <result property="IC_H11" column="IC_H11" />
+        <result property="IC_H12" column="IC_H12" />
+        <result property="IC_H13" column="IC_H13" />
+        <result property="IC_H14" column="IC_H14" />
+        <result property="IC_H15" column="IC_H15" />
+        <result property="IC_H16" column="IC_H16" />
+        <result property="IC_H17" column="IC_H17" />
+        <result property="IC_H18" column="IC_H18" />
+        <result property="IC_H19" column="IC_H19" />
+        <result property="IC_H20" column="IC_H20" />
+        <result property="IC_H21" column="IC_H21" />
+        <result property="IC_H22" column="IC_H22" />
+        <result property="IC_H23" column="IC_H23" />
+        <result property="IC_H24" column="IC_H24" />
+        <result property="IC_H25" column="IC_H25" />
+        <result property="IC_H26" column="IC_H26" />
+        <result property="IC_H27" column="IC_H27" />
+        <result property="IC_H28" column="IC_H28" />
+        <result property="IC_H29" column="IC_H29" />
+        <result property="IC_H30" column="IC_H30" />
+        <result property="IC_H31" column="IC_H31" />
+<!--        <result property="sentDate" column="sent_date" />-->
+        <result property="viewTime" column="sent_date" />
+
+        <result property="transactionDate" column="transactionDate" />
+    </resultMap>
+
+    <resultMap id="dataLoadFrame2" type="DataLoadFrame2">
+        <result property="id" column="id" />
+        <result property="deviceId" column="deviceId" />
+        <result property="deviceName" column="deviceName" />
+        <result property="vabH1" column="vabH1" />
+        <result property="vabH2" column="vabH2" />
+        <result property="vabH3" column="vabH3" />
+        <result property="vabH4" column="vabH4" />
+        <result property="vabH5" column="vabH5" />
+        <result property="vabH6" column="vabH6" />
+        <result property="vabH7" column="vabH7" />
+        <result property="vabH8" column="vabH8" />
+        <result property="vabH9" column="vabH9" />
+        <result property="vabH10" column="vabH10" />
+        <result property="vabH11" column="vabH11" />
+        <result property="vabH12" column="vabH12" />
+        <result property="vabH13" column="vabH13" />
+        <result property="vabH14" column="vabH14" />
+        <result property="vabH15" column="vabH15" />
+        <result property="vabH16" column="vabH16" />
+        <result property="vabH17" column="vabH17" />
+        <result property="vabH18" column="vabH18" />
+        <result property="vabH19" column="vabH19" />
+        <result property="vabH20" column="vabH20" />
+        <result property="vabH21" column="vabH21" />
+        <result property="vabH22" column="vabH22" />
+        <result property="vabH23" column="vabH23" />
+        <result property="vabH24" column="vabH24" />
+        <result property="vabH25" column="vabH25" />
+        <result property="vabH26" column="vabH26" />
+        <result property="vabH27" column="vabH27" />
+        <result property="vabH28" column="vabH28" />
+        <result property="vabH29" column="vabH29" />
+        <result property="vabH30" column="vabH30" />
+        <result property="vabH31" column="vabH31" />
+        <result property="vbcH1" column="vbcH1" />
+        <result property="vbcH2" column="vbcH2" />
+        <result property="vbcH3" column="vbcH3" />
+        <result property="vbcH4" column="vbcH4" />
+        <result property="vbcH5" column="vbcH5" />
+        <result property="vbcH6" column="vbcH6" />
+        <result property="vbcH7" column="vbcH7" />
+        <result property="vbcH8" column="vbcH8" />
+        <result property="vbcH9" column="vbcH9" />
+        <result property="vbcH10" column="vbcH10" />
+        <result property="vbcH11" column="vbcH11" />
+        <result property="vbcH12" column="vbcH12" />
+        <result property="vbcH13" column="vbcH13" />
+        <result property="vbcH14" column="vbcH14" />
+        <result property="vbcH15" column="vbcH15" />
+        <result property="vbcH16" column="vbcH16" />
+        <result property="vbcH17" column="vbcH17" />
+        <result property="vbcH18" column="vbcH18" />
+        <result property="vbcH19" column="vbcH19" />
+        <result property="vbcH20" column="vbcH20" />
+        <result property="vbcH21" column="vbcH21" />
+        <result property="vbcH22" column="vbcH22" />
+        <result property="vbcH23" column="vbcH23" />
+        <result property="vbcH24" column="vbcH24" />
+        <result property="vbcH25" column="vbcH25" />
+        <result property="vbcH26" column="vbcH26" />
+        <result property="vbcH27" column="vbcH27" />
+        <result property="vbcH28" column="vbcH28" />
+        <result property="vbcH29" column="vbcH29" />
+        <result property="vbcH30" column="vbcH30" />
+        <result property="vbcH31" column="vbcH31" />
+        <result property="vcaH1" column="vcaH1" />
+        <result property="vcaH2" column="vcaH2" />
+        <result property="vcaH3" column="vcaH3" />
+        <result property="vcaH4" column="vcaH4" />
+        <result property="vcaH5" column="vcaH5" />
+        <result property="vcaH6" column="vcaH6" />
+        <result property="vcaH7" column="vcaH7" />
+        <result property="vcaH8" column="vcaH8" />
+        <result property="vcaH9" column="vcaH9" />
+        <result property="vcaH10" column="vcaH10" />
+        <result property="vcaH11" column="vcaH11" />
+        <result property="vcaH12" column="vcaH12" />
+        <result property="vcaH13" column="vcaH13" />
+        <result property="vcaH14" column="vcaH14" />
+        <result property="vcaH15" column="vcaH15" />
+        <result property="vcaH16" column="vcaH16" />
+        <result property="vcaH17" column="vcaH17" />
+        <result property="vcaH18" column="vcaH18" />
+        <result property="vcaH19" column="vcaH19" />
+        <result property="vcaH20" column="vcaH20" />
+        <result property="vcaH21" column="vcaH21" />
+        <result property="vcaH22" column="vcaH22" />
+        <result property="vcaH23" column="vcaH23" />
+        <result property="vcaH24" column="vcaH24" />
+        <result property="vcaH25" column="vcaH25" />
+        <result property="vcaH26" column="vcaH26" />
+        <result property="vcaH27" column="vcaH27" />
+        <result property="vcaH28" column="vcaH28" />
+        <result property="vcaH29" column="vcaH29" />
+        <result property="vcaH30" column="vcaH30" />
+        <result property="vcaH31" column="vcaH31" />
+        <result property="vanH1" column="vanH1" />
+        <result property="vanH2" column="vanH2" />
+        <result property="vanH3" column="vanH3" />
+        <result property="vanH4" column="vanH4" />
+        <result property="vanH5" column="vanH5" />
+        <result property="vanH6" column="vanH6" />
+        <result property="vanH7" column="vanH7" />
+        <result property="vanH8" column="vanH8" />
+        <result property="vanH9" column="vanH9" />
+        <result property="vanH10" column="vanH10" />
+        <result property="vanH11" column="vanH11" />
+        <result property="vanH12" column="vanH12" />
+        <result property="vanH13" column="vanH13" />
+        <result property="vanH14" column="vanH14" />
+        <result property="vanH15" column="vanH15" />
+        <result property="vanH16" column="vanH16" />
+        <result property="vanH17" column="vanH17" />
+        <result property="vanH18" column="vanH18" />
+        <result property="vanH19" column="vanH19" />
+        <result property="vanH20" column="vanH20" />
+        <result property="vanH21" column="vanH21" />
+        <result property="vanH22" column="vanH22" />
+        <result property="vanH23" column="vanH23" />
+        <result property="vanH24" column="vanH24" />
+        <result property="vanH25" column="vanH25" />
+        <result property="vanH26" column="vanH26" />
+        <result property="vanH27" column="vanH27" />
+        <result property="vanH28" column="vanH28" />
+        <result property="vanH29" column="vanH29" />
+        <result property="vanH30" column="vanH30" />
+        <result property="vanH31" column="vanH31" />
+        <result property="vbnH1" column="vbnH1" />
+        <result property="vbnH2" column="vbnH2" />
+        <result property="vbnH3" column="vbnH3" />
+        <result property="vbnH4" column="vbnH4" />
+        <result property="vbnH5" column="vbnH5" />
+        <result property="vbnH6" column="vbnH6" />
+        <result property="vbnH7" column="vbnH7" />
+        <result property="vbnH8" column="vbnH8" />
+        <result property="vbnH9" column="vbnH9" />
+        <result property="vbnH10" column="vbnH10" />
+        <result property="vbnH11" column="vbnH11" />
+        <result property="vbnH12" column="vbnH12" />
+        <result property="vbnH13" column="vbnH13" />
+        <result property="vbnH14" column="vbnH14" />
+        <result property="vbnH15" column="vbnH15" />
+        <result property="vbnH16" column="vbnH16" />
+        <result property="vbnH17" column="vbnH17" />
+        <result property="vbnH18" column="vbnH18" />
+        <result property="vbnH19" column="vbnH19" />
+        <result property="vbnH20" column="vbnH20" />
+        <result property="vbnH21" column="vbnH21" />
+        <result property="vbnH22" column="vbnH22" />
+        <result property="vbnH23" column="vbnH23" />
+        <result property="vbnH24" column="vbnH24" />
+        <result property="vbnH25" column="vbnH25" />
+        <result property="vbnH26" column="vbnH26" />
+        <result property="vbnH27" column="vbnH27" />
+        <result property="vbnH28" column="vbnH28" />
+        <result property="vbnH29" column="vbnH29" />
+        <result property="vbnH30" column="vbnH30" />
+        <result property="vbnH31" column="vbnH31" />
+        <result property="vcnH1" column="vcnH1" />
+        <result property="vcnH2" column="vcnH2" />
+        <result property="vcnH3" column="vcnH3" />
+        <result property="vcnH4" column="vcnH4" />
+        <result property="vcnH5" column="vcnH5" />
+        <result property="vcnH6" column="vcnH6" />
+        <result property="vcnH7" column="vcnH7" />
+        <result property="vcnH8" column="vcnH8" />
+        <result property="vcnH9" column="vcnH9" />
+        <result property="vcnH10" column="vcnH10" />
+        <result property="vcnH11" column="vcnH11" />
+        <result property="vcnH12" column="vcnH12" />
+        <result property="vcnH13" column="vcnH13" />
+        <result property="vcnH14" column="vcnH14" />
+        <result property="vcnH15" column="vcnH15" />
+        <result property="vcnH16" column="vcnH16" />
+        <result property="vcnH17" column="vcnH17" />
+        <result property="vcnH18" column="vcnH18" />
+        <result property="vcnH19" column="vcnH19" />
+        <result property="vcnH20" column="vcnH20" />
+        <result property="vcnH21" column="vcnH21" />
+        <result property="vcnH22" column="vcnH22" />
+        <result property="vcnH23" column="vcnH23" />
+        <result property="vcnH24" column="vcnH24" />
+        <result property="vcnH25" column="vcnH25" />
+        <result property="vcnH26" column="vcnH26" />
+        <result property="vcnH27" column="vcnH27" />
+        <result property="vcnH28" column="vcnH28" />
+        <result property="vcnH29" column="vcnH29" />
+        <result property="vcnH30" column="vcnH30" />
+        <result property="vcnH31" column="vcnH31" />
+        <result property="iaH1" column="iaH1" />
+        <result property="iaH2" column="iaH2" />
+        <result property="iaH3" column="iaH3" />
+        <result property="iaH4" column="iaH4" />
+        <result property="iaH5" column="iaH5" />
+        <result property="iaH6" column="iaH6" />
+        <result property="iaH7" column="iaH7" />
+        <result property="iaH8" column="iaH8" />
+        <result property="iaH9" column="iaH9" />
+        <result property="iaH10" column="iaH10" />
+        <result property="iaH11" column="iaH11" />
+        <result property="iaH12" column="iaH12" />
+        <result property="iaH13" column="iaH13" />
+        <result property="iaH14" column="iaH14" />
+        <result property="iaH15" column="iaH15" />
+        <result property="iaH16" column="iaH16" />
+        <result property="iaH17" column="iaH17" />
+        <result property="iaH18" column="iaH18" />
+        <result property="iaH19" column="iaH19" />
+        <result property="iaH20" column="iaH20" />
+        <result property="iaH21" column="iaH21" />
+        <result property="iaH22" column="iaH22" />
+        <result property="iaH23" column="iaH23" />
+        <result property="iaH24" column="iaH24" />
+        <result property="iaH25" column="iaH25" />
+        <result property="iaH26" column="iaH26" />
+        <result property="iaH27" column="iaH27" />
+        <result property="iaH28" column="iaH28" />
+        <result property="iaH29" column="iaH29" />
+        <result property="iaH30" column="iaH30" />
+        <result property="iaH31" column="iaH31" />
+        <result property="ibH1" column="ibH1" />
+        <result property="ibH2" column="ibH2" />
+        <result property="ibH3" column="ibH3" />
+        <result property="ibH4" column="ibH4" />
+        <result property="ibH5" column="ibH5" />
+        <result property="ibH6" column="ibH6" />
+        <result property="ibH7" column="ibH7" />
+        <result property="ibH8" column="ibH8" />
+        <result property="ibH9" column="ibH9" />
+        <result property="ibH10" column="ibH10" />
+        <result property="ibH11" column="ibH11" />
+        <result property="ibH12" column="ibH12" />
+        <result property="ibH13" column="ibH13" />
+        <result property="ibH14" column="ibH14" />
+        <result property="ibH15" column="ibH15" />
+        <result property="ibH16" column="ibH16" />
+        <result property="ibH17" column="ibH17" />
+        <result property="ibH18" column="ibH18" />
+        <result property="ibH19" column="ibH19" />
+        <result property="ibH20" column="ibH20" />
+        <result property="ibH21" column="ibH21" />
+        <result property="ibH22" column="ibH22" />
+        <result property="ibH23" column="ibH23" />
+        <result property="ibH24" column="ibH24" />
+        <result property="ibH25" column="ibH25" />
+        <result property="ibH26" column="ibH26" />
+        <result property="ibH27" column="ibH27" />
+        <result property="ibH28" column="ibH28" />
+        <result property="ibH29" column="ibH29" />
+        <result property="ibH30" column="ibH30" />
+        <result property="ibH31" column="ibH31" />
+        <result property="icH1" column="icH1" />
+        <result property="icH2" column="icH2" />
+        <result property="icH3" column="icH3" />
+        <result property="icH4" column="icH4" />
+        <result property="icH5" column="icH5" />
+        <result property="icH6" column="icH6" />
+        <result property="icH7" column="icH7" />
+        <result property="icH8" column="icH8" />
+        <result property="icH9" column="icH9" />
+        <result property="icH10" column="icH10" />
+        <result property="icH11" column="icH11" />
+        <result property="icH12" column="icH12" />
+        <result property="icH13" column="icH13" />
+        <result property="icH14" column="icH14" />
+        <result property="icH15" column="icH15" />
+        <result property="icH16" column="icH16" />
+        <result property="icH17" column="icH17" />
+        <result property="icH18" column="icH18" />
+        <result property="icH19" column="icH19" />
+        <result property="icH20" column="icH20" />
+        <result property="icH21" column="icH21" />
+        <result property="icH22" column="icH22" />
+        <result property="icH23" column="icH23" />
+        <result property="icH24" column="icH24" />
+        <result property="icH25" column="icH25" />
+        <result property="icH26" column="icH26" />
+        <result property="icH27" column="icH27" />
+        <result property="icH28" column="icH28" />
+        <result property="icH29" column="icH29" />
+        <result property="icH30" column="icH30" />
+        <result property="icH31" column="icH31" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transactionDate" />
+    </resultMap>
+
+    <select id="getListWarnedDataFrame2" resultMap="dataLoadFrame2Warning" parameterType="map">
+        SELECT
+        A.*,
+        DATE_FORMAT(A.sent_date, "%Y-%m-%d %H:%i:%s") AS view_time
+        FROM
+        ${schema}s3m_data_meter_2${year} A
+        WHERE
+        A.sent_date BETWEEN #{fromDate} AND #{toDate}
+        <if test="projectId != null">
+            AND
+            C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="fiveMinute == true">
+            GROUP BY
+            UNIX_TIMESTAMP(A.sent_date) DIV 300
+        </if>
+        ORDER BY
+        A.id DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <select id="getInforDataFrame2LoadByTime" resultMap="dataLoadFrame2Warning" parameterType="map">
+        SELECT
+            A.*,
+            B.device_id,
+            C.pn AS power,
+            C.in AS imccb
+        FROM
+            ${schema}s3m_data_meter_2${year} A
+        JOIN
+            ${schema}s3m_warning B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_device C ON C.device_id = A.device_id
+        WHERE
+            A.sent_date =  #{toDate}
+        <if test="projectId != null">
+            AND
+            C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+            A.device_id = #{deviceId}
+        </if>
+        GROUP BY
+        A.id
+    </select>
+
+    <select id="getDataHarmonic" resultMap="dataLoadFrame2" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.vAB_H1 as vabH1,
+            A.VAB_H2 as vabH2,
+            A.VAB_H3 as vabH3,
+            A.VAB_H4 as vabH4,
+            A.VAB_H5  as vabH5,
+            A.VAB_H6 as vabH6,
+            A.VAB_H7 as vabH7,
+            A.VAB_H8 as vabH8,
+            A.VAB_H9 as vabH9,
+            A.VAB_H10 as vabH10,
+            A.VAB_H11 as vabH11,
+            A.VAB_H12 as vabH12,
+            A.VAB_H13 as vabH13,
+            A.VAB_H14 as vabH14,
+            A.VAB_H15 as vabH15,
+            A.VAB_H16 as vabH16,
+            A.VAB_H17 as vabH17,
+            A.VAB_H18 as vabH18,
+            A.VAB_H19 as vabH19,
+            A.VAB_H20 as vabH20,
+            A.VAB_H21 as vabH21,
+            A.VAB_H22 as vabH22,
+            A.VAB_H23 as vabH23,
+            A.VAB_H24 as vabH24,
+            A.VAB_H25 as vabH25,
+            A.VAB_H26 as vabH26,
+            A.VAB_H27 as vabH27,
+            A.VAB_H28 as vabH28,
+            A.VAB_H29 as vabH29,
+            A.VAB_H30 as vabH30,
+            A.VAB_H31 as vabH31,
+            A.VBC_H1 as vbcH1,
+            A.VBC_H2 as vbcH2,
+            A.VBC_H3 as vbcH3,
+            A.VBC_H4 as vbcH4,
+            A.VBC_H5 as vbcH5,
+            A.VBC_H6 as vbcH6,
+            A.VBC_H7 as vbcH7,
+            A.VBC_H8 as vbcH8,
+            A.VBC_H9 as vbcH9,
+            A.VBC_H10 as vbcH10,
+            A.VBC_H11 as vbcH11,
+            A.VBC_H12 as vbcH12,
+            A.VBC_H13 as vbcH13,
+            A.VBC_H14 as vbcH14,
+            A.VBC_H15 as vbcH15,
+            A.VBC_H16 as vbcH16,
+            A.VBC_H17 as vbcH17,
+            A.VBC_H18 as vbcH18,
+            A.VBC_H19 as vbcH19,
+            A.VBC_H20 as vbcH20,
+            A.VBC_H21 as vbcH21,
+            A.VBC_H22 as vbcH22,
+            A.VBC_H23 as vbcH23,
+            A.VBC_H24 as vbcH24,
+            A.VBC_H25 as vbcH25,
+            A.VBC_H26 as vbcH26,
+            A.VBC_H27 as vbcH27,
+            A.VBC_H28 as vbcH28,
+            A.VBC_H29 as vbcH29,
+            A.VBC_H30 as vbcH30,
+            A.VBC_H31 as vbcH31,
+            A.VCA_H1 as vcaH1,
+            A.VCA_H2 as vcaH2,
+            A.VCA_H3 as vcaH3,
+            A.VCA_H4 as vcaH4,
+            A.VCA_H5 as vcaH5,
+            A.VCA_H6 as vcaH6,
+            A.VCA_H7 as vcaH7,
+            A.VCA_H8 as vcaH8,
+            A.VCA_H9 as vcaH9,
+            A.VCA_H10 as vcaH10,
+            A.VCA_H11 as vcaH11,
+            A.VCA_H12 as vcaH12,
+            A.VCA_H13 as vcaH13,
+            A.VCA_H14 as vcaH14,
+            A.VCA_H15 as vcaH15,
+            A.VCA_H16 as vcaH16,
+            A.VCA_H17 as vcaH17,
+            A.VCA_H18 as vcaH18,
+            A.VCA_H19 as vcaH19,
+            A.VCA_H20 as vcaH20,
+            A.VCA_H21 as vcaH21,
+            A.VCA_H22 as vcaH22,
+            A.VCA_H23 as vcaH23,
+            A.VCA_H24 as vcaH24,
+            A.VCA_H25 as vcaH25,
+            A.VCA_H26 as vcaH26,
+            A.VCA_H27 as vcaH27,
+            A.VCA_H28 as vcaH28,
+            A.VCA_H29 as vcaH29,
+            A.VCA_H30 as vcaH30,
+            A.VCA_H31 as vcaH31,
+            A.IA_H1 as iaH1,
+            A.IA_H2 as iaH2,
+            A.IA_H3 as iaH3,
+            A.IA_H4 as iaH4,
+            A.IA_H5 as iaH5,
+            A.IA_H6 as iaH6,
+            A.IA_H7 as iaH7,
+            A.IA_H8 as iaH8,
+            A.IA_H9 as iaH9,
+            A.IA_H10 as iaH10,
+            A.IA_H11 as iaH11,
+            A.IA_H12 as iaH12,
+            A.IA_H13 as iaH13,
+            A.IA_H14 as iaH14,
+            A.IA_H15 as iaH15,
+            A.IA_H16 as iaH16,
+            A.IA_H17 as iaH17,
+            A.IA_H18 as iaH18,
+            A.IA_H19 as iaH19,
+            A.IA_H20 as iaH20,
+            A.IA_H21 as iaH21,
+            A.IA_H22 as iaH22,
+            A.IA_H23 as iaH23,
+            A.IA_H24 as iaH24,
+            A.IA_H25 as iaH25,
+            A.IA_H26 as iaH26,
+            A.IA_H27 as iaH27,
+            A.IA_H28 as iaH28,
+            A.IA_H29 as iaH29,
+            A.IA_H30 as iaH30,
+            A.IA_H31 as iaH31,
+            A.IB_H1 as ibH1,
+            A.IB_H2 as ibH2,
+            A.IB_H3 as ibH3,
+            A.IB_H4 as ibH4,
+            A.IB_H5 as ibH5,
+            A.IB_H6 as ibH6,
+            A.IB_H7 as ibH7,
+            A.IB_H8 as ibH8,
+            A.IB_H9 as ibH9,
+            A.IB_H10 as ibH10,
+            A.IB_H11 as ibH11,
+            A.IB_H12 as ibH12,
+            A.IB_H13 as ibH13,
+            A.IB_H14 as ibH14,
+            A.IB_H15 as ibH15,
+            A.IB_H16 as ibH16,
+            A.IB_H17 as ibH17,
+            A.IB_H18 as ibH18,
+            A.IB_H19 as ibH19,
+            A.IB_H20 as ibH20,
+            A.IB_H21 as ibH21,
+            A.IB_H22 as ibH22,
+            A.IB_H23 as ibH23,
+            A.IB_H24 as ibH24,
+            A.IB_H25 as ibH25,
+            A.IB_H26 as ibH26,
+            A.IB_H27 as ibH27,
+            A.IB_H28 as ibH28,
+            A.IB_H29 as ibH29,
+            A.IB_H30 as ibH30,
+            A.IB_H31 as ibH31,
+            A.IC_H1 as icH1,
+            A.IC_H2 as icH2,
+            A.IC_H3 as icH3,
+            A.IC_H4 as icH4,
+            A.IC_H5 as icH5,
+            A.IC_H6 as icH6,
+            A.IC_H7 as icH7,
+            A.IC_H8 as icH8,
+            A.IC_H9 as icH9,
+            A.IC_H10 as icH10,
+            A.IC_H11 as icH11,
+            A.IC_H12 as icH12,
+            A.IC_H13 as icH13,
+            A.IC_H14 as icH14,
+            A.IC_H15 as icH15,
+            A.IC_H16 as icH16,
+            A.IC_H17 as icH17,
+            A.IC_H18 as icH18,
+            A.IC_H19 as icH19,
+            A.IC_H20 as icH20,
+            A.IC_H21 as icH21,
+            A.IC_H22 as icH22,
+            A.IC_H23 as icH23,
+            A.IC_H24 as icH24,
+            A.IC_H25 as icH25,
+            A.IC_H26 as icH26,
+            A.IC_H27 as icH27,
+            A.IC_H28 as icH28,
+            A.IC_H29 as icH29,
+            A.IC_H30 as icH30,
+            A.IC_H31 as icH31,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_data_meter_2_${year} A
+        WHERE
+            A.device_id = #{deviceId}
+        ORDER BY
+            A.transaction_date DESC
+        LIMIT 1
+    </select>
+
+    <select id="getDataHarmonicByDay" resultMap="dataLoadFrame2" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.vAB_H1 as vabH1,
+            A.VAB_H2 as vabH2,
+            A.VAB_H3 as vabH3,
+            A.VAB_H4 as vabH4,
+            A.VAB_H5  as vabH5,
+            A.VAB_H6 as vabH6,
+            A.VAB_H7 as vabH7,
+            A.VAB_H8 as vabH8,
+            A.VAB_H9 as vabH9,
+            A.VAB_H10 as vabH10,
+            A.VAB_H11 as vabH11,
+            A.VAB_H12 as vabH12,
+            A.VAB_H13 as vabH13,
+            A.VAB_H14 as vabH14,
+            A.VAB_H15 as vabH15,
+            A.VAB_H16 as vabH16,
+            A.VAB_H17 as vabH17,
+            A.VAB_H18 as vabH18,
+            A.VAB_H19 as vabH19,
+            A.VAB_H20 as vabH20,
+            A.VAB_H21 as vabH21,
+            A.VAB_H22 as vabH22,
+            A.VAB_H23 as vabH23,
+            A.VAB_H24 as vabH24,
+            A.VAB_H25 as vabH25,
+            A.VAB_H26 as vabH26,
+            A.VAB_H27 as vabH27,
+            A.VAB_H28 as vabH28,
+            A.VAB_H29 as vabH29,
+            A.VAB_H30 as vabH30,
+            A.VAB_H31 as vabH31,
+            A.VBC_H1 as vbcH1,
+            A.VBC_H2 as vbcH2,
+            A.VBC_H3 as vbcH3,
+            A.VBC_H4 as vbcH4,
+            A.VBC_H5 as vbcH5,
+            A.VBC_H6 as vbcH6,
+            A.VBC_H7 as vbcH7,
+            A.VBC_H8 as vbcH8,
+            A.VBC_H9 as vbcH9,
+            A.VBC_H10 as vbcH10,
+            A.VBC_H11 as vbcH11,
+            A.VBC_H12 as vbcH12,
+            A.VBC_H13 as vbcH13,
+            A.VBC_H14 as vbcH14,
+            A.VBC_H15 as vbcH15,
+            A.VBC_H16 as vbcH16,
+            A.VBC_H17 as vbcH17,
+            A.VBC_H18 as vbcH18,
+            A.VBC_H19 as vbcH19,
+            A.VBC_H20 as vbcH20,
+            A.VBC_H21 as vbcH21,
+            A.VBC_H22 as vbcH22,
+            A.VBC_H23 as vbcH23,
+            A.VBC_H24 as vbcH24,
+            A.VBC_H25 as vbcH25,
+            A.VBC_H26 as vbcH26,
+            A.VBC_H27 as vbcH27,
+            A.VBC_H28 as vbcH28,
+            A.VBC_H29 as vbcH29,
+            A.VBC_H30 as vbcH30,
+            A.VBC_H31 as vbcH31,
+            A.VCA_H1 as vcaH1,
+            A.VCA_H2 as vcaH2,
+            A.VCA_H3 as vcaH3,
+            A.VCA_H4 as vcaH4,
+            A.VCA_H5 as vcaH5,
+            A.VCA_H6 as vcaH6,
+            A.VCA_H7 as vcaH7,
+            A.VCA_H8 as vcaH8,
+            A.VCA_H9 as vcaH9,
+            A.VCA_H10 as vcaH10,
+            A.VCA_H11 as vcaH11,
+            A.VCA_H12 as vcaH12,
+            A.VCA_H13 as vcaH13,
+            A.VCA_H14 as vcaH14,
+            A.VCA_H15 as vcaH15,
+            A.VCA_H16 as vcaH16,
+            A.VCA_H17 as vcaH17,
+            A.VCA_H18 as vcaH18,
+            A.VCA_H19 as vcaH19,
+            A.VCA_H20 as vcaH20,
+            A.VCA_H21 as vcaH21,
+            A.VCA_H22 as vcaH22,
+            A.VCA_H23 as vcaH23,
+            A.VCA_H24 as vcaH24,
+            A.VCA_H25 as vcaH25,
+            A.VCA_H26 as vcaH26,
+            A.VCA_H27 as vcaH27,
+            A.VCA_H28 as vcaH28,
+            A.VCA_H29 as vcaH29,
+            A.VCA_H30 as vcaH30,
+            A.VCA_H31 as vcaH31,
+            A.IA_H1 as iaH1,
+            A.IA_H2 as iaH2,
+            A.IA_H3 as iaH3,
+            A.IA_H4 as iaH4,
+            A.IA_H5 as iaH5,
+            A.IA_H6 as iaH6,
+            A.IA_H7 as iaH7,
+            A.IA_H8 as iaH8,
+            A.IA_H9 as iaH9,
+            A.IA_H10 as iaH10,
+            A.IA_H11 as iaH11,
+            A.IA_H12 as iaH12,
+            A.IA_H13 as iaH13,
+            A.IA_H14 as iaH14,
+            A.IA_H15 as iaH15,
+            A.IA_H16 as iaH16,
+            A.IA_H17 as iaH17,
+            A.IA_H18 as iaH18,
+            A.IA_H19 as iaH19,
+            A.IA_H20 as iaH20,
+            A.IA_H21 as iaH21,
+            A.IA_H22 as iaH22,
+            A.IA_H23 as iaH23,
+            A.IA_H24 as iaH24,
+            A.IA_H25 as iaH25,
+            A.IA_H26 as iaH26,
+            A.IA_H27 as iaH27,
+            A.IA_H28 as iaH28,
+            A.IA_H29 as iaH29,
+            A.IA_H30 as iaH30,
+            A.IA_H31 as iaH31,
+            A.IB_H1 as ibH1,
+            A.IB_H2 as ibH2,
+            A.IB_H3 as ibH3,
+            A.IB_H4 as ibH4,
+            A.IB_H5 as ibH5,
+            A.IB_H6 as ibH6,
+            A.IB_H7 as ibH7,
+            A.IB_H8 as ibH8,
+            A.IB_H9 as ibH9,
+            A.IB_H10 as ibH10,
+            A.IB_H11 as ibH11,
+            A.IB_H12 as ibH12,
+            A.IB_H13 as ibH13,
+            A.IB_H14 as ibH14,
+            A.IB_H15 as ibH15,
+            A.IB_H16 as ibH16,
+            A.IB_H17 as ibH17,
+            A.IB_H18 as ibH18,
+            A.IB_H19 as ibH19,
+            A.IB_H20 as ibH20,
+            A.IB_H21 as ibH21,
+            A.IB_H22 as ibH22,
+            A.IB_H23 as ibH23,
+            A.IB_H24 as ibH24,
+            A.IB_H25 as ibH25,
+            A.IB_H26 as ibH26,
+            A.IB_H27 as ibH27,
+            A.IB_H28 as ibH28,
+            A.IB_H29 as ibH29,
+            A.IB_H30 as ibH30,
+            A.IB_H31 as ibH31,
+            A.IC_H1 as icH1,
+            A.IC_H2 as icH2,
+            A.IC_H3 as icH3,
+            A.IC_H4 as icH4,
+            A.IC_H5 as icH5,
+            A.IC_H6 as icH6,
+            A.IC_H7 as icH7,
+            A.IC_H8 as icH8,
+            A.IC_H9 as icH9,
+            A.IC_H10 as icH10,
+            A.IC_H11 as icH11,
+            A.IC_H12 as icH12,
+            A.IC_H13 as icH13,
+            A.IC_H14 as icH14,
+            A.IC_H15 as icH15,
+            A.IC_H16 as icH16,
+            A.IC_H17 as icH17,
+            A.IC_H18 as icH18,
+            A.IC_H19 as icH19,
+            A.IC_H20 as icH20,
+            A.IC_H21 as icH21,
+            A.IC_H22 as icH22,
+            A.IC_H23 as icH23,
+            A.IC_H24 as icH24,
+            A.IC_H25 as icH25,
+            A.IC_H26 as icH26,
+            A.IC_H27 as icH27,
+            A.IC_H28 as icH28,
+            A.IC_H29 as icH29,
+            A.IC_H30 as icH30,
+            A.IC_H31 as icH31,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema}s3m_data_meter_2_${year} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.transaction_date DESC
+        LIMIT 1
+    </select>
+
+    <select id="getInstantPowerQuality" resultMap="dataLoadFrame2" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.VAB_H1 as vabH1,
+            A.VAB_H2 as vabH2,
+            A.VAB_H3 as vabH3,
+            A.VAB_H4 as vabH4,
+            A.VAB_H5  as vabH5,
+            A.VAB_H6 as vabH6,
+            A.VAB_H7 as vabH7,
+            A.VAB_H8 as vabH8,
+            A.VAB_H9 as vabH9,
+            A.VAB_H10 as vabH10,
+            A.VAB_H11 as vabH11,
+            A.VAB_H12 as vabH12,
+            A.VAB_H13 as vabH13,
+            A.VAB_H14 as vabH14,
+            A.VAB_H15 as vabH15,
+            A.VAB_H16 as vabH16,
+            A.VAB_H17 as vabH17,
+            A.VAB_H18 as vabH18,
+            A.VAB_H19 as vabH19,
+            A.VAB_H20 as vabH20,
+            A.VAB_H21 as vabH21,
+            A.VAB_H22 as vabH22,
+            A.VAB_H23 as vabH23,
+            A.VAB_H24 as vabH24,
+            A.VAB_H25 as vabH25,
+            A.VAB_H26 as vabH26,
+            A.VAB_H27 as vabH27,
+            A.VAB_H28 as vabH28,
+            A.VAB_H29 as vabH29,
+            A.VAB_H30 as vabH30,
+            A.VAB_H31 as vabH31,
+            A.VBC_H1 as vbcH1,
+            A.VBC_H2 as vbcH2,
+            A.VBC_H3 as vbcH3,
+            A.VBC_H4 as vbcH4,
+            A.VBC_H5 as vbcH5,
+            A.VBC_H6 as vbcH6,
+            A.VBC_H7 as vbcH7,
+            A.VBC_H8 as vbcH8,
+            A.VBC_H9 as vbcH9,
+            A.VBC_H10 as vbcH10,
+            A.VBC_H11 as vbcH11,
+            A.VBC_H12 as vbcH12,
+            A.VBC_H13 as vbcH13,
+            A.VBC_H14 as vbcH14,
+            A.VBC_H15 as vbcH15,
+            A.VBC_H16 as vbcH16,
+            A.VBC_H17 as vbcH17,
+            A.VBC_H18 as vbcH18,
+            A.VBC_H19 as vbcH19,
+            A.VBC_H20 as vbcH20,
+            A.VBC_H21 as vbcH21,
+            A.VBC_H22 as vbcH22,
+            A.VBC_H23 as vbcH23,
+            A.VBC_H24 as vbcH24,
+            A.VBC_H25 as vbcH25,
+            A.VBC_H26 as vbcH26,
+            A.VBC_H27 as vbcH27,
+            A.VBC_H28 as vbcH28,
+            A.VBC_H29 as vbcH29,
+            A.VBC_H30 as vbcH30,
+            A.VBC_H31 as vbcH31,
+            A.VCA_H1 as vcaH1,
+            A.VCA_H2 as vcaH2,
+            A.VCA_H3 as vcaH3,
+            A.VCA_H4 as vcaH4,
+            A.VCA_H5 as vcaH5,
+            A.VCA_H6 as vcaH6,
+            A.VCA_H7 as vcaH7,
+            A.VCA_H8 as vcaH8,
+            A.VCA_H9 as vcaH9,
+            A.VCA_H10 as vcaH10,
+            A.VCA_H11 as vcaH11,
+            A.VCA_H12 as vcaH12,
+            A.VCA_H13 as vcaH13,
+            A.VCA_H14 as vcaH14,
+            A.VCA_H15 as vcaH15,
+            A.VCA_H16 as vcaH16,
+            A.VCA_H17 as vcaH17,
+            A.VCA_H18 as vcaH18,
+            A.VCA_H19 as vcaH19,
+            A.VCA_H20 as vcaH20,
+            A.VCA_H21 as vcaH21,
+            A.VCA_H22 as vcaH22,
+            A.VCA_H23 as vcaH23,
+            A.VCA_H24 as vcaH24,
+            A.VCA_H25 as vcaH25,
+            A.VCA_H26 as vcaH26,
+            A.VCA_H27 as vcaH27,
+            A.VCA_H28 as vcaH28,
+            A.VCA_H29 as vcaH29,
+            A.VCA_H30 as vcaH30,
+            A.VCA_H31 as vcaH31,
+            A.VAN_H1 as vanH1,
+            A.VAN_H2 as vanH2,
+            A.VAN_H3 as vanH3,
+            A.VAN_H4 as vanH4,
+            A.VAN_H5 as vanH5,
+            A.VAN_H6 as vanH6,
+            A.VAN_H7 as vanH7,
+            A.VAN_H8 as vanH8,
+            A.VAN_H9 as vanH9,
+            A.VAN_H10 as vanH10,
+            A.VAN_H11 as vanH11,
+            A.VAN_H12 as vanH12,
+            A.VAN_H13 as vanH13,
+            A.VAN_H14 as vanH14,
+            A.VAN_H15 as vanH15,
+            A.VAN_H16 as vanH16,
+            A.VAN_H17 as vanH17,
+            A.VAN_H18 as vanH18,
+            A.VAN_H19 as vanH19,
+            A.VAN_H20 as vanH20,
+            A.VAN_H21 as vanH21,
+            A.VAN_H22 as vanH22,
+            A.VAN_H23 as vanH23,
+            A.VAN_H24 as vanH24,
+            A.VAN_H25 as vanH25,
+            A.VAN_H26 as vanH26,
+            A.VAN_H27 as vanH27,
+            A.VAN_H28 as vanH28,
+            A.VAN_H29 as vanH29,
+            A.VAN_H30 as vanH30,
+            A.VAN_H31 as vanH31,
+            A.VBN_H1 as vbnH1,
+            A.VBN_H2 as vbnH2,
+            A.VBN_H3 as vbnH3,
+            A.VBN_H4 as vbnH4,
+            A.VBN_H5 as vbnH5,
+            A.VBN_H6 as vbnH6,
+            A.VBN_H7 as vbnH7,
+            A.VBN_H8 as vbnH8,
+            A.VBN_H9 as vbnH9,
+            A.VBN_H10 as vbnH10,
+            A.VBN_H11 as vbnH11,
+            A.VBN_H12 as vbnH12,
+            A.VBN_H13 as vbnH13,
+            A.VBN_H14 as vbnH14,
+            A.VBN_H15 as vbnH15,
+            A.VBN_H16 as vbnH16,
+            A.VBN_H17 as vbnH17,
+            A.VBN_H18 as vbnH18,
+            A.VBN_H19 as vbnH19,
+            A.VBN_H20 as vbnH20,
+            A.VBN_H21 as vbnH21,
+            A.VBN_H22 as vbnH22,
+            A.VBN_H23 as vbnH23,
+            A.VBN_H24 as vbnH24,
+            A.VBN_H25 as vbnH25,
+            A.VBN_H26 as vbnH26,
+            A.VBN_H27 as vbnH27,
+            A.VBN_H28 as vbnH28,
+            A.VBN_H29 as vbnH29,
+            A.VBN_H30 as vbnH30,
+            A.VBN_H31 as vbnH31,
+            A.VCN_H1 as vcnH1,
+            A.VCN_H2 as vcnH2,
+            A.VCN_H3 as vcnH3,
+            A.VCN_H4 as vcnH4,
+            A.VCN_H5 as vcnH5,
+            A.VCN_H6 as vcnH6,
+            A.VCN_H7 as vcnH7,
+            A.VCN_H8 as vcnH8,
+            A.VCN_H9 as vcnH9,
+            A.VCN_H10 as vcnH10,
+            A.VCN_H11 as vcnH11,
+            A.VCN_H12 as vcnH12,
+            A.VCN_H13 as vcnH13,
+            A.VCN_H14 as vcnH14,
+            A.VCN_H15 as vcnH15,
+            A.VCN_H16 as vcnH16,
+            A.VCN_H17 as vcnH17,
+            A.VCN_H18 as vcnH18,
+            A.VCN_H19 as vcnH19,
+            A.VCN_H20 as vcnH20,
+            A.VCN_H21 as vcnH21,
+            A.VCN_H22 as vcnH22,
+            A.VCN_H23 as vcnH23,
+            A.VCN_H24 as vcnH24,
+            A.VCN_H25 as vcnH25,
+            A.VCN_H26 as vcnH26,
+            A.VCN_H27 as vcnH27,
+            A.VCN_H28 as vcnH28,
+            A.VCN_H29 as vcnH29,
+            A.VCN_H30 as vcnH30,
+            A.VCN_H31 as vcnH31,
+            A.IA_H1 as iaH1,
+            A.IA_H2 as iaH2,
+            A.IA_H3 as iaH3,
+            A.IA_H4 as iaH4,
+            A.IA_H5 as iaH5,
+            A.IA_H6 as iaH6,
+            A.IA_H7 as iaH7,
+            A.IA_H8 as iaH8,
+            A.IA_H9 as iaH9,
+            A.IA_H10 as iaH10,
+            A.IA_H11 as iaH11,
+            A.IA_H12 as iaH12,
+            A.IA_H13 as iaH13,
+            A.IA_H14 as iaH14,
+            A.IA_H15 as iaH15,
+            A.IA_H16 as iaH16,
+            A.IA_H17 as iaH17,
+            A.IA_H18 as iaH18,
+            A.IA_H19 as iaH19,
+            A.IA_H20 as iaH20,
+            A.IA_H21 as iaH21,
+            A.IA_H22 as iaH22,
+            A.IA_H23 as iaH23,
+            A.IA_H24 as iaH24,
+            A.IA_H25 as iaH25,
+            A.IA_H26 as iaH26,
+            A.IA_H27 as iaH27,
+            A.IA_H28 as iaH28,
+            A.IA_H29 as iaH29,
+            A.IA_H30 as iaH30,
+            A.IA_H31 as iaH31,
+            A.IB_H1 as ibH1,
+            A.IB_H2 as ibH2,
+            A.IB_H3 as ibH3,
+            A.IB_H4 as ibH4,
+            A.IB_H5 as ibH5,
+            A.IB_H6 as ibH6,
+            A.IB_H7 as ibH7,
+            A.IB_H8 as ibH8,
+            A.IB_H9 as ibH9,
+            A.IB_H10 as ibH10,
+            A.IB_H11 as ibH11,
+            A.IB_H12 as ibH12,
+            A.IB_H13 as ibH13,
+            A.IB_H14 as ibH14,
+            A.IB_H15 as ibH15,
+            A.IB_H16 as ibH16,
+            A.IB_H17 as ibH17,
+            A.IB_H18 as ibH18,
+            A.IB_H19 as ibH19,
+            A.IB_H20 as ibH20,
+            A.IB_H21 as ibH21,
+            A.IB_H22 as ibH22,
+            A.IB_H23 as ibH23,
+            A.IB_H24 as ibH24,
+            A.IB_H25 as ibH25,
+            A.IB_H26 as ibH26,
+            A.IB_H27 as ibH27,
+            A.IB_H28 as ibH28,
+            A.IB_H29 as ibH29,
+            A.IB_H30 as ibH30,
+            A.IB_H31 as ibH31,
+            A.IC_H1 as icH1,
+            A.IC_H2 as icH2,
+            A.IC_H3 as icH3,
+            A.IC_H4 as icH4,
+            A.IC_H5 as icH5,
+            A.IC_H6 as icH6,
+            A.IC_H7 as icH7,
+            A.IC_H8 as icH8,
+            A.IC_H9 as icH9,
+            A.IC_H10 as icH10,
+            A.IC_H11 as icH11,
+            A.IC_H12 as icH12,
+            A.IC_H13 as icH13,
+            A.IC_H14 as icH14,
+            A.IC_H15 as icH15,
+            A.IC_H16 as icH16,
+            A.IC_H17 as icH17,
+            A.IC_H18 as icH18,
+            A.IC_H19 as icH19,
+            A.IC_H20 as icH20,
+            A.IC_H21 as icH21,
+            A.IC_H22 as icH22,
+            A.IC_H23 as icH23,
+            A.IC_H24 as icH24,
+            A.IC_H25 as icH25,
+            A.IC_H26 as icH26,
+            A.IC_H27 as icH27,
+            A.IC_H28 as icH28,
+            A.IC_H29 as icH29,
+            A.IC_H30 as icH30,
+            A.IC_H31 as icH31,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+             ${schema}s3m_instant_data A
+        WHERE
+            A.device_id = #{deviceId}
+    </select>
+
+    <select id="getPowerQualities" resultMap="dataLoadFrame2" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.VAB_H1 as vabH1,
+            A.VAB_H2 as vabH2,
+            A.VAB_H3 as vabH3,
+            A.VAB_H4 as vabH4,
+            A.VAB_H5  as vabH5,
+            A.VAB_H6 as vabH6,
+            A.VAB_H7 as vabH7,
+            A.VAB_H8 as vabH8,
+            A.VAB_H9 as vabH9,
+            A.VAB_H10 as vabH10,
+            A.VAB_H11 as vabH11,
+            A.VAB_H12 as vabH12,
+            A.VAB_H13 as vabH13,
+            A.VAB_H14 as vabH14,
+            A.VAB_H15 as vabH15,
+            A.VAB_H16 as vabH16,
+            A.VAB_H17 as vabH17,
+            A.VAB_H18 as vabH18,
+            A.VAB_H19 as vabH19,
+            A.VAB_H20 as vabH20,
+            A.VAB_H21 as vabH21,
+            A.VAB_H22 as vabH22,
+            A.VAB_H23 as vabH23,
+            A.VAB_H24 as vabH24,
+            A.VAB_H25 as vabH25,
+            A.VAB_H26 as vabH26,
+            A.VAB_H27 as vabH27,
+            A.VAB_H28 as vabH28,
+            A.VAB_H29 as vabH29,
+            A.VAB_H30 as vabH30,
+            A.VAB_H31 as vabH31,
+            A.VBC_H1 as vbcH1,
+            A.VBC_H2 as vbcH2,
+            A.VBC_H3 as vbcH3,
+            A.VBC_H4 as vbcH4,
+            A.VBC_H5 as vbcH5,
+            A.VBC_H6 as vbcH6,
+            A.VBC_H7 as vbcH7,
+            A.VBC_H8 as vbcH8,
+            A.VBC_H9 as vbcH9,
+            A.VBC_H10 as vbcH10,
+            A.VBC_H11 as vbcH11,
+            A.VBC_H12 as vbcH12,
+            A.VBC_H13 as vbcH13,
+            A.VBC_H14 as vbcH14,
+            A.VBC_H15 as vbcH15,
+            A.VBC_H16 as vbcH16,
+            A.VBC_H17 as vbcH17,
+            A.VBC_H18 as vbcH18,
+            A.VBC_H19 as vbcH19,
+            A.VBC_H20 as vbcH20,
+            A.VBC_H21 as vbcH21,
+            A.VBC_H22 as vbcH22,
+            A.VBC_H23 as vbcH23,
+            A.VBC_H24 as vbcH24,
+            A.VBC_H25 as vbcH25,
+            A.VBC_H26 as vbcH26,
+            A.VBC_H27 as vbcH27,
+            A.VBC_H28 as vbcH28,
+            A.VBC_H29 as vbcH29,
+            A.VBC_H30 as vbcH30,
+            A.VBC_H31 as vbcH31,
+            A.VCA_H1 as vcaH1,
+            A.VCA_H2 as vcaH2,
+            A.VCA_H3 as vcaH3,
+            A.VCA_H4 as vcaH4,
+            A.VCA_H5 as vcaH5,
+            A.VCA_H6 as vcaH6,
+            A.VCA_H7 as vcaH7,
+            A.VCA_H8 as vcaH8,
+            A.VCA_H9 as vcaH9,
+            A.VCA_H10 as vcaH10,
+            A.VCA_H11 as vcaH11,
+            A.VCA_H12 as vcaH12,
+            A.VCA_H13 as vcaH13,
+            A.VCA_H14 as vcaH14,
+            A.VCA_H15 as vcaH15,
+            A.VCA_H16 as vcaH16,
+            A.VCA_H17 as vcaH17,
+            A.VCA_H18 as vcaH18,
+            A.VCA_H19 as vcaH19,
+            A.VCA_H20 as vcaH20,
+            A.VCA_H21 as vcaH21,
+            A.VCA_H22 as vcaH22,
+            A.VCA_H23 as vcaH23,
+            A.VCA_H24 as vcaH24,
+            A.VCA_H25 as vcaH25,
+            A.VCA_H26 as vcaH26,
+            A.VCA_H27 as vcaH27,
+            A.VCA_H28 as vcaH28,
+            A.VCA_H29 as vcaH29,
+            A.VCA_H30 as vcaH30,
+            A.VCA_H31 as vcaH31,
+            A.VAN_H1 as vanH1,
+            A.VAN_H2 as vanH2,
+            A.VAN_H3 as vanH3,
+            A.VAN_H4 as vanH4,
+            A.VAN_H5 as vanH5,
+            A.VAN_H6 as vanH6,
+            A.VAN_H7 as vanH7,
+            A.VAN_H8 as vanH8,
+            A.VAN_H9 as vanH9,
+            A.VAN_H10 as vanH10,
+            A.VAN_H11 as vanH11,
+            A.VAN_H12 as vanH12,
+            A.VAN_H13 as vanH13,
+            A.VAN_H14 as vanH14,
+            A.VAN_H15 as vanH15,
+            A.VAN_H16 as vanH16,
+            A.VAN_H17 as vanH17,
+            A.VAN_H18 as vanH18,
+            A.VAN_H19 as vanH19,
+            A.VAN_H20 as vanH20,
+            A.VAN_H21 as vanH21,
+            A.VAN_H22 as vanH22,
+            A.VAN_H23 as vanH23,
+            A.VAN_H24 as vanH24,
+            A.VAN_H25 as vanH25,
+            A.VAN_H26 as vanH26,
+            A.VAN_H27 as vanH27,
+            A.VAN_H28 as vanH28,
+            A.VAN_H29 as vanH29,
+            A.VAN_H30 as vanH30,
+            A.VAN_H31 as vanH31,
+            A.VBN_H1 as vbnH1,
+            A.VBN_H2 as vbnH2,
+            A.VBN_H3 as vbnH3,
+            A.VBN_H4 as vbnH4,
+            A.VBN_H5 as vbnH5,
+            A.VBN_H6 as vbnH6,
+            A.VBN_H7 as vbnH7,
+            A.VBN_H8 as vbnH8,
+            A.VBN_H9 as vbnH9,
+            A.VBN_H10 as vbnH10,
+            A.VBN_H11 as vbnH11,
+            A.VBN_H12 as vbnH12,
+            A.VBN_H13 as vbnH13,
+            A.VBN_H14 as vbnH14,
+            A.VBN_H15 as vbnH15,
+            A.VBN_H16 as vbnH16,
+            A.VBN_H17 as vbnH17,
+            A.VBN_H18 as vbnH18,
+            A.VBN_H19 as vbnH19,
+            A.VBN_H20 as vbnH20,
+            A.VBN_H21 as vbnH21,
+            A.VBN_H22 as vbnH22,
+            A.VBN_H23 as vbnH23,
+            A.VBN_H24 as vbnH24,
+            A.VBN_H25 as vbnH25,
+            A.VBN_H26 as vbnH26,
+            A.VBN_H27 as vbnH27,
+            A.VBN_H28 as vbnH28,
+            A.VBN_H29 as vbnH29,
+            A.VBN_H30 as vbnH30,
+            A.VBN_H31 as vbnH31,
+            A.VCN_H1 as vcnH1,
+            A.VCN_H2 as vcnH2,
+            A.VCN_H3 as vcnH3,
+            A.VCN_H4 as vcnH4,
+            A.VCN_H5 as vcnH5,
+            A.VCN_H6 as vcnH6,
+            A.VCN_H7 as vcnH7,
+            A.VCN_H8 as vcnH8,
+            A.VCN_H9 as vcnH9,
+            A.VCN_H10 as vcnH10,
+            A.VCN_H11 as vcnH11,
+            A.VCN_H12 as vcnH12,
+            A.VCN_H13 as vcnH13,
+            A.VCN_H14 as vcnH14,
+            A.VCN_H15 as vcnH15,
+            A.VCN_H16 as vcnH16,
+            A.VCN_H17 as vcnH17,
+            A.VCN_H18 as vcnH18,
+            A.VCN_H19 as vcnH19,
+            A.VCN_H20 as vcnH20,
+            A.VCN_H21 as vcnH21,
+            A.VCN_H22 as vcnH22,
+            A.VCN_H23 as vcnH23,
+            A.VCN_H24 as vcnH24,
+            A.VCN_H25 as vcnH25,
+            A.VCN_H26 as vcnH26,
+            A.VCN_H27 as vcnH27,
+            A.VCN_H28 as vcnH28,
+            A.VCN_H29 as vcnH29,
+            A.VCN_H30 as vcnH30,
+            A.VCN_H31 as vcnH31,
+            A.IA_H1 as iaH1,
+            A.IA_H2 as iaH2,
+            A.IA_H3 as iaH3,
+            A.IA_H4 as iaH4,
+            A.IA_H5 as iaH5,
+            A.IA_H6 as iaH6,
+            A.IA_H7 as iaH7,
+            A.IA_H8 as iaH8,
+            A.IA_H9 as iaH9,
+            A.IA_H10 as iaH10,
+            A.IA_H11 as iaH11,
+            A.IA_H12 as iaH12,
+            A.IA_H13 as iaH13,
+            A.IA_H14 as iaH14,
+            A.IA_H15 as iaH15,
+            A.IA_H16 as iaH16,
+            A.IA_H17 as iaH17,
+            A.IA_H18 as iaH18,
+            A.IA_H19 as iaH19,
+            A.IA_H20 as iaH20,
+            A.IA_H21 as iaH21,
+            A.IA_H22 as iaH22,
+            A.IA_H23 as iaH23,
+            A.IA_H24 as iaH24,
+            A.IA_H25 as iaH25,
+            A.IA_H26 as iaH26,
+            A.IA_H27 as iaH27,
+            A.IA_H28 as iaH28,
+            A.IA_H29 as iaH29,
+            A.IA_H30 as iaH30,
+            A.IA_H31 as iaH31,
+            A.IB_H1 as ibH1,
+            A.IB_H2 as ibH2,
+            A.IB_H3 as ibH3,
+            A.IB_H4 as ibH4,
+            A.IB_H5 as ibH5,
+            A.IB_H6 as ibH6,
+            A.IB_H7 as ibH7,
+            A.IB_H8 as ibH8,
+            A.IB_H9 as ibH9,
+            A.IB_H10 as ibH10,
+            A.IB_H11 as ibH11,
+            A.IB_H12 as ibH12,
+            A.IB_H13 as ibH13,
+            A.IB_H14 as ibH14,
+            A.IB_H15 as ibH15,
+            A.IB_H16 as ibH16,
+            A.IB_H17 as ibH17,
+            A.IB_H18 as ibH18,
+            A.IB_H19 as ibH19,
+            A.IB_H20 as ibH20,
+            A.IB_H21 as ibH21,
+            A.IB_H22 as ibH22,
+            A.IB_H23 as ibH23,
+            A.IB_H24 as ibH24,
+            A.IB_H25 as ibH25,
+            A.IB_H26 as ibH26,
+            A.IB_H27 as ibH27,
+            A.IB_H28 as ibH28,
+            A.IB_H29 as ibH29,
+            A.IB_H30 as ibH30,
+            A.IB_H31 as ibH31,
+            A.IC_H1 as icH1,
+            A.IC_H2 as icH2,
+            A.IC_H3 as icH3,
+            A.IC_H4 as icH4,
+            A.IC_H5 as icH5,
+            A.IC_H6 as icH6,
+            A.IC_H7 as icH7,
+            A.IC_H8 as icH8,
+            A.IC_H9 as icH9,
+            A.IC_H10 as icH10,
+            A.IC_H11 as icH11,
+            A.IC_H12 as icH12,
+            A.IC_H13 as icH13,
+            A.IC_H14 as icH14,
+            A.IC_H15 as icH15,
+            A.IC_H16 as icH16,
+            A.IC_H17 as icH17,
+            A.IC_H18 as icH18,
+            A.IC_H19 as icH19,
+            A.IC_H20 as icH20,
+            A.IC_H21 as icH21,
+            A.IC_H22 as icH22,
+            A.IC_H23 as icH23,
+            A.IC_H24 as icH24,
+            A.IC_H25 as icH25,
+            A.IC_H26 as icH26,
+            A.IC_H27 as icH27,
+            A.IC_H28 as icH28,
+            A.IC_H29 as icH29,
+            A.IC_H30 as icH30,
+            A.IC_H31 as icH31,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date DESC
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset}, #{pageSize}
+        </if>
+    </select>
+
+    <select id="countDataFrame2" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+    
+    
+
+</mapper>

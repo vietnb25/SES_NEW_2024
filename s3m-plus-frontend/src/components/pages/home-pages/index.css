@@ -1,0 +1,612 @@
+.btn-cus-active {
+    background-color: #fff0e3 !important;
+    box-shadow: 2px 2px #9da3be !important;
+}
+
+
+.btn-cus-active i {
+    color: #ff7300 !important;
+}
+
+.btn-cus-active span {
+    font-weight: bold;
+    color: #ff7300 !important;
+}
+
+.btn-cus {
+    display: flex;
+    border: 1px solid #D8D9DA;
+    background-color: var(--ses-grey-80-color);
+}
+
+.btn-cus i {
+    margin-top: 4px;
+    color: #fff;
+}
+
+.btn-cus span {
+    color: #fff;
+    text-align: -webkit-left;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+.tab-hide {
+    background: transparent !important;
+    padding-right: 0 !important;
+    width: 50px !important;
+    height: 60px !important;
+    border: none !important
+}
+
+.tab-show {
+    width: 200px !important;
+}
+
+.tab-menu div {
+    flex: 1;
+}
+
+.tab-menu div a {
+    border-radius: unset;
+    width: 100%;
+    background-color: #09195C;
+}
+
+.tab-menu div a i {
+    color: #ffffff;
+}
+
+.tab-menu div a span {
+    font-size: 13px;
+    text-align: -webkit-left;
+    font-weight: bold;
+    color: #ffffff;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.tab-menu .active a.primary-menu {
+    color: #FFFFFF;
+    background-color: #F36F21 !important;
+    border-radius: 5px;
+    height: 40px;
+    margin-top: -2px;
+    box-shadow: 5px 5px 10px 0 black;
+    z-index: 1;
+}
+
+.tab-menu .active a i {
+    color: #FFFFFF !important;
+}
+
+.tab-menu .active a span {
+    font-weight: bold;
+    color: #FFFFFF !important;
+}
+
+.btn-change-tab {
+    height: 31.25px !important;
+    background-color: #a5a6a9;
+}
+
+.tab-overview {
+    height: 790px;
+    margin: -3px 0 0 0 !important;
+}
+
+.tab-overview::-webkit-scrollbar {}
+
+.card-sys .modun {
+    width: 533.94px;
+    border: 4px solid #0a1a5c;
+    height: 330px;
+    text-align: -webkit-center;
+    margin-right: 10px;
+}
+
+.card-sys .modun::-webkit-scrollbar {
+    display: none;
+}
+
+.card-sys .modun {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+
+.card-sys .modun:hover {
+    width: 533.94px;
+    border: 5px solid #0a1a5c;
+    height: 330px;
+    text-align: -webkit-center;
+    opacity: 100%;
+}
+
+.card-sys .active {
+    width: 533.94px;
+    border: 5px solid #0a1a5c;
+    height: 330px;
+    text-align: -webkit-center;
+    box-shadow: 7px 7px 3px #aaaaaa;
+}
+
+.card-sys .block {
+    width: 533.94px;
+    border: 4px solid #0a1a5c;
+    overflow: auto;
+    height: 330px;
+    text-align: -webkit-center;
+    opacity: 30%;
+}
+
+.card-sys .module-body {
+    overflow-y: scroll;
+    height: 230px;
+    font-size: 13px;
+}
+
+.card-sys .modun .title-sys {
+    color: #fff;
+    margin-bottom: 0;
+    font-size: 15px;
+    font-weight: bold;
+    height: 53px;
+}
+
+.card-sys .modun .title-module {
+    color: #000000;
+    margin-bottom: 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card-sys .modun .title-sys-sm {
+    margin: 0;
+    color: #000000;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card-sys .load {
+    background-color: #fff;
+}
+
+.card-sys .solar {
+    background-color: #fff;
+}
+
+.card-sys .battery {
+    background-color: #fff;
+}
+
+.card-sys .wind {
+    background-color: #fff;
+}
+
+.card-sys .grid {
+    background-color: #fff;
+}
+
+.text-height {
+    height: 18px;
+}
+
+.click-down {
+    bottom: 0;
+    right: 46%;
+    font-size: 37px;
+    cursor: pointer;
+}
+
+.click-up {
+    bottom: -12px;
+    right: 46%;
+    font-size: 37px;
+    cursor: pointer;
+}
+
+.click-up-view {
+    bottom: -20px;
+    right: 46%;
+    font-size: 37px;
+    cursor: pointer;
+}
+
+.click-down-view {
+    right: 49%;
+    bottom: 0;
+    font-size: 37px;
+    cursor: pointer;
+}
+
+.click-down-views {
+    right: 50%;
+    font-size: 37px;
+    cursor: pointer;
+    top: 0px;
+}
+
+.tab-data-sys {
+    background-color: #fff;
+    height: 325px;
+    margin-top: 20px;
+}
+
+.load-site {
+    width: 21.5%;
+    margin-top: 45px;
+    background-color: #F5F5F5;
+    height: 345px;
+    margin-left: 5px;
+}
+
+
+
+.tab-data-sys-view {
+    border-radius: 3.5rem;
+    height: 360px;
+}
+
+.tab-site-view {
+    display: -webkit-box;
+    overflow: auto;
+}
+
+.tab-module-view {
+    display: -webkit-box;
+    overflow: auto;
+}
+
+.load-system {
+    background-color: #CCCCCC;
+    cursor: pointer;
+    width: 24%;
+    height: 275px;
+    overflow: hidden;
+}
+
+.load-system:hover {
+    background-color: #ffffff !important;
+}
+
+.tab-site-view .checked {
+
+    border: 2px solid black !important;
+    background-color: #ffffff !important;
+}
+
+.tab-site-view .checked p {
+    color: #000000 !important;
+}
+
+.tab-site-view .checked p i {
+    color: #000000 !important;
+}
+
+.load-system:hover {
+    width: 24%;
+    cursor: pointer;
+    height: 275px;
+    border: 2px solid black !important;
+}
+
+.load-system.checked:hover {
+    width: 24%;
+    height: 275px;
+    border: 2px solid black !important;
+}
+
+.title-sys {
+    font-weight: bold;
+    display: -webkit-box;
+    width: 80%;
+    -webkit-line-clamp: 1;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 12%
+}
+
+.title-address {
+    font-weight: bold;
+    display: -webkit-box;
+    width: 70%;
+    -webkit-line-clamp: 1;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 12%
+}
+
+.tab-site {
+    display: -webkit-box;
+    overflow: auto;
+    margin-top: 10px;
+}
+
+
+
+.tab-site-view .active {
+    background-color: #CCCCCC;
+}
+
+.tab-site-view .active p {
+    color: #ffffff;
+}
+
+.tab-site-view .active p i {
+    color: #ffffff;
+}
+
+.tab-header-site-left {
+    top: 0;
+    left: 3%;
+    font-weight: bold;
+    color: black;
+}
+
+.tab-header-site-right {
+    top: 0;
+    right: 3%;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+}
+
+.tab-header-site-center {
+    border: 1px solid black;
+    top: 0;
+    right: 41%;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    background-color: #B5B6D0;
+}
+
+.card-sys-site {
+    background-color: #F8A46F;
+}
+
+.tab-time {
+    height: 36px !important;
+}
+
+.tab-site-left {
+    left: 2%;
+}
+
+.tab-site-right {
+    right: 4%;
+}
+
+.tab-site-left {
+    font-size: 15px;
+}
+
+.click-close {
+    cursor: pointer;
+    font-size: 26px;
+    position: absolute;
+    right: 10px;
+    top: 2px;
+}
+
+.tab-width {
+    width: 96% !important;
+}
+
+/* .tab-site-view::-webkit-scrollbar-track {
+    background-color: #313972;
+/* .tab-site-view::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    height:1%;
+}
+
+.tab-site-view::-webkit-scrollbar {
+    background-color: #ffffff
+}
+
+.tab-site-view::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+} */
+
+.tab-view-max {
+    width: 99% !important;
+}
+
+#keyword {
+    position: relative;
+    font-weight: bold;
+}
+
+#icon-search {
+    position: absolute;
+    left: 170px;
+    top: 53px;
+}
+
+.tab-container .menu li.div:hover {
+    background-color: var(--ses-orange-40-color);
+    box-shadow: 1px 1px 5px var(--ses-orange-40-color)
+}
+
+@media (max-width: 1800px) {
+    .tab-container .menu li {
+        list-style: none;
+        flex: 1;
+        font-size: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        color: #FFFFFF;
+        text-align: center;
+    }
+
+}
+
+.menu-drop ul li {
+    display: inline-block;
+    position: relative;
+}
+
+.menu-drop ul li a {
+    display: block;
+    text-decoration: none;
+}
+
+.menu-drop ul li ul {
+    width: 100%;
+    background-color: var(--ses-blue-20-color);
+}
+
+.menu-drop ul li ul.dropdown li {
+    display: block;
+    background-color: var(--ses-blue-20-color);
+    text-align: center;
+    width: 100%;
+}
+
+.menu-drop ul li ul.dropdown li a {
+    width: calc(100% + 40px);
+    margin-left: -40px;
+    text-transform: none;
+}
+
+.menu-drop ul li ul.dropdown {
+    width: 100%;
+    background-color: var(--ses-blue-20-color);
+    position: absolute;
+    z-index: 2;
+    display: none;
+}
+
+.menu-drop ul li:hover {
+    background: var(--ses-orange-40-color);
+}
+
+.menu-drop ul li a:hover {
+    background: var(--ses-orange-40-color);
+}
+
+.menu-drop ul li:hover ul.dropdown {
+    display: block;
+}
+
+.module-header {
+    border-radius: 10px 10px 0px 0px;
+    padding-left: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+    background-color: #0a1a5c;
+}
+
+.module-footer .title-arrow {
+    border-radius: 0px 0px 10px 10px;
+    padding-left: 10px;
+    background-color: #0a1a5c;
+    height: 40px;
+}
+
+.input-checked {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.input-checked input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.input-checked:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.input-checked input:checked~.checkmark {
+    background-color: #0a1a5c;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.input-checked input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.input-checked .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.customer-list {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.customer-list::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-content::-webkit-scrollbar {
+    display: none;
+}
+
+.main-content {
+    display: flex;
+}
+
+#project-info {
+    flex-grow: 1;
+}

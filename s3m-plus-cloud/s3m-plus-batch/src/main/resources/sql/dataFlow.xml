@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataFlowMapper">
+
+    <resultMap id="baseResult" type="DataFlow">
+        <result property="id"  column="id" />
+        <result property="deviceId"  column="device_id" />
+        <result property="t"  column="t" />
+        <result property="sentDate"  column="sent_date" />
+    </resultMap>
+    
+     <select id="selectNewRecordFlow" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	WHERE 
+    		id > #{id} 
+    	LIMIT 1000000
+    </select>
+    
+    <select id="selectNewestRecordFlow" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	ORDER BY id DESC
+    	LIMIT 1
+    </select>
+</mapper>

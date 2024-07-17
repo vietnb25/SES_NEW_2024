@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SelectDeviceMapper">
+   <resultMap id="selectDevice" type="SelectDevice">
+       <result column="location" property="location"/>
+       <result column="object_type_id" property="objectTypeId"/>
+       <result column="object_type_name" property="objectTypeName"/>
+   </resultMap>
+    <select id="getLocationSelectDevice" parameterType="map" resultMap="selectDevice">
+        SELECT
+            B.location
+        FROM
+            s3m_device B
+        where
+            B.system_type_id = #{systemType}
+          and
+            B.project_id = ${project}
+        group by B.location;
+    </select>
+    <select id="getObjectTypeSelectDevice" parameterType="map" resultMap="selectDevice">
+        SELECT A.id as object_type_id,
+               A.name as object_type_name
+        FROM s3m_plus.s3m_object_type_mst A
+                  join s3m_object B on A.id = B.object_type_id
+                  join s3m_device C on C.object_id = B.id
+        where C.system_type_id = #{systemType} and C.project_id = #{project} group by A.id;
+    </select>
+</mapper>

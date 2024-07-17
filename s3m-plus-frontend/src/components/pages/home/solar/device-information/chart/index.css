@@ -1,0 +1,29 @@
+.btn-s3m-chart {
+    background: white;
+    border: 1px solid #FFA87D;
+    font-size: 13px;
+    color: #f58248;
+    border-radius: 0%;
+}
+
+.btn-s3m-chart:hover {
+    background: #FFA87D !important;
+    border: 1px solid #FFA87D;
+    font-size: 13px;
+    color: #fff;
+    border-radius: 0%;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+    border-color: #f16363 !important;
+    background: #f1e663 !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight:hover {
+    border-color: #f16363 !important;
+    background: #f1e663 !important;
+}
+
+.p-radiobutton {
+    height: 18px;
+}

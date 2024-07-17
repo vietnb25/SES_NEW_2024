@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Investment</title>
+    <!-- Link to Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            width: 600px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myChart"></canvas>
+
+    <script>
+        // Data for the chart
+        const labels = [
+            'Học tập và phát triển',
+            'Đầu tư vào giáo dục cấp cao',
+            'Hỗ trợ tài chính cho giáo dục',
+            'Khuyến khích tham gia hoạt động ngoại khóa',
+            'Sử dụng nguồn tài nguyên trực tuyến',
+            'Xây dựng môi trường học tập tích cực tại nhà'
+        ];
+
+        // Mô tả chi tiết cho từng cột
+        const descriptions = [
+            'Tham gia các khóa học, hội thảo để nâng cao kiến thức và kỹ năng cá nhân.',
+            'Tham gia các khóa học văn hóa, nghệ thuật, khoa học kỹ thuật để mở rộng tầm nhìn.',
+            'Dành một phần thu nhập hàng tháng cho việc trang trải học phí, sách vở, đồ dùng học tập.',
+            'Khuyến khích tham gia các hoạt động văn hóa, thể thao và nghệ thuật ngoại khóa.',
+            'Tận dụng nguồn tài nguyên giáo dục trực tuyến để học tập và nghiên cứu.',
+            'Tạo môi trường học tập tích cực tại nhà bằng cách cung cấp sách vở, thiết bị học tập.'
+        ];
+
+        const data = [30, 20, 15, 10, 15, 10]; // Thay đổi giá trị tương ứng với tỷ trọng %
+
+        // Create the chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tỷ trọng',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const value = context.parsed.y || 0;
+                                label += value + '%';
+                                return label;
+                            },
+                            title: function (tooltipItems) {
+                                return labels[tooltipItems[0].index];
+                            },
+                            afterLabel: function (tooltipItem) {
+                                const index = tooltipItem.dataIndex;
+                                return descriptions[index];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

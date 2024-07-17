@@ -1,0 +1,53 @@
+import CONS from "./constant";
+
+const BASE_API = CONS.LOCAL_HOST + "common/home"
+const BASE_API_HOME_PAGE = CONS.LOCAL_HOST + "common/homePage"
+
+const HOME_API = {
+    HOME: BASE_API,
+    SUPER_MANAGER: BASE_API + "/tree/superManager/",
+    MANAGER: BASE_API + "/tree/manager/",
+    AREA: BASE_API + "/tree/area/",
+    PROJECT: BASE_API + "/tree/project/",
+    ALL: BASE_API + "/tree/customer",
+    CHART: BASE_API + "/chart",
+    CHART_CUSTOMER: BASE_API + "/chartCustomer",
+    CHART_SUPER_MANAGER: BASE_API + "/chartSuperManager",
+    CHART_MANAGER: BASE_API + "/chartManager",
+    CHART_AREA: BASE_API + "/chartArea",
+    DOWNLOAD: BASE_API + "/chart/download",
+    CHART_ALL: BASE_API + "/chartAll",
+    DOWNLOAD_CUSTOMER: BASE_API + "/chartCustomer/download",
+    DOWNLOAD_SUPER_MANAGER: BASE_API + "/chartSuperManager/download",
+    DOWNLOAD_MANAGER: BASE_API + "/chartManager/download",
+    DOWNLOAD_AREA: BASE_API + "/chartArea/download",
+    DOWNLOAD_ALL: BASE_API + "/chartAll/download",
+    INIT: BASE_API + "/init/",
+    PROJECT_CHART: BASE_API + "/tree/chart/",
+    HOME_PAGE: BASE_API_HOME_PAGE,
+    INIT_HOME_PAGE: BASE_API_HOME_PAGE + "/init/",
+    GET_SYSTEM_TYPE_BY_SITE: BASE_API_HOME_PAGE + "/getSystemTypeByProjectId/",
+    GET_SYSTEM_LOAD: BASE_API_HOME_PAGE + "/getInfoSystemLoad",
+    GET_SYSTEM_SOLAR: BASE_API_HOME_PAGE + "/getInfoSystemPv",
+    GET_SYSTEM_GRID: BASE_API_HOME_PAGE + "/getInfoSystemGrid",
+    GET_SITE_BY_SYSTEM_TYPE: BASE_API_HOME_PAGE + "/getProjectBySystemType/",
+    GET_CUSTOMER_ID: BASE_API_HOME_PAGE + "/getCustomerIdFirstTime",
+    GET_SYSTEM_LOAD_BY_CUSTOMER: BASE_API_HOME_PAGE + "/getInfoSystemLoadByCustomerId",
+    GET_SYSTEM_SOLAR_BY_CUSTOMER: BASE_API_HOME_PAGE + "/getInfoSystemSolarByCustomerId",
+    GET_SYSTEM_GRID_BY_CUSTOMER: BASE_API_HOME_PAGE + "/getInfoSystemGridByCustomerId",
+    GET_WARNING_BY_PROJECT_ID: BASE_API_HOME_PAGE + "/getWarningByProjectId",
+    GET_DATA_BY_PROJECT_ID: BASE_API_HOME_PAGE + "/getDataByProject",
+    GET_LIST_DATA: BASE_API_HOME_PAGE + "/getDataPowerAndEnergyInHomePage",
+    GET_LIST_DATA_POWER_BY_TIME: BASE_API_HOME_PAGE + "/getListDataPowerByTime",
+    GET_DATA_TAB_1: BASE_API_HOME_PAGE + "/getDataTab1",
+    GET_DATA_TAB_2: BASE_API_HOME_PAGE + "/getDataTab2",
+    GET_DATA_TAB_3: BASE_API_HOME_PAGE + "/getDataTab3",
+    GET_DATA_TAB_4: BASE_API_HOME_PAGE + "/getDataTab4",
+    GET_DATA_TAB_5: BASE_API_HOME_PAGE + "/getDataTab5",
+    GET_DATA_TAB_6: BASE_API_HOME_PAGE + "/getDataTab6",
+    GET_DATA_TAB_7_8: BASE_API_HOME_PAGE + "/getDataFlowSensor",
+    EXPORT_DATA_TAB_1: BASE_API_HOME_PAGE + "/exportDataTab1",
+    EXPORT_DATA_TAB_6: BASE_API_HOME_PAGE + "/exportDataTab6",
+}
+
+export default HOME_API;

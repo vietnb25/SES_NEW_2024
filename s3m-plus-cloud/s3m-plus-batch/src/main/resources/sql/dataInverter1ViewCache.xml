@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataInverter1ViewCacheMapper">
+
+    <resultMap id="baseResult" type="DataInverter1ViewCache">
+        <result property="id"  column="id" />
+        <result property="deviceId"  column="device_id" />
+        <result property="viewType"  column="view_type" />
+        <result property="Ep"  column="Ep" />
+    </resultMap>
+    
+    <select id="selectAllInverter" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.s3m_data_inverter_1_view_cache
+    </select>
+    
+    <select id="selectInverterByDeviceIdAndViewType" parameterType="map" resultMap="baseResult">
+    	SELECT 
+			* 
+		FROM 
+			${schema}.s3m_data_inverter_1_view_cache 
+		WHERE 
+			view_type = #{viewType} 
+			AND device_id = #{deviceId}
+    </select>
+    
+    <update id="updateInverter" parameterType="DataInverter1ViewCache">
+    	UPDATE 
+    		${schema}.s3m_data_inverter_1_view_cache 
+    	SET	
+    		device_id = #{data.deviceId}, 
+    		view_type = #{data.viewType}, 
+    		Ep = #{data.Ep}
+    	WHERE 
+    		id = #{data.id}
+    </update>
+    
+    <update id="saveAllInverter" parameterType="DataInverter1ViewCache">
+    	INSERT INTO ${schema}.s3m_data_inverter_1_view_cache
+    		(device_id, view_type, Ep)
+    	VALUES
+          <foreach item="data" collection="datas" separator=",">
+          	(#{data.deviceId}, #{data.viewType}, #{data.Ep})
+          </foreach>
+    </update>
+</mapper>

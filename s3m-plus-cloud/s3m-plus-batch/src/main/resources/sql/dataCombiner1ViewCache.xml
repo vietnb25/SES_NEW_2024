@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataCombiner1ViewCacheMapper">
+
+    <resultMap id="baseResult" type="DataCombiner1ViewCache">
+
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="BIGINT" column="device_id" />
+        <result property="viewType" jdbcType="INTEGER" column="view_type" />
+        <result property="EpCombiner" jdbcType="FLOAT" column="EpCombiner" />
+        <result property="POWER" jdbcType="INTEGER" column="POWER" />
+
+    </resultMap>
+
+    <select id="selectAll" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_combiner_1_view_cache
+    </select>
+
+    <select id="selectByDeviceIdAndViewType" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_combiner_1_view_cache 
+        WHERE 
+            view_type = #{viewType} 
+            AND device_id = #{deviceId}
+    </select>
+
+    <update id="update" parameterType="DataLoadFrame1ViewCache">
+        UPDATE 
+            ${schema}.s3m_data_combiner_1_view_cache 
+        SET 
+            device_id = #{data.deviceId}, 
+            view_type = #{data.viewType}, 
+            EpCombiner = #{data.EpCombiner}
+        WHERE 
+            id = #{data.id}
+    </update>
+
+    <update id="saveAll" parameterType="DataLoadFrame1ViewCache">
+        INSERT INTO ${schema}.s3m_data_combiner_1_view_cache
+            (device_id, view_type, EpCombiner)
+        VALUES
+        <foreach item="data" collection="datas" separator=",">
+            (#{data.deviceId}, #{data.viewType}, #{data.EpCombiner})
+          </foreach>
+    </update>
+</mapper>

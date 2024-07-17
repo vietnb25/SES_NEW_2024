@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SettingMapper">
+    <resultMap id="settingResult" type="Setting">
+        <result property="settingId"  column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="warningLevel" column="warning_lv" />
+        <result column="description" property="description" />
+        <result column="update_date" property="updateDate" />
+        <result column="setting_value" property="settingValue" />
+        <result column="warning_type" property="warningType" />
+        <result column="setting_name" property="settingMstName" />
+        <result column="device_name" property="deviceName" />
+        <result column="settingValueHistory" property="settingValueHistory" />
+        <result column="settingValueHistory2" property="settingValueHistory2" />
+        <result column="viewTime" property="viewTime" />
+    </resultMap>
+    <select id="getSettings" parameterType="map" resultType="Setting">
+        SELECT 
+            A.id as settingId,
+            A.device_id as deviceId,
+            A.project_id as projectId,
+            A.customer_id as projectId,
+            A.type as type,
+            A.setting_mst_id as settingMstId,
+            B.setting_name as settingMstName,
+            A.setting_value as settingValue,
+            A.warning_type as warningType,
+            A.description,
+            A.update_date as updateDate,
+            C.warning_type_id as warningType,
+            COALESCE(A.warning_level, C.warning_level) AS warningLevel
+        FROM
+            s3m_setting A
+            LEFT JOIN s3m_setting_mst B ON A.setting_mst_id = B.setting_id
+            LEFT JOIN s3m_warning_type_mst C ON C.warning_type_id = A.warning_type
+        WHERE
+            A.id IS NOT NULL
+        <if test="projectId != null">
+                AND A.project_id = #{projectId} 
+            </if>
+        <if test="customerId != null">
+                AND A.customer_id = #{customerId}
+            </if>
+        <if test="type != null">
+                AND A.type = #{type}
+            </if>
+    </select>
+ 
+    <select id="getSetting" resultType="Setting">
+        SELECT 
+            A.id as settingId,
+            A.type as type,
+            A.customer_id as customerId,
+            A.project_id as projectId,
+            A.setting_mst_id as settingMstId,
+            B.setting_name as settingMstName,
+            A.setting_value as settingValue,
+            C.warning_type as warningType,
+            COALESCE(A.warning_level, C.warning_level) AS warningLevel
+        FROM
+            s3m_setting A
+            LEFT JOIN s3m_setting_mst B ON A.setting_mst_id = B.setting_id
+            LEFT JOIN s3m_warning_type C ON C.warning_type = A.warning_type
+        WHERE
+            A.id IS NOT NULL
+        <if test="settingId != null">
+                AND A.id = #{settingId} 
+            </if>
+    </select>
+
+    <update id="updateSetting" parameterType="map">
+        UPDATE s3m_setting SET
+        <if test="settingValue != null">
+            setting_value = #{settingValue}
+        </if>
+        <if test="description != null">
+            , description = #{description}
+        </if>
+          <if test="warningLevel != null">
+           , warning_level= #{warningLevel}
+        </if>
+        WHERE
+            id = ${settingId}
+    </update>
+    <insert id="addSettingHistory" parameterType="map">
+        INSERT INTO s3m_setting_history(setting_id, setting_value, type, setting_date) VALUES(#{settingId},#{settingValue},#{type},#{settingDate})
+    </insert>
+    <insert id="addSetting" parameterType="map">
+        INSERT INTO s3m_setting(project_id, customer_id, type, setting_mst_id, setting_value, warning_type, description, create_id) 
+        VALUES
+              (#{projectId},#{customerId},'1','1','245','101','Ua || Ub || Uc
+        <![CDATA[>]]>
+        245','1'),
+              (#{projectId},#{customerId},'1','2','215','102','Ua || Ub || Uc
+        <![CDATA[<]]>
+        215','1'),
+              (#{projectId},#{customerId},'1','3','60','103','Nhiệt độ ngoài trời || Nhiệt độ thiết bị
+        <![CDATA[>]]>
+        60 °C','1'),
+              (#{projectId},#{customerId},'1','4','70,0.85','104','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        70
+        <![CDATA[&]]>
+        cosA || cosB || cosC
+        <![CDATA[<]]>
+        0.85','1'),
+              (#{projectId},#{customerId},'1','5','80','105','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44) > 80','1'),
+              (#{projectId},#{customerId},'1','6','49.8','106','F
+        <![CDATA[<]]>
+        49.8','1'),
+              (#{projectId},#{customerId},'1','7','50.2','107','F
+        <![CDATA[>]]>
+        50.2','1'),
+              (#{projectId},#{customerId},'1','8','90','108','Ua || Ub || Uc
+        <![CDATA[<]]>
+        90','1'),
+              (#{projectId},#{customerId},'1','9','50,0.25','109','((Ia + Ib + Ic)/3) / (CongSuatThietBi*1.44)
+        <![CDATA[>]]>
+        50
+        <![CDATA[&]]>
+        (Imax – Imin)/Imin
+        <![CDATA[>]]>
+        0.25','1'),
+              (#{projectId},#{customerId},'1','10','','110',null,'1'),
+              (#{projectId},#{customerId},'1','11','','111','H_iA,iB, iC, uA-N, uB-N, uC-N
+        <![CDATA[>]]>
+        X (%)','1'),
+              (#{projectId},#{customerId},'1','12','10','112','THD_VA-N|| THD_VB-N || THD_VC-N
+        <![CDATA[>]]>
+        10 (%)','1'),
+              (#{projectId},#{customerId},'1','13','0.25','113','In
+        <![CDATA[>]]>
+        Icap x 0.25','1'),
+              (#{projectId},#{customerId},'1','14','','114',null,'1'),
+              (#{projectId},#{customerId},'1','15','','115',null,'1'),
+              (#{projectId},#{customerId},'1','16','','116',null,'1'),
+              (#{projectId},#{customerId},'1','17','20,90','117','Umax - Umin
+        <![CDATA[>]]>
+        20 (V)
+        <![CDATA[&]]>
+        (UA,B,C
+        <![CDATA[>]]>
+        90 (V))','1'),
+              (#{projectId},#{customerId},'2','18','1',null,'0','1'),
+              (#{projectId},#{customerId},'2','19','1',null,'1','1'),
+              (#{projectId},#{customerId},'2','20','1',null,'2','1'),
+              (#{projectId},#{customerId},'2','21','1',null,'3','1'),
+              (#{projectId},#{customerId},'2','22','1',null,'4','1'),
+              (#{projectId},#{customerId},'2','23','1',null,'5','1'),
+              (#{projectId},#{customerId},'2','24','1',null,'6','1'),
+              (#{projectId},#{customerId},'2','25','1',null,'7','1'),
+              (#{projectId},#{customerId},'2','26','1',null,'8','1'),
+              (#{projectId},#{customerId},'2','27','1',null,'9','1'),
+              (#{projectId},#{customerId},'2','28','1',null,'10','1'),
+              (#{projectId},#{customerId},'2','29','1',null,'11','1'),
+              (#{projectId},#{customerId},'2','30','1',null,'12','1'),
+              (#{projectId},#{customerId},'2','31','1',null,'13','1'),
+              (#{projectId},#{customerId},'2','32','1',null,'14','1'),
+              (#{projectId},#{customerId},'2','33','1',null,'15','1'),
+              (#{projectId},#{customerId},'3','34','1',null,'0','1'),
+              (#{projectId},#{customerId},'3','35','1',null,'1','1'),
+              (#{projectId},#{customerId},'3','36','1',null,'2','1'),
+              (#{projectId},#{customerId},'3','37','1',null,'3','1'),
+              (#{projectId},#{customerId},'3','38','1',null,'4','1'),
+              (#{projectId},#{customerId},'3','39','1',null,'5','1'),
+              (#{projectId},#{customerId},'3','40','1',null,'6','1'),
+              (#{projectId},#{customerId},'3','41','1',null,'7','1'),
+              (#{projectId},#{customerId},'3','42','1',null,'8','1'),
+              (#{projectId},#{customerId},'3','43','1',null,'9','1'),
+              (#{projectId},#{customerId},'3','44','1',null,'10','1'),
+              (#{projectId},#{customerId},'3','45','1',null,'11','1'),
+              (#{projectId},#{customerId},'3','46','1',null,'12','1'),
+              (#{projectId},#{customerId},'3','47','1',null,'13','1'),
+              (#{projectId},#{customerId},'3','48','1',null,'14','1'),
+              (#{projectId},#{customerId},'3','49','1',null,'15','1'),
+              (#{projectId},#{customerId},'3','50','1',null,'16','1'),
+              (#{projectId},#{customerId},'3','51','1',null,'17','1'),
+              (#{projectId},#{customerId},'3','52','1',null,'18','1'),
+              (#{projectId},#{customerId},'3','53','1',null,'19','1')
+    </insert>
+
+    <delete id="deleteSetting" parameterType="map">
+        DELETE FROM s3m_setting WHERE project_id = #{projectId}
+    </delete>
+    
+    <select id="getSettingValue" parameterType="map" resultType="java.lang.String">
+        SELECT A.setting_value 
+            FROM s3m_setting A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+            <if test="deviceId != null">
+                AND
+                    B.device_id = #{deviceId} 
+            </if>
+            <if test="projectId != null">
+                AND
+                    B.project_id = #{projectId} 
+            </if>
+            <if test="warningType != null">
+                AND
+                    A.warning_type = #{warningType} 
+            </if>
+    </select>
+
+    <select id="getSettingValueHistory" parameterType="map" resultType="java.lang.String">
+        SELECT B.setting_value, B.create_date
+            FROM s3m_setting A
+        JOIN
+            s3m_setting_history B ON A.id = B.setting_id
+        JOIN
+            s3m_device C ON A.device_id = C.device_id
+        WHERE
+            <if test="deviceId != null">
+                C.device_id = #{deviceId}
+            </if>
+            <if test="projectId != null">
+                AND
+                A.project_id = #{projectId}
+            </if>
+            <if test="warningType != null">
+                AND
+                A.warning_type = #{warningType}
+            </if>
+    </select>
+
+    <select id="getSettingValues" parameterType="map" resultType="Setting">
+        SELECT
+            A.id as settingId,
+            A.device_id as deviceId,
+            A.project_id as projectId,
+            A.customer_id as projectId,
+            A.type as type,
+            A.setting_mst_id as settingMstId,
+            B.setting_name as settingMstName,
+            A.setting_value as settingValue,
+            A.warning_type as warningType,
+            A.description,
+            A.update_date as updateDate
+        FROM
+            s3m_setting A
+            LEFT JOIN s3m_setting_mst B ON A.setting_mst_id = B.setting_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="projectId != null">
+                AND A.project_id = #{projectId}
+            </if>
+        <if test="customerId != null">
+                AND A.customer_id = #{customerId}
+            </if>
+        <if test="type != null">
+                AND A.type = #{type}
+            </if>
+    </select>
+
+<!--    <select id="getSettingHistory" parameterType="map" resultType="Setting">-->
+<!--        SELECT-->
+<!--        A.id as settingId,-->
+<!--        A.device_id as deviceId,-->
+<!--        A.project_id as projectId,-->
+<!--        A.setting_mst_id as settingMstId,-->
+<!--        A.setting_value as settingValue,-->
+<!--        A.warning_type as warningType,-->
+<!--        A.description,-->
+<!--        A.update_date as updateDate,-->
+<!--        B.setting_value AS settingValueHistory,-->
+<!--        B.create_date AS viewTime-->
+<!--        FROM-->
+<!--        s3m_setting A-->
+<!--        JOIN-->
+<!--            s3m_setting_history B ON A.id = B.setting_id-->
+<!--        JOIN-->
+<!--            s3m_device C ON A.device_id = C.device_id-->
+<!--        WHERE-->
+<!--        A.id IS NOT NULL-->
+<!--        <if test="projectId != null">-->
+<!--            AND A.project_id = #{projectId}-->
+<!--        </if>-->
+<!--        <if test="customerId != null">-->
+<!--            AND A.customer_id = #{customerId}-->
+<!--        </if>-->
+
+<!--    </select>-->
+    <select id="getSettingHistoryByDate" parameterType="map" resultType="Setting">
+        <!--    <select id="getSettingHistory" parameterType="map" resultMap="settingResult">-->
+        SELECT
+            A.setting_value as settingValue,
+        FROM
+            s3m_setting A
+        JOIN
+            s3m_setting_history B ON A.id = B.setting_id
+        JOIN
+            s3m_device C ON A.device_id = C.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.create_date <![CDATA[<]]> #{fromDate}
+        AND
+            B.create_date <![CDATA[>]]> #{toDate}
+        <if test="deviceId != null">
+            AND C.device_id = #{deviceId}
+        </if>
+        <if test="projectId != null">
+            AND A.project_id = #{projectId}
+        </if>
+        <if test="warningType != null">
+            AND
+            A.warning_type = #{warningType}
+        </if>
+    </select>
+
+    <select id="getSettingHistory" parameterType="map" resultType="Setting">
+        (SELECT
+            A.id AS settingId,
+            A.device_id AS deviceId,
+            A.project_id AS projectId,
+            A.customer_id AS customerId,
+            A.warning_type AS warningType,
+            (SELECT CASE
+        		WHEN A.warning_type = 103 THEN B.setting_value * C.in
+        	ELSE B.setting_value END AS settingValueHistory
+            FROM s3m_setting_history B
+            WHERE A.id = B.setting_id
+            AND B.create_date <![CDATA[<]]> #{fromDate}
+            ORDER BY B.create_date ASC
+            LIMIT 1) AS settingValueHistory,
+            B.create_date AS viewTime,
+            C.in 
+        FROM
+            s3m_setting A
+        JOIN
+            s3m_setting_history B ON A.id = B.setting_id
+        JOIN
+        	s3m_device C ON A.device_id = C.device_id
+        WHERE
+            A.id IS NOT NULL
+            AND B.create_date <![CDATA[<]]> #{fromDate}
+             AND A.device_id = #{deviceId} AND A.warning_type = #{warningType}
+        ORDER BY
+            B.create_date DESC
+        LIMIT 1)
+
+        UNION ALL
+
+        SELECT
+            A.id AS settingId,
+            A.device_id AS deviceId,
+            A.project_id AS projectId,
+            A.customer_id AS customerId,
+            A.warning_type AS warningType,
+            CASE
+        		WHEN A.warning_type = 103 THEN B.setting_value * C.in
+        	ELSE B.setting_value
+    			END AS settingValueHistory,
+            B.create_date AS viewTime,
+            C.in 
+        FROM
+        	s3m_setting A
+        JOIN
+        	s3m_setting_history B ON A.id = B.setting_id
+        JOIN
+        	s3m_device C ON A.device_id = C.device_id
+        WHERE
+        	A.id IS NOT NULL
+       	AND
+            B.create_date between #{fromDate} AND #{toDate}
+        <if test="deviceId != null">
+            AND C.device_id = #{deviceId}
+        </if>
+        <if test="projectId != null">
+            AND A.project_id = #{projectId}
+        </if>
+        <if test="warningType != null">
+            AND
+            A.warning_type = #{warningType}
+
+            UNION ALL
+
+            (SELECT
+            A.id AS settingId,
+            A.device_id AS deviceId,
+            A.project_id AS projectId,
+            A.customer_id AS customerId,
+            A.warning_type AS warningType,
+            B.setting_value AS settingValueHistory,
+            B.create_date AS viewTime,
+            C.in 
+            FROM
+            s3m_setting A
+            JOIN
+            	s3m_setting_history B ON A.id = B.setting_id
+            JOIN
+        		s3m_device C ON A.device_id = C.device_id
+            WHERE
+            A.id IS NOT NULL
+            AND B.create_date <![CDATA[>]]> #{toDate}
+          AND A.device_id = #{deviceId} AND A.warning_type = #{warningType}
+            ORDER BY
+            B.create_date ASC
+            LIMIT 1
+            );
+        </if>
+    </select>
+    
+    <select id="getSettingByDevice" parameterType="map" resultType="Setting">
+        SELECT 
+            A.id as settingId,
+            A.device_id as deviceId,
+            A.project_id as projectId,
+            A.customer_id as projectId,
+            A.type as type,
+            A.setting_mst_id as settingMstId,
+            B.setting_name as settingMstName,
+            A.setting_value as settingValue,
+            A.warning_type as warningType,
+            A.description,
+            A.update_date as updateDate
+        FROM
+            s3m_setting A
+            LEFT JOIN s3m_setting_mst B ON A.setting_mst_id = B.setting_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="projectId != null">
+                AND A.project_id = #{projectId} 
+        </if>
+        <if test="settingMstId != null">
+                AND A.setting_mst_id = #{settingMstId} 
+        </if>
+
+
+
+    </select>
+    
+    <select id="getSettingByDeviceId" parameterType="map" resultType="Setting">
+        SELECT 
+            A.setting_value AS settingValue
+        FROM 
+            s3m_plus.s3m_setting A
+        LEFT JOIN s3m_plus.s3m_project B ON A.project_id = B.project_id
+        LEFT JOIN s3m_plus.s3m_device C ON C.project_id = B.project_id
+        WHERE 
+            C.device_id = #{device_id} 
+        AND 
+            A.setting_mst_id = #{setting_mst_id}
+            
+    </select>
+
+    <select id="getSettingByDeviceIds" parameterType="map" resultMap="settingResult">
+        select B.setting_name, D.device_name, A.*,COALESCE(A.warning_level, C.warning_level) AS warning_lv
+        from s3m_plus.s3m_setting A
+        JOIN  s3m_plus.s3m_setting_mst B on A.setting_mst_id = B.setting_id
+        JOIN s3m_plus.s3m_warning_type_mst C ON C.warning_type_id = A.warning_type
+        JOIN s3m_device D ON D.device_id = A.device_id
+        where A.device_id in (${deviceIds});
+    </select>
+
+
+
+</mapper>

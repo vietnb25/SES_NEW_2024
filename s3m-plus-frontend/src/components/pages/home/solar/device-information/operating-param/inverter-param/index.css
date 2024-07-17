@@ -1,0 +1,7 @@
+.tr-border-none td {
+    border: none !important;
+}
+
+.tbody-border-none {
+    border: solid 5px red;
+}

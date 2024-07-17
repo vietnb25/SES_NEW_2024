@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ChartMapper">
+	<resultMap id="chart" type="Chart">
+		<result property="id" column="id" />
+		<result property="deviceId" column="device_id" />
+		<result property="deviceName" column="device_name" />
+		<result property="deviceCode" column="device_code" />
+		<result property="systemTypeId" column="system_type_id" />
+		<result property="systemTypeName" column="system_type_name" />
+		<result property="deviceType" column="device_type" />
+		<result property="deviceTypeName" column="device_type_name" />
+		<result property="customerId" column="customer_id" />
+		<result property="customerName" column="customer_name" />
+		<result property="managerId" column="manager_id" />
+		<result property="managerName" column="manager_name" />
+		<result property="areaId" column="area_id" />
+		<result property="areaName" column="area_name" />
+		<result property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="address" column="address" />
+		<result property="pTotal" column="p_total" />
+		<result property="epIn" column="ep_in" />
+		<result property="epOut" column="ep_out" />
+		<result property="viewTime" column="view_time" />
+		<result property="time" column="time" />
+		<result property="t" column="t" />
+		<result property="h" column="h" />
+		<result property="name" column="name" />
+	</resultMap>
+	
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartLoadCostByCustomerId" resultMap="chart" parameterType="map">
+        SELECT
+        A.id,
+        A.device_id,
+        A.view_type,
+        <if test="fromDate != null and viewType == 5">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+        </if>
+        <if test="fromDate != null and viewType == 3">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d") AS view_time,
+        </if>
+        <if test="fromDate != null and viewType == 2 or viewType == 1">
+            A.view_time AS view_time,
+        </if>
+         <if test="fromDate != null and typeTime == 5">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d") AS view_time,
+        </if>
+        <if test="fromDate != null and typeTime == 6">
+            A.view_time AS view_time,
+        </if>
+        A.p_total,
+      
+        <if test="projectId != null">
+			A.ep AS ep_in,
+            A.low_cost_in AS costLowIn,
+            A.normal_cost_in AS costMediumIn,
+            A.high_cost_in AS costHighIn,
+        </if>
+        <if test="projectId == null">
+			SUM(A.ep) AS ep_in,
+            SUM(A.low_cost_in) AS costLowIn,
+            SUM(A.normal_cost_in) AS costMediumIn,
+            SUM(A.high_cost_in) AS costHighIn,
+        </if>
+        A.sent_date,
+        C.project_id,
+        C.project_name,
+        B.device_name
+        FROM
+        ${schema}s3m_data_pqs A
+        LEFT JOIN
+        s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+        s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+        s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+        B.device_id IS NOT NULL
+
+        <if test="projectId != null">
+            AND C.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+        <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+          <if test="ids != null">
+            AND C.project_id IN (${ids})
+        </if>
+        <if test="typeTime == null and viewType == 5">
+            AND YEAR(view_time) = YEAR(#{fromDate})
+            AND MONTH(view_time) = MONTH(#{fromDate})
+            AND DAY(view_time) = DAY(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 3">
+            AND YEAR(view_time) = YEAR(#{fromDate})
+            AND MONTH(view_time) = MONTH(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 2">
+            AND SUBSTRING(view_time,1,4) = YEAR(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 1">
+        </if>
+        <if test="fromDate != null and typeTime == 5">          
+	   		AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+        </if>
+         <if test="fromDate != null and typeTime == 6">
+            AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+        </if>
+        <if test="viewType != null">
+            AND A.view_type = #{viewType}
+        </if>
+        <if test="projectId == null">
+            GROUP BY view_time, C.project_id
+        </if>
+        ORDER BY view_time ASC
+    </select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartLoadByHour" resultMap="chart" parameterType="map">
+		SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+		<!-- type = 1 lấy giờ-->
+		<if test="fromDate != null and type == 1">
+                 DATE_FORMAT(A.view_time, "%H") AS view_time,
+           </if>
+		<!-- type = 2 lấy ngày-->
+		<if test="fromDate != null and type == 2">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+		<!-- type = 3 lấy tháng-->
+		<if test="fromDate != null and type == 3">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+        <if test="fromDate != null and type == 4">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+        </if>
+		    SUM(A.p_total) AS p_total,
+            SUM(A.ep) AS ep_in,
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+            view_type = ${viewType}
+         <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+		<if test="projectId != null">
+             AND B.project_id = ${projectId}
+        </if>
+		<if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+          <if test="ids != null">
+            AND B.project_id IN (${ids})
+        </if>
+		AND 
+            A.view_time
+		<![CDATA[>=]]>
+		"${fromDate}"
+        AND
+            A.view_time
+		<![CDATA[<=]]>
+		"${toDate}"
+		<if test="fromDate != null and type == 1">
+             GROUP BY HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 2">       
+             GROUP BY DAY(view_time), HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 3">
+             GROUP BY MONTH(view_time), HOUR(view_time)
+         </if>
+        <if test="fromDate != null and type == 4">
+            GROUP BY YEAR(view_time), HOUR(view_time)
+        </if>
+	</select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartInverterByHour" resultMap="chart" parameterType="map">
+		SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+		<!-- type = 1 lấy giờ-->
+		<if test="fromDate != null and type == 1">
+                 DATE_FORMAT(A.view_time, "%H") AS view_time,
+           </if>
+		<!-- type = 2 lấy ngày-->
+		<if test="fromDate != null and type == 2">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+		<!-- type = 3 lấy tháng-->
+		<if test="fromDate != null and type == 3">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+		    SUM(A.p_total) AS p_total,
+            SUM(A.ep) AS ep_in,
+            A.sent_date,
+            C.project_id,
+            C.project_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+            view_type = #{viewType}
+		<if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+		<if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+		AND 
+            A.view_time
+		<![CDATA[>=]]>
+		#{fromDate}
+        AND
+            A.view_time
+		<![CDATA[<=]]>
+		#{toDate}
+		<if test="fromDate != null and type == 1">
+             GROUP BY HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 2">       
+             GROUP BY DAY(view_time), HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 3">
+             GROUP BY MONTH(view_time), HOUR(view_time)
+         </if>
+	</select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartRmuByHour" resultMap="chart" parameterType="map">
+		SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+		<!-- type = 1 lấy giờ-->
+		<if test="fromDate != null and type == 1">
+                 DATE_FORMAT(A.view_time, "%H") AS view_time,
+           </if>
+		<!-- type = 2 lấy ngày-->
+		<if test="fromDate != null and type == 2">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+		<!-- type = 3 lấy tháng-->
+		<if test="fromDate != null and type == 3">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,
+           </if>
+		SUM(A.P_Total) AS p_total,
+            SUM(A.EP) AS ep_in,
+            A.sent_date,
+            C.project_id,
+            C.project_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+            view_type = #{viewType}
+        AND B.calculate_flag = 1
+		<if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+		<if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+		AND 
+            A.view_time
+		<![CDATA[>=]]>
+		#{fromDate}
+        AND
+            A.view_time
+		<![CDATA[<=]]>
+		#{toDate}
+		<if test="fromDate != null and type == 1">
+             GROUP BY HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 2">       
+             GROUP BY DAY(view_time), HOUR(view_time)
+         </if>
+		<if test="fromDate != null and type == 3">
+             GROUP BY MONTH(view_time), HOUR(view_time)
+         </if>
+	</select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartLoadPower" resultMap="chart" parameterType="map">
+        SELECT
+        A.id,
+        A.device_id,
+        A.view_type,
+        <if test="typeTime == null and viewType == 5">
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+        </if>
+        <if test="typeTime == null and viewType == 4">
+            TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+        </if>
+        <if test="typeTime == null and viewType == 3">
+            DATE_FORMAT(A.view_time, "%d") AS view_time,
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+        </if>
+        <if test="typeTime == null and viewType == 2">
+            SUBSTRING(view_time, 6, 2) AS view_time,
+            SUBSTRING(view_time, 1, 7) AS time,
+        </if>
+        <if test="typeTime == null and viewType == 1">
+            SUBSTRING(view_time, 6, 2) AS view_time,
+            SUBSTRING(view_time, 1, 7) AS time,
+        </if>
+        <if test="fromDate != null and typeTime == 5">
+            view_time,
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+        </if>
+        <if test="fromDate != null and typeTime == 6">
+             DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+        </if>
+          <if test="projectId != null">
+            A.p_total AS p_total,
+        </if>
+        <if test="projectId == null">
+            SUM(A.p_total) AS p_total,
+        </if>
+        A.sent_date,
+        C.project_id,
+        C.project_name,
+        B.device_name
+        FROM
+        ${schema}s3m_data_pqs A
+        LEFT JOIN
+        s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+        s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+        s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+        view_type = #{viewType}
+        <if test="projectId != null">
+            AND B.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+        <if test="deviceId != null">
+            AND B.device_id IN (${deviceId})
+        </if>
+        <if test="deviceId == null">
+            AND B.calculate_flag = 1
+        </if>
+          <if test="ids != null">
+            AND B.project_id IN (${ids})
+        </if>
+        <if test="typeTime == null and viewType == 5">
+            AND YEAR(view_time) = YEAR(#{fromDate})
+            AND MONTH(view_time) = MONTH(#{fromDate})
+            AND DAY(view_time) = DAY(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 4">
+            AND YEAR(view_time) = YEAR(#{fromDate})
+            AND MONTH(view_time) = MONTH(#{fromDate})
+            AND DAY(view_time) = DAY(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 3">
+            AND YEAR(view_time) = YEAR(#{fromDate})
+            AND MONTH(view_time) = MONTH(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 2">
+            AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+        </if>
+        <if test="typeTime == null and viewType == 2">
+            AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+        </if>
+        <if test="fromDate != null and typeTime == 5">
+            AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+        </if>
+         <if test="fromDate != null and typeTime == 6">
+            AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+        </if>
+          <if test="projectId == null">
+            GROUP BY view_time, B.project_id
+        </if>
+    </select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartInverterPower" resultMap="chart" parameterType="map">
+		SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+		<if test="typeTime == null and viewType == 5">             
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS view_time,
+                DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 2">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+		<if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+		<if test="fromDate != null and typeTime == 5">
+                 view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		A.Ptotal AS p_total,
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+           view_type = #{viewType}
+        AND B.calculate_flag = 1
+		<if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+		<if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+		<if test="typeTime == null and viewType == 5">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 3">		
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+		<if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+         </if>
+	</select>
+	<!-- Lấy dữ liệu để hiển thị chart -->
+	<select id="getChartRmuPower" resultMap="chart" parameterType="map">
+		SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+		<if test="typeTime == null and viewType == 5">             
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS view_time,
+                DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		<if test="typeTime == null and viewType == 2">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+		<if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 6, 2) AS view_time,
+                 SUBSTRING(view_time, 1, 7) AS time,
+           </if>
+		<if test="fromDate != null and typeTime == 5">
+                 view_time,
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+		    A.p_total,
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+              ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+             view_type = #{viewType}
+        AND B.calculate_flag = 1
+		<if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+		<if test="deviceId != null">
+             AND B.device_id IN (${deviceId})
+        </if>
+		<if test="typeTime == null and viewType == 5">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 3">		
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+		<if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+         </if>
+	</select>
+	  <select id="getChartLoadCostHomePage" resultMap="chart" parameterType="map">
+        SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+            DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS view_time,     
+            A.p_total,
+            A.ep AS ep_in,
+            SUM(A.low_ep) AS lowEp,
+            SUM(A.normal_ep) AS normalEp,
+            SUM(A.high_ep) AS highEp,
+            SUM(A.low_cost_in) AS costLowIn,
+            SUM(A.normal_cost_in) AS costMediumIn,
+            SUM(A.high_cost_in) AS costHighIn,
+            A.sent_date,
+            C.project_id,
+            C.project_name
+        FROM
+            ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+            s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+            view_type = #{viewType}
+        AND
+          B.calculate_flag = 1
+        AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+        AND
+            A.view_time <![CDATA[<=]]> #{toDate}
+          <if test="projectId != null">
+              AND C.project_id = #{projectId}
+          </if>
+          <if test="systemTypeId != null">
+              AND B.system_type_id = #{systemTypeId}
+          </if>
+          GROUP BY C.project_id, view_time
+    </select>
+       <select id="getChartLoadSumCostHomePage" resultMap="chart" parameterType="map">
+           SELECT
+           A.id,
+           A.device_id,
+           A.view_type,
+           A.view_time AS view_time,
+           A.p_total,
+           A.ep AS ep_in,
+           SUM(A.low_ep) AS lowEp,
+           SUM(A.normal_ep) AS normalEp,
+           SUM(A.high_ep) AS highEp,
+           SUM(A.low_cost_in) AS costLowIn,
+           SUM(A.normal_cost_in) AS costMediumIn,
+           SUM(A.high_cost_in) AS costHighIn,
+           A.sent_date,
+           C.project_id,
+           C.project_name
+           FROM
+           ${schema}s3m_data_pqs A
+           LEFT JOIN
+           s3m_device B ON B.device_id = A.device_id
+           LEFT JOIN
+           s3m_project C ON C.project_id = B.project_id
+           LEFT JOIN
+           s3m_system_type D ON D.system_type_id = B.system_type_id
+           WHERE
+           view_type = #{viewType}
+             <if test="viewType == 3 and typeTime == 5">
+               AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+           </if>
+           <if test="viewType == 3 and typeTime != 5">
+               AND YEAR(view_time) = YEAR(#{fromDate})
+               AND MONTH(view_time) = MONTH(#{fromDate})
+           </if>
+           <if test="viewType == 2">
+               AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+           </if>
+           <if test="viewType == 1">
+               AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+           </if>
+           <if test="projectId != null">
+               AND C.project_id = #{projectId}
+           </if>
+           <if test="systemTypeId != null">
+               AND B.system_type_id = #{systemTypeId}
+           </if>
+            AND
+               B.calculate_flag = 1
+           GROUP BY C.project_id, view_time
+       </select>
+       
+       <select id="getChartTemperature" parameterType="map" resultMap="chart">
+	        SET @begin_datetime = '1000-01-01 00:00:00';
+	   		SET @interval_mins = #{minute};
+	        SELECT
+	            A.t AS t,
+	            A.h AS h,  
+	            B.project_id,
+                B.system_type_id,
+                B.device_name,
+                C.project_name,      
+	            DATE_ADD(@begin_datetime, Interval FLOOR(TIMESTAMPDIFF(MINUTE, @begin_datetime, A.sent_date) / @interval_mins) * @interval_mins minute) AS view_time
+	        FROM
+	            ${schema}s3m_data_temp_humidity_1_${year} A
+	        JOIN
+			     s3m_device B ON B.device_id = A.device_id
+			JOIN
+          		 s3m_project C ON C.project_id = B.project_id
+	        WHERE  
+	            A.sent_date BETWEEN #{fromDate} AND #{toDate}  
+	        AND (A.t IS NOT NULL OR A.h IS NOT NULL)
+	         <if test="projectId != null">
+	            AND B.project_id = #{projectId}
+	        </if>
+	        <if test="systemTypeId != null">
+	            AND B.system_type_id = #{systemTypeId}
+	        </if>
+	        <if test="deviceId != null">
+	            AND A.device_id IN (${deviceId})
+	        </if> 
+	      --  <if test="deviceId == null">
+	         --   AND B.calculate_flag = 1
+	       -- </if>
+	          <if test="ids != null">
+	            AND B.project_id IN (${ids})
+	        </if>
+    </select>
+        <!-- Lấy dữ liệu để hiển thị chart -->
+    <select id="getChartSankey" resultMap="chart" parameterType="map">
+       SELECT 
+            A.id,
+            A.device_id,
+            A.view_type,
+            A.view_time,
+            <if test="typeTime == null and viewType == 3">
+				DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+            <if test="typeTime == null and viewType == 2">
+				SUBSTRING(view_time, 1, 7) AS time,               
+           </if>
+			<if test="typeTime == null and viewType == 1">
+                 SUBSTRING(view_time, 1, 4) AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 5">
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d %H:%i:%s") AS time,
+           </if>
+           <if test="fromDate != null and typeTime == 6">                 
+                 DATE_FORMAT(A.view_time, "%Y-%m-%d") AS time,
+           </if>
+            SUM(A.p_total) AS p_total,
+            SUM(A.ep) AS ep_in,
+            A.sent_date,
+            C.project_id,
+            C.project_name,
+            B.device_name
+        FROM
+           ${schema}s3m_data_pqs A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        LEFT JOIN
+            s3m_system_type D ON D.system_type_id = B.system_type_id
+        WHERE
+            view_type = #{viewType}
+		<if test="projectId != null">
+			AND B.project_id = #{projectId}
+         </if>
+         <if test="systemTypeId != null">
+             AND B.system_type_id = #{systemTypeId}
+         </if>
+          <if test="deviceId != null">
+              AND B.device_id IN (${deviceId})
+         </if>
+        <if test="deviceId == null">
+             AND B.calculate_flag = 1
+        </if>
+         <if test="ids != null">
+             AND C.project_id IN (${ids})
+        </if>
+          <if test="typeTime == null and viewType == 3">
+  			  AND YEAR(view_time) = YEAR(#{fromDate})
+              AND MONTH(view_time) = MONTH(#{fromDate})
+			  AND DAY(view_time) = DAY(#{fromDate})            
+         </if>
+         <if test="typeTime == null and viewType == 2">		
+              AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+              AND SUBSTRING(view_time, 6, 7) = MONTH(#{fromDate})
+         </if>
+		<if test="typeTime == null and viewType == 1">		
+              AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+         </if>
+        <if test="fromDate != null and typeTime == 5">
+             AND A.view_time BETWEEN #{fromDate} AND #{toDate}
+          </if>
+          <if test="fromDate != null and typeTime == 6">
+             AND A.view_time BETWEEN SUBSTRING(#{fromDate}, 1, 10) AND SUBSTRING(#{toDate}, 1, 10)
+         </if>
+            GROUP BY B.device_id
+    </select>
+    
+    <select id="getChartDischargeIndicatorHtr02" parameterType="map" resultMap="chart">
+	        SET @begin_datetime = '1000-01-01 00:00:00';
+	   		SET @interval_mins = #{minute};
+	        SELECT
+	            COALESCE (A.indicator, 0) AS indicator,
+	            B.project_id,
+                B.system_type_id,
+                B.device_name,
+                C.project_name,      
+	            DATE_ADD(@begin_datetime, Interval FLOOR(TIMESTAMPDIFF(MINUTE, @begin_datetime, A.sent_date) / @interval_mins) * @interval_mins minute) AS view_time
+	        FROM
+	            ${schema}s3m_data_pd_htr02_1_${year} A
+	        JOIN
+			     s3m_device B ON B.device_id = A.device_id
+			JOIN
+          		 s3m_project C ON C.project_id = B.project_id
+	        WHERE  
+	            A.sent_date BETWEEN #{fromDate} AND #{toDate}  
+	         <if test="projectId != null">
+	            AND B.project_id = #{projectId}
+	        </if>
+	        <if test="systemTypeId != null">
+	            AND B.system_type_id = #{systemTypeId}
+	        </if>
+	        <if test="deviceId != null">
+	            AND A.device_id IN (${deviceId})
+	        </if> 
+	          <if test="ids != null">
+	            AND B.project_id IN (${ids})
+	        </if>
+    </select>
+    
+       <select id="getChartDischargeIndicatorAms01" parameterType="map" resultMap="chart">
+	        SET @begin_datetime = '1000-01-01 00:00:00';
+	   		SET @interval_mins = #{minute};
+	        SELECT
+	            COALESCE (A.indicator, 0) AS indicator,
+	            B.project_id,
+                B.system_type_id,
+                B.device_name,
+                C.project_name,      
+	            DATE_ADD(@begin_datetime, Interval FLOOR(TIMESTAMPDIFF(MINUTE, @begin_datetime, A.sent_date) / @interval_mins) * @interval_mins minute) AS view_time
+	        FROM
+	            ${schema}s3m_data_pd_ams01_1_${year} A
+	        JOIN
+			     s3m_device B ON B.device_id = A.device_id
+			JOIN
+          		 s3m_project C ON C.project_id = B.project_id
+	        WHERE  
+	            A.sent_date BETWEEN #{fromDate} AND #{toDate}  
+	         <if test="projectId != null">
+	            AND B.project_id = #{projectId}
+	        </if>
+	        <if test="systemTypeId != null">
+	            AND B.system_type_id = #{systemTypeId}
+	        </if>
+	        <if test="deviceId != null">
+	            AND A.device_id IN (${deviceId})
+	        </if> 
+	          <if test="ids != null">
+	            AND B.project_id IN (${ids})
+	        </if>
+    </select>
+</mapper>

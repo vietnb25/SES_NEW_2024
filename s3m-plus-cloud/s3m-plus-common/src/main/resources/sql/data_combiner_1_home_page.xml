@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataCombinerMapper">
+
+    <resultMap id="dataCombiner1Result" type="DataCombiner1"></resultMap>
+
+    <!-- Lấy dữ liệu để hiển thị chart -->
+    <select id="getChartCombinerByCustomerId" resultMap="dataCombiner1Result" parameterType="map">
+        SELECT 
+            A.id,
+            A.device_id AS deviceId,
+            A.view_type AS viewType,
+             <if test="fromDate != null and viewType == 4">
+                 TIME_FORMAT(A.view_time, "%H:%i:%s") AS viewTime,
+           </if>
+           <if test="fromDate != null and viewType == 3">
+                 DATE_FORMAT(A.view_time, "%d") AS viewTime,
+           </if>
+           <if test="fromDate != null and viewType == 2">
+                 SUBSTRING(view_time, 6, 2) AS viewTime,
+           </if>
+            A.POWER AS POWER,
+            A.PdcCombiner AS PdcCombiner,
+            SUM(A.EpCombiner) AS EpCombiner,
+            A.sent_date AS sentDate,
+            C.project_id,
+            C.project_name
+        FROM
+            ${schema}s3m_data_combiner_1_view A
+        LEFT JOIN 
+            s3m_device B ON B.device_id = A.device_id
+        LEFT JOIN
+            s3m_project C ON C.project_id = B.project_id
+        WHERE
+            view_type = #{viewType}
+        AND B.calculate_flag = 1 
+        <if test="projectId != null">
+             AND B.project_id = #{projectId}
+        </if>
+        <if test="fromDate != null and viewType == 4">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             AND DAY(view_time) = DAY(#{fromDate})
+             GROUP BY YEAR(view_time), MONTH(view_time), DAY(view_time), HOUR(view_time)
+         </if>
+         <if test="fromDate != null and viewType == 3">
+             AND YEAR(view_time) = YEAR(#{fromDate})
+             AND MONTH(view_time) = MONTH(#{fromDate})
+             GROUP BY YEAR(view_time), MONTH(view_time), DAY(view_time)
+         </if>
+         <if test="fromDate != null and viewType == 2">
+             AND SUBSTRING(view_time, 1, 4) = YEAR(#{fromDate})
+             GROUP BY SUBSTRING(view_time, 1, 4), SUBSTRING(view_time, 6, 2)
+         </if>
+        
+    </select>
+
+</mapper>

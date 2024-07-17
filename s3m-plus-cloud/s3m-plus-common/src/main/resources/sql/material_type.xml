@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.MaterialTypeMapper">
+    <resultMap id="dataMaterialType" type="MaterialType">
+        <result column="id" property="id"/>
+        <result column="material_name" property="materialName"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="material_form" property="materialForm"/>
+    </resultMap>
+    <select id="getListMaterialType" resultMap="dataMaterialType">
+        select * from s3m_plus_material_type where delete_flag = 0;
+    </select>
+    <insert id="addMaterialType" parameterType="MaterialType">
+        INSERT INTO s3m_plus_material_type (`material_name`) VALUES (#{materialName});
+    </insert>
+    <update id="updateMaterialType" parameterType="MaterialType">
+        UPDATE s3m_plus_material_type  set `material_name` = #{materialName} where id = #{id};
+    </update>
+</mapper>

@@ -1,0 +1,1164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ReportMapper">
+
+    <resultMap id="listReport" type="report">
+        <result property="id" column="id" />
+        <result property="dateFrom" column="date_from" />
+        <result property="dateTo" column="date_to" />
+        <result property="reportDate" column="report_date" />
+        <result property="deviceName" column="device_name" />
+        <result property="reportId" column="report_id" />
+        <result property="status" column="status" />
+        <result property="url" column="url" />
+        <result property="deviceId" column="device_id" />
+        <result property="deleted" column="delete_flag" />
+        <result property="managerId" column="manager_id" />
+        <result property="percent" column="percent" />
+        <result property="updated" column="updated" />
+        <result property="dateType" column="date_type" />
+    </resultMap>
+    <!--
+    <resultMap id="dataLoadFrameEP" type="DataLoadFrame1">
+        <result property="eq" column="eq" />
+        <result property="sentDate" column="sent_date" />
+    </resultMap>
+ -->
+    <resultMap id="dataLoadFrame" type="DataLoadFrame1">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="uab" column="uab" />
+        <result property="ubc" column="ubc" />
+        <result property="uca" column="uca" />
+        <result property="ull" column="ull" />
+        <result property="uan" column="uan" />
+        <result property="ubn" column="ubn" />
+        <result property="ucn" column="ucn" />
+        <result property="uln" column="uln" />
+        <result property="ia" column="ia" />
+        <result property="ib" column="ib" />
+        <result property="ic" column="ic" />
+        <result property="in" column="in" />
+        <result property="ig" column="ig" />
+        <result property="iavg" column="iavg" />
+        <result property="pa" column="pa" />
+        <result property="pb" column="pb" />
+        <result property="pc" column="pc" />
+        <result property="pTotal" column="p_total" />
+        <result property="qa" column="qa" />
+        <result property="qb" column="qb" />
+        <result property="qc" column="qc" />
+        <result property="qTotal" column="q_total" />
+        <result property="sa" column="sa" />
+        <result property="sb" column="sb" />
+        <result property="sc" column="sc" />
+        <result property="sTotal" column="s_total" />
+        <result property="pfa" column="pfa" />
+        <result property="pfb" column="pfb" />
+        <result property="pfc" column="pfc" />
+        <result property="pfavg" column="pfavg" />
+        <result property="f" column="f" />
+        <result property="ep" column="ep" />
+        <result property="epR" column="ep_r" />
+        <result property="epDr" column="ep_dr" />
+        <result property="epDrr" column="ep_drr" />
+        <result property="eq" column="eq" />
+        <result property="eqR" column="eq_r" />
+        <result property="eqDr" column="eq_dr" />
+        <result property="eqDrr" column="eq_drr" />
+        <result property="es" column="es" />
+        <result property="esR" column="es_r" />
+        <result property="esDr" column="es_dr" />
+        <result property="esDrr" column="es_drr" />
+        <result property="t1" column="t1" />
+        <result property="t2" column="t2" />
+        <result property="t3" column="t3" />
+        <result property="commandData1" column="command_data1" />
+        <result property="commandData2" column="command_data2" />
+        <result property="commandData3" column="command_data3" />
+        <result property="commandData4" column="command_data4" />
+        <result property="commandData5" column="command_data5" />
+        <result property="commandData6" column="command_data6" />
+        <result property="thdIa" column="thd_ia" />
+        <result property="thdIb" column="thd_ib" />
+        <result property="thdIc" column="thd_ic" />
+        <result property="thdIn" column="thd_in" />
+        <result property="thdIg" column="thd_ig" />
+        <result property="thdVab" column="thd_vab" />
+        <result property="thdVbc" column="thd_vbc" />
+        <result property="thdVca" column="thd_vca" />
+        <result property="thdVll" column="thd_vll" />
+        <result property="thdVan" column="thd_van" />
+        <result property="thdVbn" column="thd_vbn" />
+        <result property="thdVcn" column="thd_vcn" />
+        <result property="thdVln" column="thd_vln" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transaction_date" />
+        <result property="viewTime" column="view_time" />
+    </resultMap>
+
+    <resultMap id="dataLoadFrame2" type="DataLoadFrame2">
+        <result property="id" column="id" />
+        <result property="deviceId" column="device_id" />
+        <result property="deviceName" column="device_name" />
+        <result property="vanH1" column="VAN_H1" />
+        <result property="vanH2" column="VAN_H2" />
+        <result property="vanH3" column="VAN_H3" />
+        <result property="vanH4" column="VAN_H4" />
+        <result property="vanH5" column="VAN_H5" />
+        <result property="vanH6" column="VAN_H6" />
+        <result property="vanH7" column="VAN_H7" />
+        <result property="vanH8" column="VAN_H8" />
+        <result property="vanH9" column="VAN_H9" />
+        <result property="vanH10" column="VAN_H10" />
+        <result property="vanH11" column="VAN_H11" />
+        <result property="vanH12" column="VAN_H12" />
+        <result property="vanH13" column="VAN_H13" />
+        <result property="vanH14" column="VAN_H14" />
+        <result property="vanH15" column="VAN_H15" />
+        <result property="vanH16" column="VAN_H16" />
+        <result property="vanH17" column="VAN_H17" />
+        <result property="vanH18" column="VAN_H18" />
+        <result property="vanH19" column="VAN_H19" />
+        <result property="vanH20" column="VAN_H20" />
+        <result property="vanH21" column="VAN_H21" />
+        <result property="vanH22" column="VAN_H22" />
+        <result property="vanH23" column="VAN_H23" />
+        <result property="vanH24" column="VAN_H24" />
+        <result property="vanH25" column="VAN_H25" />
+        <result property="vanH26" column="VAN_H26" />
+        <result property="vanH27" column="VAN_H27" />
+        <result property="vanH28" column="VAN_H28" />
+        <result property="vanH29" column="VAN_H29" />
+        <result property="vanH30" column="VAN_H30" />
+        <result property="vanH31" column="VAN_H31" />
+        <result property="vbnH1" column="VBN_H1" />
+        <result property="vbnH2" column="VBN_H2" />
+        <result property="vbnH3" column="VBN_H3" />
+        <result property="vbnH4" column="VBN_H4" />
+        <result property="vbnH5" column="VBN_H5" />
+        <result property="vbnH6" column="VBN_H6" />
+        <result property="vbnH7" column="VBN_H7" />
+        <result property="vbnH8" column="VBN_H8" />
+        <result property="vbnH9" column="VBN_H9" />
+        <result property="vbnH10" column="VBN_H10" />
+        <result property="vbnH11" column="VBN_H11" />
+        <result property="vbnH12" column="VBN_H12" />
+        <result property="vbnH13" column="VBN_H13" />
+        <result property="vbnH14" column="VBN_H14" />
+        <result property="vbnH15" column="VBN_H15" />
+        <result property="vbnH16" column="VBN_H16" />
+        <result property="vbnH17" column="VBN_H17" />
+        <result property="vbnH18" column="VBN_H18" />
+        <result property="vbnH19" column="VBN_H19" />
+        <result property="vbnH20" column="VBN_H20" />
+        <result property="vbnH21" column="VBN_H21" />
+        <result property="vbnH22" column="VBN_H22" />
+        <result property="vbnH23" column="VBN_H23" />
+        <result property="vbnH24" column="VBN_H24" />
+        <result property="vbnH25" column="VBN_H25" />
+        <result property="vbnH26" column="VBN_H26" />
+        <result property="vbnH27" column="VBN_H27" />
+        <result property="vbnH28" column="VBN_H28" />
+        <result property="vbnH29" column="VBN_H29" />
+        <result property="vbnH30" column="VBN_H30" />
+        <result property="vbnH31" column="VBN_H31" />
+        <result property="vcnH1" column="VCN_H1" />
+        <result property="vcnH2" column="VCN_H2" />
+        <result property="vcnH3" column="VCN_H3" />
+        <result property="vcnH4" column="VCN_H4" />
+        <result property="vcnH5" column="VCN_H5" />
+        <result property="vcnH6" column="VCN_H6" />
+        <result property="vcnH7" column="VCN_H7" />
+        <result property="vcnH8" column="VCN_H8" />
+        <result property="vcnH9" column="VCN_H9" />
+        <result property="vcnH10" column="VCN_H10" />
+        <result property="vcnH11" column="VCN_H11" />
+        <result property="vcnH12" column="VCN_H12" />
+        <result property="vcnH13" column="VCN_H13" />
+        <result property="vcnH14" column="VCN_H14" />
+        <result property="vcnH15" column="VCN_H15" />
+        <result property="vcnH16" column="VCN_H16" />
+        <result property="vcnH17" column="VCN_H17" />
+        <result property="vcnH18" column="VCN_H18" />
+        <result property="vcnH19" column="VCN_H19" />
+        <result property="vcnH20" column="VCN_H20" />
+        <result property="vcnH21" column="VCN_H21" />
+        <result property="vcnH22" column="VCN_H22" />
+        <result property="vcnH23" column="VCN_H23" />
+        <result property="vcnH24" column="VCN_H24" />
+        <result property="vcnH25" column="VCN_H25" />
+        <result property="vcnH26" column="VCN_H26" />
+        <result property="vcnH27" column="VCN_H27" />
+        <result property="vcnH28" column="VCN_H28" />
+        <result property="vcnH29" column="VCN_H29" />
+        <result property="vcnH30" column="VCN_H30" />
+        <result property="vcnH31" column="VCN_H31" />
+        <result property="iaH1" column="IA_H1" />
+        <result property="iaH2" column="IA_H2" />
+        <result property="iaH3" column="IA_H3" />
+        <result property="iaH4" column="IA_H4" />
+        <result property="iaH5" column="IA_H5" />
+        <result property="iaH6" column="IA_H6" />
+        <result property="iaH7" column="IA_H7" />
+        <result property="iaH8" column="IA_H8" />
+        <result property="iaH9" column="IA_H9" />
+        <result property="iaH10" column="IA_H10" />
+        <result property="iaH11" column="IA_H11" />
+        <result property="iaH12" column="IA_H12" />
+        <result property="iaH13" column="IA_H13" />
+        <result property="iaH14" column="IA_H14" />
+        <result property="iaH15" column="IA_H15" />
+        <result property="iaH16" column="IA_H16" />
+        <result property="iaH17" column="IA_H17" />
+        <result property="iaH18" column="IA_H18" />
+        <result property="iaH19" column="IA_H19" />
+        <result property="iaH20" column="IA_H20" />
+        <result property="iaH21" column="IA_H21" />
+        <result property="iaH22" column="IA_H22" />
+        <result property="iaH23" column="IA_H23" />
+        <result property="iaH24" column="IA_H24" />
+        <result property="iaH25" column="IA_H25" />
+        <result property="iaH26" column="IA_H26" />
+        <result property="iaH27" column="IA_H27" />
+        <result property="iaH28" column="IA_H28" />
+        <result property="iaH29" column="IA_H29" />
+        <result property="iaH30" column="IA_H30" />
+        <result property="iaH31" column="IA_H31" />
+        <result property="ibH1" column="IB_H1" />
+        <result property="ibH2" column="IB_H2" />
+        <result property="ibH3" column="IB_H3" />
+        <result property="ibH4" column="IB_H4" />
+        <result property="ibH5" column="IB_H5" />
+        <result property="ibH6" column="IB_H6" />
+        <result property="ibH7" column="IB_H7" />
+        <result property="ibH8" column="IB_H8" />
+        <result property="ibH9" column="IB_H9" />
+        <result property="ibH10" column="IB_H10" />
+        <result property="ibH11" column="IB_H11" />
+        <result property="ibH12" column="IB_H12" />
+        <result property="ibH13" column="IB_H13" />
+        <result property="ibH14" column="IB_H14" />
+        <result property="ibH15" column="IB_H15" />
+        <result property="ibH16" column="IB_H16" />
+        <result property="ibH17" column="IB_H17" />
+        <result property="ibH18" column="IB_H18" />
+        <result property="ibH19" column="IB_H19" />
+        <result property="ibH20" column="IB_H20" />
+        <result property="ibH21" column="IB_H21" />
+        <result property="ibH22" column="IB_H22" />
+        <result property="ibH23" column="IB_H23" />
+        <result property="ibH24" column="IB_H24" />
+        <result property="ibH25" column="IB_H25" />
+        <result property="ibH26" column="IB_H26" />
+        <result property="ibH27" column="IB_H27" />
+        <result property="ibH28" column="IB_H28" />
+        <result property="ibH29" column="IB_H29" />
+        <result property="ibH30" column="IB_H30" />
+        <result property="ibH31" column="IB_H31" />
+        <result property="icH1" column="IC_H1" />
+        <result property="icH2" column="IC_H2" />
+        <result property="icH3" column="IC_H3" />
+        <result property="icH4" column="IC_H4" />
+        <result property="icH5" column="IC_H5" />
+        <result property="icH6" column="IC_H6" />
+        <result property="icH7" column="IC_H7" />
+        <result property="icH8" column="IC_H8" />
+        <result property="icH9" column="IC_H9" />
+        <result property="icH10" column="IC_H10" />
+        <result property="icH11" column="IC_H11" />
+        <result property="icH12" column="IC_H12" />
+        <result property="icH13" column="IC_H13" />
+        <result property="icH14" column="IC_H14" />
+        <result property="icH15" column="IC_H15" />
+        <result property="icH16" column="IC_H16" />
+        <result property="icH17" column="IC_H17" />
+        <result property="icH18" column="IC_H18" />
+        <result property="icH19" column="IC_H19" />
+        <result property="icH20" column="IC_H20" />
+        <result property="icH21" column="IC_H21" />
+        <result property="icH22" column="IC_H22" />
+        <result property="icH23" column="IC_H23" />
+        <result property="icH24" column="IC_H24" />
+        <result property="icH25" column="IC_H25" />
+        <result property="icH26" column="IC_H26" />
+        <result property="icH27" column="IC_H27" />
+        <result property="icH28" column="IC_H28" />
+        <result property="icH29" column="IC_H29" />
+        <result property="icH30" column="IC_H30" />
+        <result property="icH31" column="IC_H31" />
+        <result property="sentDate" column="sent_date" />
+        <result property="transactionDate" column="transactionDate" />
+    </resultMap>
+
+    <resultMap id="warningResult" type="Warning">
+        <result column="id" property="id" />
+        <result column="warning_id" property="warningId" />
+        <result column="warning_type" property="warningType" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="total" property="totalDevice" />
+        <result column="system_type_id" property="systemTypeId" />
+        <result column="from_date" property="fromDate" />
+        <result column="to_date" property="toDate" />
+        <result column="handle_flag" property="handleFlag" />
+        <result column="project_name" property="projectName" />
+        <result column="project_id" property="projectId" />
+        <result column="handle_name" property="handleName" />
+        <result column="staff_name" property="staffName" />
+        <result column="setting_history_id" property="settingHistoryId" />
+        <result column="description" property="description" />
+        <result column="create_id" property="createId" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_id" property="updateId" />
+        <result column="update_date" property="updateDate" />
+    </resultMap>
+
+
+    <!--Lấy danh sách device -->
+    <select id="getDevice" parameterType="map" resultType="map">
+    SELECT 
+        A.device_id, A.device_name
+    FROM
+        s3m_device A
+    WHERE 
+       A.project_id= #{projectId}  AND A.delete_flag = 0 AND A.system_type_id = 1
+    </select>
+
+    <!--Tìm kiếm device theo tên device-->
+    <select id="searchDevice" parameterType="map" resultType="map">
+    SELECT
+       device_name
+    FROM
+        s3m_device
+    WHERE
+        device_name LIKE '%${keyword}%' and delete_flag = 0
+    </select>
+
+    <select id="getReport" parameterType="map" resultMap="listReport">
+    SELECT 
+        *
+    FROM
+        s3m_report_table
+    WHERE 
+        delete_flag = 0 and user_id =#{userId} and system_type = 1 and project_id=#{projectId} order by id desc
+    </select>
+
+
+    <select id="getDataLoadFrame1ById" parameterType="map" resultMap="dataLoadFrame">
+    SELECT 
+        A.sent_date,
+        A.device_id,
+        B.device_name,
+        A.uab,
+        A.ubc,
+        A.uca,
+        A.ia,
+        A.ib,
+        A.ic,
+        A.pa,
+        A.pb,
+        A.pc,
+        A.qa,
+        A.qb,
+        A.qc,
+        A.sa,
+        A.sb,
+        A.sc,
+        A.pfa,
+        A.pfb,
+        A.pfc,
+        A.thd_vab,
+        A.thd_vbc,
+        A.thd_vca,
+        A.thd_ia,
+        A.thd_ib,
+        A.thd_ic,
+        A.f,
+        A.ep,
+        A.t1,
+        A.t2,
+        A.t3
+    FROM
+        ${schema}${s3mDataTableFrame1} A JOIN s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.sent_date BETWEEN #{fromDate}  AND #{toDate}
+        AND A.device_id=#{deviceId} 
+    </select>
+
+    <select id="getDataLoadFrame1ByIdLimit" parameterType="map" resultMap="dataLoadFrame">
+    SELECT 
+        A.device_id
+    FROM
+        ${schema}${s3mDataTableFrame1} A 
+    WHERE
+        A.sent_date BETWEEN #{fromDate}  AND #{toDate}
+        AND A.device_id=#{deviceId} LIMIT 5
+    </select>
+
+    <select id="getDataLoadFrame1Limit" parameterType="map" resultMap="dataLoadFrame">
+        SELECT 
+        A.device_id
+    FROM
+        ${schema}${s3mDataTableFrame1} A 
+        LEFT JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} AND
+        </if>
+        B.project_id= #{projectId} AND
+        A.sent_date BETWEEN #{fromDate}  AND #{toDate} LIMIT 5
+    </select>
+
+    <!--    insert report -->
+    <insert id="addReport" parameterType="vn.ses.s3m.plus.dto.Report">
+    INSERT INTO 
+        s3m_report_table(report_id, device_id, report_date, updated, url, user_id, system_type, date_type, project_id)
+    VALUES
+        (#{reportId}, #{deviceId}, #{reportDate}, #{updated}, #{url}, #{userId}, #{systemType},#{dateType}, #{projectId})
+    </insert>
+
+    <!--    delete report -->
+    <update id="deleteReport" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        delete_flag=1
+    WHERE 
+        id=#{id}
+    </update>
+
+    <!--    update percent report -->
+    <update id="updatePercent" parameterType="map">
+    UPDATE
+        s3m_report_table
+    SET 
+        percent = #{percent}
+    WHERE 
+        id=#{id}
+    </update>
+
+    <select id="getUserId" parameterType="String" resultType="java.lang.Integer">
+    SELECT 
+        user_id
+    FROM
+        s3m_user
+    WHERE
+        username =#{userName}
+    </select>
+
+    <select id="getAllDataLoadFrame2" parameterType="map" resultMap="dataLoadFrame2">
+    SELECT 
+        A.device_id,
+        B.device_name,
+        A.VAN_H1,
+        A.VAN_H2,
+        A.VAN_H3,
+        A.VAN_H4,
+        A.VAN_H5,
+        A.VAN_H6,
+        A.VAN_H7,
+        A.VAN_H8,
+        A.VAN_H9,
+        A.VAN_H10,
+        A.VAN_H11,
+        A.VAN_H12,
+        A.VAN_H13,
+        A.VAN_H14,
+        A.VAN_H15,
+        A.VAN_H16,
+        A.VAN_H17,
+        A.VAN_H18,
+        A.VAN_H19,
+        A.VAN_H20,
+        A.VAN_H21,
+        A.VAN_H22,
+        A.VAN_H23,
+        A.VAN_H24,
+        A.VAN_H25,
+        A.VAN_H26,
+        A.VAN_H27,
+        A.VAN_H28,
+        A.VAN_H29,
+        A.VAN_H30,
+        A.VAN_H31,
+        A.VBN_H1,
+        A.VBN_H2,
+        A.VBN_H3,
+        A.VBN_H4,
+        A.VBN_H5,
+        A.VBN_H6,
+        A.VBN_H7,
+        A.VBN_H8,
+        A.VBN_H9,
+        A.VBN_H10,
+        A.VBN_H11,
+        A.VBN_H12,
+        A.VBN_H13,
+        A.VBN_H14,
+        A.VBN_H15,
+        A.VBN_H16,
+        A.VBN_H17,
+        A.VBN_H18,
+        A.VBN_H19,
+        A.VBN_H20,
+        A.VBN_H21,
+        A.VBN_H22,
+        A.VBN_H23,
+        A.VBN_H24,
+        A.VBN_H25,
+        A.VBN_H26,
+        A.VBN_H27,
+        A.VBN_H28,
+        A.VBN_H29,
+        A.VBN_H30,
+        A.VBN_H31,
+        A.VCN_H1,
+        A.VCN_H2,
+        A.VCN_H3,
+        A.VCN_H4,
+        A.VCN_H5,
+        A.VCN_H6,
+        A.VCN_H7,
+        A.VCN_H8,
+        A.VCN_H9,
+        A.VCN_H10,
+        A.VCN_H11,
+        A.VCN_H12,
+        A.VCN_H13,
+        A.VCN_H14,
+        A.VCN_H15,
+        A.VCN_H16,
+        A.VCN_H17,
+        A.VCN_H18,
+        A.VCN_H19,
+        A.VCN_H20,
+        A.VCN_H21,
+        A.VCN_H22,
+        A.VCN_H23,
+        A.VCN_H24,
+        A.VCN_H25,
+        A.VCN_H26,
+        A.VCN_H27,
+        A.VCN_H28,
+        A.VCN_H29,
+        A.VCN_H30,
+        A.VCN_H31,
+        A.IA_H1,
+        A.IA_H2,
+        A.IA_H3,
+        A.IA_H4,
+        A.IA_H5,
+        A.IA_H6,
+        A.IA_H7,
+        A.IA_H8,
+        A.IA_H9,
+        A.IA_H10,
+        A.IA_H11,
+        A.IA_H12,
+        A.IA_H13,
+        A.IA_H14,
+        A.IA_H15,
+        A.IA_H16,
+        A.IA_H17,
+        A.IA_H18,
+        A.IA_H19,
+        A.IA_H20,
+        A.IA_H21,
+        A.IA_H22,
+        A.IA_H23,
+        A.IA_H24,
+        A.IA_H25,
+        A.IA_H26,
+        A.IA_H27,
+        A.IA_H28,
+        A.IA_H29,
+        A.IA_H30,
+        A.IA_H31,
+        A.IB_H1,
+        A.IB_H2,
+        A.IB_H3,
+        A.IB_H4,
+        A.IB_H5,
+        A.IB_H6,
+        A.IB_H7,
+        A.IB_H8,
+        A.IB_H9,
+        A.IB_H10,
+        A.IB_H11,
+        A.IB_H12,
+        A.IB_H13,
+        A.IB_H14,
+        A.IB_H15,
+        A.IB_H16,
+        A.IB_H17,
+        A.IB_H18,
+        A.IB_H19,
+        A.IB_H20,
+        A.IB_H21,
+        A.IB_H22,
+        A.IB_H23,
+        A.IB_H24,
+        A.IB_H25,
+        A.IB_H26,
+        A.IB_H27,
+        A.IB_H28,
+        A.IB_H29,
+        A.IB_H30,
+        A.IB_H31,
+        A.IC_H1,
+        A.IC_H2,
+        A.IC_H3,
+        A.IC_H4,
+        A.IC_H5,
+        A.IC_H6,
+        A.IC_H7,
+        A.IC_H8,
+        A.IC_H9,
+        A.IC_H10,
+        A.IC_H11,
+        A.IC_H12,
+        A.IC_H13,
+        A.IC_H14,
+        A.IC_H15,
+        A.IC_H16,
+        A.IC_H17,
+        A.IC_H18,
+        A.IC_H19,
+        A.IC_H20,
+        A.IC_H21,
+        A.IC_H22,
+        A.IC_H23,
+        A.IC_H24,
+        A.IC_H25,
+        A.IC_H26,
+        A.IC_H27,
+        A.IC_H28,
+        A.IC_H29,
+        A.IC_H30,
+        A.IC_H31,
+        A.sent_date
+    FROM
+        ${schema}${s3mDataTableFrame2} A 
+            JOIN 
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+         B.project_id = #{projectId}
+         AND
+            (A.sent_date BETWEEN #{fromDate} AND #{toDate}) LIMIT 5
+    </select>
+
+    <select id="getDataLoadFrame2ById" parameterType="map" resultMap="dataLoadFrame2">
+    SELECT 
+        A.device_id,
+        B.device_name,
+        A.VAN_H1,
+        A.VAN_H2,
+        A.VAN_H3,
+        A.VAN_H4,
+        A.VAN_H5,
+        A.VAN_H6,
+        A.VAN_H7,
+        A.VAN_H8,
+        A.VAN_H9,
+        A.VAN_H10,
+        A.VAN_H11,
+        A.VAN_H12,
+        A.VAN_H13,
+        A.VAN_H14,
+        A.VAN_H15,
+        A.VAN_H16,
+        A.VAN_H17,
+        A.VAN_H18,
+        A.VAN_H19,
+        A.VAN_H20,
+        A.VAN_H21,
+        A.VAN_H22,
+        A.VAN_H23,
+        A.VAN_H24,
+        A.VAN_H25,
+        A.VAN_H26,
+        A.VAN_H27,
+        A.VAN_H28,
+        A.VAN_H29,
+        A.VAN_H30,
+        A.VAN_H31,
+        A.VBN_H1,
+        A.VBN_H2,
+        A.VBN_H3,
+        A.VBN_H4,
+        A.VBN_H5,
+        A.VBN_H6,
+        A.VBN_H7,
+        A.VBN_H8,
+        A.VBN_H9,
+        A.VBN_H10,
+        A.VBN_H11,
+        A.VBN_H12,
+        A.VBN_H13,
+        A.VBN_H14,
+        A.VBN_H15,
+        A.VBN_H16,
+        A.VBN_H17,
+        A.VBN_H18,
+        A.VBN_H19,
+        A.VBN_H20,
+        A.VBN_H21,
+        A.VBN_H22,
+        A.VBN_H23,
+        A.VBN_H24,
+        A.VBN_H25,
+        A.VBN_H26,
+        A.VBN_H27,
+        A.VBN_H28,
+        A.VBN_H29,
+        A.VBN_H30,
+        A.VBN_H31,
+        A.VCN_H1,
+        A.VCN_H2,
+        A.VCN_H3,
+        A.VCN_H4,
+        A.VCN_H5,
+        A.VCN_H6,
+        A.VCN_H7,
+        A.VCN_H8,
+        A.VCN_H9,
+        A.VCN_H10,
+        A.VCN_H11,
+        A.VCN_H12,
+        A.VCN_H13,
+        A.VCN_H14,
+        A.VCN_H15,
+        A.VCN_H16,
+        A.VCN_H17,
+        A.VCN_H18,
+        A.VCN_H19,
+        A.VCN_H20,
+        A.VCN_H21,
+        A.VCN_H22,
+        A.VCN_H23,
+        A.VCN_H24,
+        A.VCN_H25,
+        A.VCN_H26,
+        A.VCN_H27,
+        A.VCN_H28,
+        A.VCN_H29,
+        A.VCN_H30,
+        A.VCN_H31,
+        A.IA_H1,
+        A.IA_H2,
+        A.IA_H3,
+        A.IA_H4,
+        A.IA_H5,
+        A.IA_H6,
+        A.IA_H7,
+        A.IA_H8,
+        A.IA_H9,
+        A.IA_H10,
+        A.IA_H11,
+        A.IA_H12,
+        A.IA_H13,
+        A.IA_H14,
+        A.IA_H15,
+        A.IA_H16,
+        A.IA_H17,
+        A.IA_H18,
+        A.IA_H19,
+        A.IA_H20,
+        A.IA_H21,
+        A.IA_H22,
+        A.IA_H23,
+        A.IA_H24,
+        A.IA_H25,
+        A.IA_H26,
+        A.IA_H27,
+        A.IA_H28,
+        A.IA_H29,
+        A.IA_H30,
+        A.IA_H31,
+        A.IB_H1,
+        A.IB_H2,
+        A.IB_H3,
+        A.IB_H4,
+        A.IB_H5,
+        A.IB_H6,
+        A.IB_H7,
+        A.IB_H8,
+        A.IB_H9,
+        A.IB_H10,
+        A.IB_H11,
+        A.IB_H12,
+        A.IB_H13,
+        A.IB_H14,
+        A.IB_H15,
+        A.IB_H16,
+        A.IB_H17,
+        A.IB_H18,
+        A.IB_H19,
+        A.IB_H20,
+        A.IB_H21,
+        A.IB_H22,
+        A.IB_H23,
+        A.IB_H24,
+        A.IB_H25,
+        A.IB_H26,
+        A.IB_H27,
+        A.IB_H28,
+        A.IB_H29,
+        A.IB_H30,
+        A.IB_H31,
+        A.IC_H1,
+        A.IC_H2,
+        A.IC_H3,
+        A.IC_H4,
+        A.IC_H5,
+        A.IC_H6,
+        A.IC_H7,
+        A.IC_H8,
+        A.IC_H9,
+        A.IC_H10,
+        A.IC_H11,
+        A.IC_H12,
+        A.IC_H13,
+        A.IC_H14,
+        A.IC_H15,
+        A.IC_H16,
+        A.IC_H17,
+        A.IC_H18,
+        A.IC_H19,
+        A.IC_H20,
+        A.IC_H21,
+        A.IC_H22,
+        A.IC_H23,
+        A.IC_H24,
+        A.IC_H25,
+        A.IC_H26,
+        A.IC_H27,
+        A.IC_H28,
+        A.IC_H29,
+        A.IC_H30,
+        A.IC_H31,
+        A.sent_date
+    FROM
+        ${schema}${s3mDataTableFrame2} A 
+            JOIN 
+        s3m_device B ON A.device_id = B.device_id
+        WHERE
+            (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+                AND A.device_id = #{deviceId}
+    </select>
+
+    <!--    delete report theo url-->
+    <delete id="deleteReportByUrl" parameterType="map">
+    DELETE FROM 
+        s3m_report_table
+    WHERE 
+        url=#{url}
+    </delete>
+    <select id="getListByLimit" parameterType="map" resultMap="listReport">
+    SELECT 
+        A.id,
+        A.user_id,
+        A.date_from,
+        A.date_to,
+        A.report_id,
+        COALESCE(B.device_name, 'Tất cả thiết bị') AS device_name,
+        B.device_id,
+        A.report_date,
+        A.status,
+        A.url,
+        A.delete_flag,
+        A.manager_id,
+        A.percent,
+        A.updated
+    FROM
+        s3m_report_table A
+            LEFT JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.delete_flag = 0 AND A.user_id=#{userId}
+    ORDER BY A.id DESC
+    LIMIT #{limit}
+    </select>
+
+    <!--    update status report -->
+    <update id="updateStatus" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        status=1
+    WHERE 
+        id=#{id}
+    </update>
+
+    <update id="updateTimeFinish" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        updated = current_timestamp()
+    WHERE 
+        id = #{id}
+    </update>
+
+    <select id="getDetailWarningByWarningType" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            A.from_date,
+            A.to_date,
+            A.handle_flag,
+            C.staff_name
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        WHERE
+            A.from_date
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND
+            A.to_date
+        <![CDATA[<=]]>
+        #{toDate}
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        AND A.device_id=#{deviceId}
+        
+        AND 
+            B.project_id = #{projectId}
+    </select>
+
+    <select id="getDeviceHasWaring" parameterType="map" resultType="map">
+        SELECT DISTINCT
+            A.device_id
+            
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+         JOIN
+            s3m_system_map D ON B.system_map_id = D.system_map_id
+        WHERE
+            A.from_date
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND
+            A.to_date
+        <![CDATA[<=]]>
+        #{toDate}
+        AND 
+            B.project_id = #{projectId}
+    </select>
+
+    <select id="getDetailWarningByWarningTypeByLimit" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_type, 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND
+            A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+        AND 
+             A.warning_type between 100 AND 200
+        AND 
+            B.project_id = #{projectId}
+        AND 
+            B.device_id=#{deviceId}
+        GROUP BY
+            A.warning_type LIMIT 5
+    </select>
+
+    <select id="getTotalWarningByLimit" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_type, 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND
+            A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+        AND 
+             A.warning_type between 100 AND 200
+        AND 
+            B.project_id = #{projectId}
+        GROUP BY
+            A.warning_type LIMIT 5
+    </select>
+
+
+    <select id="getProjectName" parameterType="String" resultType="java.lang.String">
+    SELECT
+        A.project_name 
+    FROM 
+        s3m_project A
+    WHERE
+        A.project_id=#{projectId}
+    </select>
+
+    <select id="getWarningLoad" parameterType="map" resultType="map">
+        SELECT 
+    A.warning_type, count(A.warning_type) AS TOTAL
+    FROM 
+        ${schema}s3m_warning A 
+    JOIN 
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}  
+    AND 
+        A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+    AND
+         A.warning_type between 100 AND 200
+    AND 
+        B.project_id = #{projectId}
+    GROUP BY 
+        A.warning_type
+    </select>
+
+    <select id="getTotalWarningLoad" parameterType="map" resultType="java.lang.String">
+    SELECT 
+        count(A.warning_type) AS TOTAL
+    FROM 
+        ${schema}s3m_warning A
+    JOIN 
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.create_date
+        <![CDATA[>=]]>
+        #{fromDate}  
+    AND 
+        A.create_date
+        <![CDATA[<=]]>
+        #{toDate}
+    AND
+         A.warning_type between 100 AND 200
+    AND 
+        B.project_id = #{projectId}
+    </select>
+
+    
+    <select id="getElectricalPowerInMonth" parameterType="map" resultMap="dataLoadFrame">
+        SELECT 
+        A.view_time, A.ep
+    FROM
+        ${schema}s3m_data_load_frame_1_view A
+    LEFT JOIN
+        s3m_device B ON A.device_id = B.device_id
+    LEFT JOIN
+        s3m_project C ON B.project_id = C.project_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        C.project_id = #{projectId} AND
+        A.view_type = 4 AND
+        A.view_time
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND A.view_time
+        <![CDATA[<=]]>
+        #{toDate}
+        order by A.view_time 
+    </select>
+
+    <select id="getElectricalPowerInDay" parameterType="map" resultMap="dataLoadFrame">
+        SELECT 
+        A.view_time, A.ep
+    FROM
+        ${schema}s3m_data_load_frame_1_view A
+    LEFT JOIN
+        s3m_device B ON A.device_id = B.device_id
+    LEFT JOIN
+        s3m_project C ON B.project_id = C.project_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} AND
+        </if>
+        C.project_id = #{projectId} AND
+        A.view_type = 4 AND
+        A.view_time
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND A.view_time
+        <![CDATA[<=]]>
+        #{toDate}
+        order by A.view_time 
+    </select>
+    
+    <select id="getElectricalPowerInYear" parameterType="map" resultMap="dataLoadFrame">
+        SELECT 
+        A.view_time, A.ep
+    FROM
+        ${schema}s3m_data_load_frame_1_view A
+    LEFT JOIN
+        s3m_device B ON A.device_id = B.device_id
+    LEFT JOIN
+        s3m_project C ON B.project_id = C.project_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} AND
+        </if>
+        C.project_id = #{projectId} AND
+        A.view_type = 4 AND
+        A.view_time
+        <![CDATA[>=]]>
+        #{fromDate}
+        AND A.view_time
+        <![CDATA[<=]]>
+        #{toDate}
+        order by A.view_time 
+    </select>
+    
+    
+    <select id="getElectricalPowerInHour" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            sum(A.ep) as ep
+        FROM 
+             ${schema}${s3mDataTableFrame1} A
+        WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.sent_date
+        <![CDATA[>=]]>
+        #{fromDate} and A.sent_date
+        <![CDATA[<=]]>
+        #{toDate}
+    </select>
+
+</mapper>

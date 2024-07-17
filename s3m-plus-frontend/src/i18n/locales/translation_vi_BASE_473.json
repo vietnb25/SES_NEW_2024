@@ -1,0 +1,56 @@
+{ 
+    "content" : {
+        "profile": "Hồ sơ",
+        "customer": "Khách hàng",
+        "add_new_account": "THÊM MỚI TÀI KHOẢN",
+        "staff_name": "Họ tên",
+        "user_type": "Tài khoản",
+        "super_manager": "Khu vực",
+        "manager": "Tỉnh thành",
+        "area": "Quận huyện",
+        "project": "Dự án",
+        "role": "Quyền hạn",
+        "username": "Tên đăng nhập",
+        "email": "Email",
+        "password": "Mật khẩu",
+        "confirm_password": "Xác nhận",
+        "update_account": "CẬP NHẬT TÀI KHOẢN",
+        "status": "Trạng thái",
+        "lock": "Khóa",
+        "unlock": "Mở khóa",
+        "list_account": "DANH SÁCH TÀI KHOẢN",
+        "no": "TT",
+        "update_date": "Ngày cập nhật",
+        "home": "Trang chủ",
+        "no_data": "Không có dữ liệu",
+        "description": "Mô tả"
+    },
+    "validate": {
+        "user": {
+            "USERNAME_NOT_BLANK": "Tên đăng nhập không được bỏ trống.",
+            "USERNAME_MAX_SIZE_ERROR": "Tên đăng nhập chỉ có tối đa 20 ký tự.",
+            "PASSWORD_PATTERN_ERROR": "Mật khẩu phải có ít nhất 1 chữ số, 1 chữ cái thường, 1 chữ cái hoa và 1 kí tự đặc biệt.",
+            "PASSWORD_NOT_BLANK": "Mật khẩu không được bỏ trống.",
+            "PASSWORD_MIN_SIZE_ERROR": "Mật khẩu có ít nhất 8 ký tự.",
+            "PASSWORD_MAX_SIZE_ERROR": "Mật khẩu chỉ có tối đa 255 ký tự.",
+            "STAFF_NAME_NOT_BLANK": "Họ tên không được bỏ trống.",
+            "STAFF_NAME_MAX_SIZE_ERROR": "Họ tên chỉ có tối đa 100 ký tự.",
+            "EMAIL_NOT_BLANK": "Email không được bỏ trống.",
+            "EMAIL_MAX_SIZE_ERROR": "Email chỉ có tối đa 100 ký tự.",
+            "EMAIL_IS_INVALID": "Email phải có định dạng xxx@domain.y",
+            "CONFIRM_PASSWORD_NOT_BLANK": "Xác nhận mật khẩu không được bỏ trống.",
+            "CONFIRM_PASSWORD_NOT_MATCH": "Mật khẩu xác nhận không trùng với mật khẩu hiện tại.",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm khách hàng mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin khách hàng!"
+        },
+        "customer": {
+            "CUSTOMER_NAME_NOT_BLANK": "Tên khách hàng không được bỏ trống.",
+            "CUSTOMER_NAME_MAX_SIZE_ERROR": "Tên khách hàng chỉ có tối đa 100 ký tự",
+            "CUSTOMER_CODE_NOT_BLANK": "Mã khách hàng không được bỏ trống",
+            "CUSTOMER_CODE_MAX_SIZE_ERROR": "Mã khách hàng chỉ có tối đa 8 ký tự",
+            "CUSTOMER_CODE_EXISTED": "Mã khách hàng đã tồn tại",
+            "INSERT_FAILED": "Lỗi phát sinh khi thêm khách hàng mới!",
+            "UPDATE_FAILED": "Lỗi phát sinh khi cập nhật thông tin khách hàng!"
+        }
+    }
+}

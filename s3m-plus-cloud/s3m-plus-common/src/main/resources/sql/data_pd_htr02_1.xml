@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.DataPDHTRMapper">
+    <resultMap id="dataResultHtr02" type="DataPDHTR02">
+        <result property="id" column="id"></result>
+        <result property="deviceId" column="device_id"></result>
+        <result property="deviceName" column="device_name"></result>
+        <result property="settingValue" column="setting_value"></result>
+        <result property="alarmStatusBit" column="larm_status_bit"></result>
+        <result property="lfbRatio" column="lfb_ratio"></result>
+        <result property="mfbRatio" column="mfb_ratio"></result>
+        <result property="mfbEppc" column="mfb_eppc"></result>
+        <result property="meanRatio" column="mean_ratio"></result>
+        <result property="meanEppc" column="mean_eppc"></result>
+        <result property="hfbRatio" column="hfb_ratio"></result>
+        <result property="hfbEppc" column="hfb_eppc"></result>
+        <result property="indicator" column="indicator"></result>
+        <result property="ratioEppcHi" column="ratio_eppc_hi"></result>
+        <result property="ratioEppcLo" column="ratio_eppc_lo"></result>
+        <result property="sentDate" column="sent_date"></result>
+        <result property="viewTime" column="viewTime"></result>
+    </resultMap>
+
+    <select id="getListHTRIndicatorByDeviceId" resultMap="dataResultHtr02" parameterType="map">
+        SELECT A.id, A.indicator, A.sent_date as viewTime, A.sent_date
+        FROM ${schema}s3m_data_pd_htr02_1${year} A
+        where A.device_id = #{deviceId}
+          and A.sent_date <![CDATA[>=]]> #{fromDate}
+          and A.sent_date <![CDATA[<=]]> #{toDate} order by A.sent_date asc
+    </select>
+
+    <select id="getInforDeviceByWarningHTR02" resultMap="dataResultHtr02" parameterType="map">
+        SELECT A.*, B.device_name,C.setting_value
+        FROM ${schema}s3m_data_pd_htr02_1${year} A
+                 join s3m_device B on B.device_id = A.device_id
+                 join s3m_setting C on C.device_id = A.device_id
+        where  A.device_id = #{deviceId} group by A.device_id
+    </select>
+</mapper>

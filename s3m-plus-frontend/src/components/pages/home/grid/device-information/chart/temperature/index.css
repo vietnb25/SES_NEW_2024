@@ -1,0 +1,10 @@
+.btn-type-weather {
+    border-radius: unset !important;
+    width: 100px !important;
+    color: #495057 Im !important;
+    font-size: 13px !important
+}
+.active-chart-weather {
+    background-color: #FFA87D;
+    color: #ffffff;
+}

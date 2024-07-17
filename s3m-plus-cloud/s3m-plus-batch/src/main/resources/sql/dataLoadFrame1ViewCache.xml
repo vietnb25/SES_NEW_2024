@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataLoadFrame1ViewCacheMapper">
+
+    <resultMap id="baseResult" type="DataLoadFrame1ViewCache">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="INTEGER" column="device_id" />
+        <result property="viewType" jdbcType="INTEGER" column="view_type" />
+        <result property="ep" jdbcType="INTEGER" column="ep" />
+    </resultMap>
+    
+    <select id="selectAll" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.s3m_data_load_frame_1_view_cache
+    </select>
+    
+    <select id="selectByDeviceIdAndViewType" parameterType="map" resultMap="baseResult">
+    	SELECT 
+			* 
+		FROM 
+			${schema}.s3m_data_load_frame_1_view_cache 
+		WHERE 
+			view_type = #{viewType} 
+			AND device_id = #{deviceId}
+    </select>
+    
+    <update id="update" parameterType="DataLoadFrame1ViewCache">
+    	UPDATE 
+    		${schema}.s3m_data_load_frame_1_view_cache 
+    	SET	
+    		device_id = #{data.deviceId}, 
+    		view_type = #{data.viewType}, 
+    		ep = #{data.ep}
+    	WHERE 
+    		id = #{data.id}
+    </update>
+    
+    <update id="saveAll" parameterType="DataLoadFrame1ViewCache">
+    	INSERT INTO ${schema}.s3m_data_load_frame_1_view_cache
+    		(device_id, view_type, ep)
+    	VALUES
+          <foreach item="data" collection="datas" separator=",">
+          	(#{data.deviceId}, #{data.viewType}, #{data.ep})
+          </foreach>
+    </update>
+</mapper>

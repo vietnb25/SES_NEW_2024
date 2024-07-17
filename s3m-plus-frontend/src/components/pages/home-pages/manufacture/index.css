@@ -1,0 +1,494 @@
+.div-filter-manufacture {
+    margin-bottom: 5px;
+    display: flex;
+    position: relative;
+}
+
+.div-table-manufacture {
+    margin-bottom: 5px;
+    float: left
+}
+
+.div-filter-manufacture .div-left-manufacture {
+    width: 0%;
+    float: left;
+    padding-right: 5px;
+}
+
+.div-filter-manufacture .btn-type-manufacture {
+    display: flex;
+    border: 1px solid var(--ses-blue-20-color);
+    background-color: var(--ses-blue-20-color);
+}
+
+.div-filter-manufacture .btn-type-manufacture span {
+    text-align: -webkit-left;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.div-filter-manufacture .btn-type-manufacture-active {
+    display: flex;
+    border: 1px solid #ff6b21;
+    background-color: #ff6b21;
+}
+
+.div-filter-manufacture .btn-type-manufacture-active span {
+    text-align: -webkit-left;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.div-filter-manufacture .div-right-manufacture {
+    width: 100%;
+    float: left;
+}
+
+.div-right-table {
+    width: 100%;
+    float: left;
+}
+
+.input-manufacture {
+    width: 100%;
+}
+
+.input-manufacture .tbody-input-manufacture {
+    width: 100%;
+}
+
+.input-manufacture .tbody-input-manufacture tr {}
+
+.input-manufacture .tbody-input-manufacture tr th {
+    padding: 5px;
+    border: 1px solid var(--ses-grey-80-color);
+    transition: all 0.5s ease 0s;
+}
+
+.input-manufacture .tbody-input-manufacture tr th:hover {
+    background: linear-gradient(-45deg, var(--ses-orange-40-color), var(--ses-orange-60-color), var(--ses-orange-80-color));
+}
+
+.input-manufacture .tbody-input-manufacture tr td {
+    padding: 5px;
+    border: 1px solid var(--ses-grey-80-color);
+}
+
+.input-manufacture .tbody-input-manufacture tr td .btn-manufacture {
+    border: 0px;
+    background-color: transparent;
+    transition: opacity 0.2s linear;
+}
+
+.input-manufacture .tbody-input-manufacture tr td .btn-manufacture:hover {
+    color: #FFF !important;
+    font-size: 1rem !important;
+}
+
+.input-manufacture .tbody-input-manufacture tr td .title-date {
+    background-color: var(--ses-blue-100-color);
+    display: inline-block;
+    line-height: 2;
+    width: 50px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 5px;
+    color: #FFF;
+    font-weight: 700;
+}
+
+.table-manufacture {
+    /* width: -webkit-fill-available; */
+    width: 100%;
+}
+
+.table-manufacture tr th {
+    background-color: var(--ses-blue-80-color);
+    border: 2px solid var(--ses-blue-20-color);
+    margin: 0;
+    padding: 3px 0;
+    color: #FFFFFF;
+    /* text-transform: uppercase; */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-manufacture td {
+    border: 1px solid var(--ses-blue-20-color);
+    margin: 0;
+    padding: 3px 0;
+    color: var(--ses-blue-100-color);
+    /* text-transform: uppercase; */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-manufacture td input {
+    text-align: center;
+}
+
+.table-manufacture tbody {
+    display: block;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.table-manufacture tbody tr {
+    /* display: table; */
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-manufacture thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-manufacture thead.scroll {
+    width: calc(100% - 1em)
+}
+
+.input-manufacture tbody tr td input[type="text"] {
+    padding: 0px 0px !important;
+}
+
+.system-type {
+    display: inline-block;
+}
+
+/* Áp dụng cho tất cả các table có className là hihi */
+table.hihi {
+    /* border-collapse: collapse; */
+    width: 100%;
+}
+
+table.thead {
+    /* border-collapse: collapse; */
+    width: 100%;
+}
+
+.hihi {
+    width: 100%;
+    /* Độ rộng cố định của khu vực chứa bảng */
+    height: 200px;
+    /* Chiều dài cố định của khu vực chứa bảng */
+    overflow-y: scroll;
+}
+
+.hihi table {
+    width: 100%;
+    /* Độ rộng 100% của bảng để nó trải dài hết khu vực chứa bảng */
+    border-collapse: collapse;
+}
+
+.hihi thead {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    /* Giữ nguyên vị trí ở đầu trang khi cuộn */
+    /* Màu nền cho phần thead */
+}
+
+
+table.hihi th {
+    background-color: var(--ses-blue-80-color);
+    font-weight: bold;
+    color: #FFF;
+    border: 1px solid grey;
+    text-align: center;
+}
+
+table.hihi td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.manufacture-main {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    min-height: 750px;
+}
+
+.manufacture-main-option {
+    margin-left: 2%;
+    width: 20%;
+    background-color: rgb(226, 223, 223);
+    border-radius: 15px;
+}
+
+.manufacture-main-show {
+    margin-left: 2%;
+    width: 80%;
+    background-color: rgb(226, 223, 223);
+    border-radius: 15px;
+}
+
+.manufacture-main-option-content {
+    background-color: white;
+    border-radius: 15px;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 4%;
+    height: 96%;
+    padding: 5%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.manufacture-main-option-detail-title {
+    background-color: #1B3281;
+    width: 30%;
+    height: 28px;
+    line-height: 2;
+    border-radius: 5px;
+    padding-left: 3%;
+}
+
+.manufacture-main-option-detail-title>i {
+    color: white;
+    font-size: 14px;
+}
+
+.manufacture-main-option-detail-title>span {
+    color: white;
+    margin-left: 5%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.manufacture-main-option-detail-select {
+    width: 100%;
+    border: 2px solid #1B3281;
+    border-radius: 5px;
+    color: rgb(27, 27, 27);
+    font-weight: bold;
+
+}
+
+.manufacture-main-option-detail-select:focus {
+    width: 100%;
+    border: 2px solid #1B3281;
+    border-radius: 5px;
+}
+
+.manufacture-main-option-detail-select>option {
+    color: rgb(27, 27, 27);
+    font-weight: bold;
+
+}
+
+.manufacture-main-option-detail-selected {
+    height: 88%;
+    margin-top: 2%;
+    border-radius: 10px;
+    border: solid 1px #1B3281;
+    padding: 0 2% 2% 2%;
+}
+
+.manufacture-main-btn-find:hover {
+    margin-left: 1%;
+    width: 40px;
+    height: 35px;
+    background-color: #ff6b21;
+    color: white;
+    border-radius: 3px;
+    /* margin-top: 3%; */
+    line-height: 1.8;
+    border: solid 1px #1B3281;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.manufacture-main-btn-find {
+    margin-left: 1%;
+    width: 40px;
+    height: 35px;
+    background-color: #1B3281;
+    color: white;
+    border-radius: 3px;
+    line-height: 1.8;
+    border: solid 1px #1B3281;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    justify-content: center;
+    transition: background-color 1s ease;
+    cursor: pointer;
+    padding-top: 8.5px;
+}
+
+.manufacture-main-show-content {
+    background-color: white;
+    border-radius: 15px;
+    width: 98%;
+    margin-left: 1%;
+    margin-top: 1%;
+    height: 96%;
+    /* padding: 5%; */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+
+/* Css tabs */
+
+.manufacture-main-show-content-container {
+    padding-top: 1%;
+    padding-left: 1%;
+    position: relative;
+}
+
+.manufacture-main-show-content-container>input {
+    display: none;
+}
+
+.manufacture-main-show-content-container>label {
+    display: block;
+    float: left;
+    padding: 12px 20px;
+    margin-right: 5px;
+    background: #fffcfc;
+    /* background: #1B3281; */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 3px 3px 0 0;
+    color: #1B3281;
+    /* color: white; */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    margin-bottom: 0;
+    border-top: 1px solid #1B3281;
+    border-left: 1px solid #1B3281;
+    border-right: 1px solid #1B3281;
+}
+
+.manufacture-main-show-content-container>label:hover,
+.manufacture-main-show-content-container>input:checked+label {
+    /* background: #fffcfc; */
+    background: #1B3281;
+    color: rgb(235, 235, 235);
+    /* color: rgb(78, 78, 78); */
+    border-top: 1px solid #1B3281;
+    border-left: 1px solid #1B3281;
+    border-right: 1px solid #1B3281;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+
+}
+
+.manufacture-main-show-content-tabs {
+    clear: both;
+    /* perspective: 600px; */
+}
+
+.manufacture-main-show-content-tabs>div {
+    position: absolute;
+    width: 98%;
+    opacity: 0;
+    border: 2px solid #1B3281;
+    padding: 0 25px 25px 30px;
+    line-height: 1.5em;
+    transition: opacity 0.3s, transform 1s;
+    border-radius: 0 3px 3px;
+    transform: rotateX(-15deg);
+    transform-origin: top center;
+    min-height: 650px;
+    max-height: 650px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+#manufacture-main-show-content-tab-1:checked~.manufacture-main-show-content-tabs>div:nth-of-type(1),
+#manufacture-main-show-content-tab-2:checked~.manufacture-main-show-content-tabs>div:nth-of-type(2) {
+    opacity: 1;
+    transform: rotateX(0deg);
+}
+
+.table-list-manu {}
+
+.table-list-manu>thead {
+    background-color: #1B3281;
+
+}
+
+.table-list-manu>thead>tr>th {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 1px white solid;
+}
+
+.table-list-manu>tbody>tr>td {
+    color: #313131;
+    font-weight: bold;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 1px rgb(167, 167, 167) solid;
+}
+
+.tr-hover:hover {
+    background-color: #cccccc;
+    cursor: pointer;
+}
+
+.tr-hover {
+    background-color: white;
+}
+
+
+#exampleModalCenterAddProductionStep .modal-content {
+    max-width: 1000px !important;
+    width: 900px !important;
+    height: 640px !important;
+    max-height: 800px !important;
+}
+
+#exampleModalCenterAddProductionStep .modal-dialog {
+    margin-left: 30%;
+    margin-top: 5%;
+    max-width: none;
+    width: 1000px;
+    min-height: 400px;
+
+}
+
+.modal-title {
+    color: #313131;
+    font-weight: bold;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+.addButtonProduction {
+    background-color: #1B3281;
+    width: 30px;
+    height: 30px;
+    margin-left: 13%;
+    border-radius: 15px;
+    padding-top: 3.2%;
+    padding-left: 3.4%;
+}
+
+.addButtonProduction:hover {
+    background-color: #ff6b21;
+    width: 30px;
+    height: 30px;
+    margin-left: 13%;
+    border-radius: 15px;
+    padding-top: 3.2%;
+    padding-left: 3.5%;
+    cursor: pointer;
+}

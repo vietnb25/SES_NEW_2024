@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.DataInverterMapper">
+
+    <resultMap id="dataInverter1Result" type="DataInverter1">
+
+    </resultMap>
+
+    <!-- getInstantOperationInverterPV Lấy dữ liệu thông tin tức thời PV -->
+    <select id="getInstantOperationInverterPV" resultMap="dataInverter1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            B.device_name as deviceName,
+            A.I,
+            A.Ia,
+            A.Ib,
+            A.Ic,
+            A.Vab,
+            A.Vbc,
+            A.Vca,
+            A.Va,
+            A.Vb,
+            A.Vc,
+            A.F,
+            A.PF,
+            A.Idc,
+            A.Udc,
+            A.Pdc,
+            A.TmpCab,
+            A.TmpSnk,
+            A.TmpTrns,
+            A.TmpOt,
+            A.St,
+            A.StVnd,
+            A.Evt1,
+            A.Evt2,
+            A.EvtVnd1,
+            A.EvtVnd2,
+            A.EvtVnd3,
+            A.EvtVnd4,
+            A.TmSrc,
+            A.Tms,
+            A.PVConn,
+            A.ECPConn,
+            A.Conn,
+            A.Wmax,
+            A.Vref,
+            A.VRefofs,
+            A.VAMax,
+            A.VAMaxQ1,
+            A.VAMaxQ2,
+            A.VAMaxQ3,
+            A.VAMaxQ4,
+            A.F_normal,
+            A.WMaxLimPct,
+            A.WMaxLimPct_WinTms,
+            A.WMaxLimPct_RvrtTms,
+            A.WMaxLimPct_RmpTms,
+            A.WMaxLim_Ena,
+            A.OutPFSet,
+            A.OutPFSet_WinTms,
+            A.OutPFSet_RvrtTms,
+            A.OutPFSet_RmpTms,
+            A.OutPFSet_Ena,
+            A.VArWMaxPct,
+            A.VArMaxPct,
+            A.VArAvalPct,
+            A.VArPct_WinTms,
+            A.VArPct_RvrtTms,
+            A.VArPct_RmpTms,
+            A.VArPct_Mod,
+            A.VArPct_Ena,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate,
+            A.p_total as Ptotal,
+            A.pa as Pa,
+            A.pb as Pb,
+            A.pc as Pc,
+            A.s_total as Stotal,
+            A.sa as Sa,
+            A.sb as Sb,
+            A.sc as Sc,
+            A.q_total as Qtotal,
+            A.qa as Qa,
+            A.qb as Qb,
+            A.qc as Qc,
+            A.pfa as PFa,
+            A.pfb as PFb,
+            A.pfc as PFc,
+            A.ep as Ep,
+            A.EpDC
+        FROM
+            ${schema}s3m_instant_data A
+        LEFT JOIN
+            s3m_plus.s3m_device B
+        ON
+            A.device_id = B.device_id
+        WHERE
+            A.device_id = ${deviceId}
+    </select>
+
+    <!-- getOperationInverterPV Lấy dữ liệu thông tin vận hành PV -->
+    <select id="getOperationInverterPV" resultMap="dataInverter1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            A.I,
+            A.Ia,
+            A.Ib,
+            A.Ic,
+            A.Vab,
+            A.Vbc,
+            A.Vca,
+            A.Va,
+            A.Vb,
+            A.Vc,
+            A.F,
+            A.PF,
+            A.Idc,
+            A.Udc,
+            A.Pdc,
+            A.TmpCab,
+            A.TmpSnk,
+            A.TmpTrns,
+            A.TmpOt,
+            A.St,
+            A.StVnd,
+            A.Evt1,
+            A.Evt2,
+            A.EvtVnd1,
+            A.EvtVnd2,
+            A.EvtVnd3,
+            A.EvtVnd4,
+            A.TmSrc,
+            A.Tms,
+            A.PVConn,
+            A.ECPConn,
+            A.Conn,
+            A.Wmax,
+            A.Vref,
+            A.VRefofs,
+            A.VAMax,
+            A.VAMaxQ1,
+            A.VAMaxQ2,
+            A.VAMaxQ3,
+            A.VAMaxQ4,
+            A.F_normal,
+            A.WMaxLimPct,
+            A.WMaxLimPct_WinTms,
+            A.WMaxLimPct_RvrtTms,
+            A.WMaxLimPct_RmpTms,
+            A.WMaxLim_Ena,
+            A.OutPFSet,
+            A.OutPFSet_WinTms,
+            A.OutPFSet_RvrtTms,
+            A.OutPFSet_RmpTms,
+            A.OutPFSet_Ena,
+            A.VArWMaxPct,
+            A.VArMaxPct,
+            A.VArAvalPct,
+            A.VArPct_WinTms,
+            A.VArPct_RvrtTms,
+            A.VArPct_RmpTms,
+            A.VArPct_Mod,
+            A.VArPct_Ena,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate,
+            A.Ptotal,
+            A.Pa,
+            A.Pb,
+            A.Pc,
+            A.Stotal,
+            A.Sa,
+            A.Sb,
+            A.Sc,
+            A.Qtotal,
+            A.Qa,
+            A.Qb,
+            A.Qc,
+            A.PFa,
+            A.PFb,
+            A.PFc,
+            A.Ep,
+            A.EpDC
+        FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            A.sent_date ${sort}
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+
+    <!-- countDataOperationInverterPV Lấy tổng dữ liệu thông tin vận hành PV -->
+    <select id="countDataOperationInverterPV" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+                FROM
+            ${schema} A
+        WHERE
+            A.device_id = #{deviceId}
+        <if test="fromDate != null and toDate != null">
+            AND (A.sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+    </select>
+
+    <!-- getDataPQSByMonthInverter Lấy liệu thông tin vận hành điện năng theo tháng PV -->
+    <select id="getDataPQSByMonthInverter" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+            A.device_id,
+            A.Ep,
+            A.view_time
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.id IS NOT NULL
+        AND
+            A.device_id = #{deviceId}
+        AND
+            A.view_type = 4 
+        AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+        AND 
+            A.view_time <![CDATA[<=]]> #{toDate}
+    </select>
+
+    <select id="getDataChartPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+            Ep,
+            sent_date
+        FROM
+            ${schema}s3m_data_inverter_1
+        WHERE
+            device_id IN (${deviceId})
+        <if test="fromDate != null and toDate != null">
+            AND (sent_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            device_id
+    </select>
+    
+    <select id="getTotalPowerPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+            SUM(W),
+            sent_date AS sentDate
+        FROM
+            ${schema}s3m_data_inverter_1
+        WHERE
+            device_id IN (${deviceId})
+        AND 
+            sent_date <![CDATA[>=]]> #{fromDate}
+        AND
+            sent_date <![CDATA[<=]]> #{toDate}
+        ORDER BY
+            sent_date DESC
+    </select>
+    
+    <select id="getDataInverterByDevice" resultMap="dataInverter1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id as deviceId,
+            C.device_name,
+            C.device_type,
+            A.I,
+            A.Ia,
+            A.Ib,
+            A.Ic,
+            A.Vab,
+            A.Vbc,
+            A.Vca,
+            A.Va,
+            A.Vb,
+            A.Vc,
+            A.F,
+            A.PF,
+            A.Idc,
+            A.Udc,
+            A.Pdc,
+            A.TmpCab,
+            A.TmpSnk,
+            A.TmpTrns,
+            A.TmpOt,
+            A.St,
+            A.StVnd,
+            A.Evt1,
+            A.Evt2,
+            A.EvtVnd1,
+            A.EvtVnd2,
+            A.EvtVnd3,
+            A.EvtVnd4,
+            A.TmSrc,
+            A.Tms,
+            A.PVConn,
+            A.ECPConn,
+            A.Conn,
+            A.Wmax,
+            A.Vref,
+            A.VRefofs,
+            A.VAMax,
+            A.VAMaxQ1,
+            A.VAMaxQ2,
+            A.VAMaxQ3,
+            A.VAMaxQ4,
+            A.F_normal,
+            A.WMaxLimPct,
+            A.WMaxLimPct_WinTms,
+            A.WMaxLimPct_RvrtTms,
+            A.WMaxLimPct_RmpTms,
+            A.WMaxLim_Ena,
+            A.OutPFSet,
+            A.OutPFSet_WinTms,
+            A.OutPFSet_RvrtTms,
+            A.OutPFSet_RmpTms,
+            A.OutPFSet_Ena,
+            A.VArWMaxPct,
+            A.VArMaxPct,
+            A.VArAvalPct,
+            A.VArPct_WinTms,
+            A.VArPct_RvrtTms,
+            A.VArPct_RmpTms,
+            A.VArPct_Mod,
+            A.VArPct_Ena,
+            A.sent_date as sentDate,
+            A.transaction_date as transactionDate,
+            A.Ptotal,
+            A.Pa,
+            A.Pb,
+            A.Pc,
+            A.Stotal,
+            A.Sa,
+            A.Sb,
+            A.Sc,
+            A.Qtotal,
+            A.Qa,
+            A.Qb,
+            A.Qc,
+            A.PFa,
+            A.PFb,
+            A.PFc,
+            A.Ep,
+            A.EpDC
+        FROM
+            ${schema}s3m_warning B
+        JOIN 
+            ${schema}s3m_data_inverter_1${year} A ON A.device_id = B.device_id
+        LEFT JOIN 
+            s3m_device C ON C.device_id = A.device_id
+        WHERE
+            B.from_date <![CDATA[>=]]>  #{fromDate}
+        AND
+            B.to_date <![CDATA[<=]]>  #{toDate}
+        AND
+            A.sent_date BETWEEN B.from_date AND B.to_date
+        <if test="projectId != null">
+            AND
+                 C.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND
+                A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND 
+                B.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.id 
+        ORDER BY
+            A.sent_date DESC
+    </select>
+    
+    <select id="getDataInverterByDeviceIdInFifMinute" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1 AS A
+        WHERE
+            A.device_id IS NOT NULL
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY sent_date DESC
+            LIMIT 1
+     </select>
+     
+     <select id="getInverterEveryYearByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 1   
+    </select>
+    
+    <select id="getInverterInDayByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 3
+        AND
+            A.view_time = #{day}       
+    </select>
+    
+    <select id="getInverterInMonthByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 2
+        AND
+            A.view_time = #{month}        
+    </select>
+    
+    <select id="getInverterInYearByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 1 
+        AND
+            A.view_time = #{year}       
+    </select>
+    
+    <select id="getInverterInPrevDayByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 3
+        AND
+            A.view_time = #{prevDay}       
+    </select>
+    
+    <select id="getInverterInPrevMonthByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 2
+        AND
+            A.view_time = #{prevMonth}        
+    </select>
+    
+    <select id="getInverterInPrevYearByDeviceId" resultMap="dataInverter1Result">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        WHERE
+            A.device_id IS NOT NULL    
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        AND
+            view_type = 1 
+        AND
+            A.view_time = #{prevYear}       
+    </select>
+
+    <!-- getOperationSettingInverter Lấy dữ liệu thông tin thông số cài đặt Inverter PV -->
+    <select id="getOperationSettingInverter" resultMap="dataInverter1Result" parameterType="map">
+        SELECT
+            A.id,
+            A.device_id,
+            A.Wmax,
+            A.Vref,
+            A.VAMax,
+            A.VAMaxQ1,
+            A.VAMaxQ2,
+            A.VAMaxQ3,
+            A.VAMaxQ4,
+            A.F_normal,
+            A.OutPFSet,
+            A.sent_date,
+            A.transaction_date
+        FROM
+            ${schema}s3m_instant_data A
+        WHERE
+            A.device_id IS NOT NULL
+        <if test="deviceId != null">
+                AND A.device_id = #{deviceId}
+            </if>
+        ORDER BY sent_date DESC
+        LIMIT 1
+    </select>
+</mapper>

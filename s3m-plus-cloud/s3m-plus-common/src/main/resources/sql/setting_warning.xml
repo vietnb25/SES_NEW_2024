@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SettingWarningMapper">
+
+    <resultMap id="settingWarningResult" type="vn.ses.s3m.plus.dto.SettingWarning">
+        <result property="warningTypeId"  column="warning_type_id" />
+        <result property="warningTypeName"  column="warning_type_name" />
+        <result property="warningLevel"  column="warning_level" />
+        <result property="settingValue"  column="setting_value" />
+        <result property="description"  column="description" />
+        <result property="descriptionMst"  column="description_mst" />
+        <result property="updateDate"  column="update_date" />
+        <result property="settingId"  column="id" />
+        <result property="type"  column="type" />
+        <result property="customerId"  column="customer_id" />
+        <result property="projectId"  column="project_id" />
+    </resultMap>
+
+    <select id="getSettingWarningByDeviceType" parameterType="map" resultMap="settingWarningResult">
+        SELECT
+            A.warning_type_id,
+            A.warning_type_name,
+            B.setting_value,
+            B.description,
+            E.description as description_mst,
+            B.update_date,
+        COALESCE(B.warning_level, A.warning_level) AS warning_level
+        FROM
+            s3m_plus.s3m_warning_type_mst A
+        JOIN s3m_plus.s3m_setting B ON A.warning_type_id = B.warning_type
+        JOIN s3m_plus.s3m_device C ON C.device_id = B.device_id
+        JOIN s3m_plus.s3m_device_type_mst D on C.device_type_id = D.id
+        JOIN s3m_plus.s3m_setting_mst E on E.setting_id = B.setting_mst_id
+        WHERE
+            C.customer_id = ${customer}
+          AND
+            C.system_type_id = ${systemType}
+          <if test="project != null and project != '' ">
+          AND
+            C.project_id = ${project}
+          </if>
+          AND
+            D.id = ${deviceType}
+          AND
+            B.device_id IN (${deviceId})
+        GROUP BY A.warning_type_id
+    </select>
+    <update id="updateSettingValue" parameterType="map" >
+        update s3m_plus.s3m_setting
+        set
+            setting_value = #{stValue},
+            description = #{sDescription},
+            warning_level = ${stLevel},
+            update_date = current_timestamp()
+        WHERE
+            id = (select id from s3m_plus.s3m_setting where device_id = ${device} and warning_type = ${warningType});
+    </update>
+    <select id="addHistorySetting">
+        insert into
+            s3m_plus.s3m_setting_history (setting_id, setting_value, `type`, setting_date, `description`,create_id,create_date,update_id,update_date)
+        SELECT
+            id, setting_value, `type`, create_date, `description`,create_id,current_timestamp(),update_id,current_timestamp()
+        from s3m_plus.s3m_setting
+        where device_id = ${device} and warning_type = ${warningType};
+    </select>
+    <select id="getSettingByDeviceAndWarningType" resultMap="settingWarningResult" parameterType="map">
+        select * from s3m_plus.s3m_setting where device_id = ${device} and warning_type = ${warningType}
+    </select>
+</mapper>

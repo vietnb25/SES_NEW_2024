@@ -1,0 +1,225 @@
+#select-device-dialog.modal-dialog {
+    max-width: none;
+    width: 1000px;
+    min-height: 400px;
+    top: 10%;
+}
+
+#select-device-content.modal-content {
+    max-width: 1000px !important;
+    width: 900px !important;
+    height: 550px !important;
+    max-height: 800px !important;
+    border-radius: 13px;
+}
+
+.modal-select-content {
+    height: 50%;
+    width: 100% !important;
+
+}
+
+.box-select {
+    height: 600px;
+    background-color: rgb(224, 224, 224);
+    padding: 2%;
+    border: var(--ses-blue-100-color) solid 3px;
+    border-radius: 10px;
+}
+
+.modal-select-footer-sankey2 {
+    width: 100%;
+    display: flex;
+    left: 35%;
+    position: relative;
+    margin-top: 2%;
+
+}
+
+.btn-confirm {
+    background-color: var(--ses-blue-80-color);
+    transition: 0.5s ease-in;
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn-can {
+    background-color: var(--ses-blue-40-color);
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: 0.5s ease-in;
+}
+
+.btn-confirm:hover {
+    background-color: var(--ses-orange-100-color);
+    color: white;
+}
+
+.btn-can:hover {
+    background-color: var(--ses-orange-100-color);
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.modal-select-header {
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.btn-find {
+    background-color: var(--ses-blue-20-color);
+    transition: 0.5s ease-in;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: 0.5s ease-in;
+    color: black;
+    width: 16%;
+    height: 36px;
+}
+
+.btn-find-checked {
+    background-color: var(--ses-blue-80-color);
+    transition: 0.3s ease-in;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: 0.5s ease-in;
+    color: white;
+    width: 18%;
+    height: 40px;
+}
+
+.btn-find:hover {
+    background-color: var(--ses-orange-60-color);
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(12, 12, 12);
+}
+
+.btn-find-checked:hover {
+    background-color: var(--ses-orange-80-color);
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+.body-left {
+    text-align: start;
+}
+
+.body-right {
+    text-align: start;
+
+}
+
+.body-title-1 {
+    background-color: rgb(168, 168, 168);
+    color: black;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    width: 65%;
+    height: 30px;
+    padding-top: 3%;
+    padding-left: 1%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 30px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.body-content {
+    width: 100%;
+    height: 360px;
+    background-color: white;
+    overflow: scroll;
+}
+
+.body-content>div {
+    /* height: 30px; */
+    line-height: 30px;
+}
+
+.body-content>div>label {
+    font-weight: bold;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 3%;
+    color: rgb(43, 43, 43);
+    cursor: pointer;
+
+}
+
+.body-content>div>input {
+    margin: 0;
+    margin-left: 2%;
+    width: 9px;
+    height: 9px;
+    cursor: pointer;
+}
+
+.label-select {
+    font-weight: bold;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 3%;
+    color: rgb(43, 43, 43);
+
+}
+
+.input-select {
+    margin: 0;
+    margin-left: 2%;
+    width: 9px;
+    height: 9px;
+}
+
+.btn-select {
+    background-color: var(--ses-blue-80-color);
+    color: white;
+    width: 50%;
+    height: 30px;
+    line-height: 15px;
+}
+
+.btn-select:hover {
+    background-color: var(--ses-orange-60-color);
+    color: white;
+    width: 50%;
+    height: 30px;
+    line-height: 15px;
+}
+
+.div-select {
+    position: relative;
+    height: 30px;
+}
+
+.div-select:hover {
+    background-color: rgb(219, 219, 219);
+    cursor: pointer;
+}
+
+.btn-select-device-sankey2 {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 210px;
+    background-color: var(--ses-blue-80-color);
+    margin: 5px 0 5px 5px;
+}
+
+.btn-select-device-sankey2:hover {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 210px;
+    background-color: var(--ses-orange-60-color);
+    margin: 5px 0 5px 5px;
+}

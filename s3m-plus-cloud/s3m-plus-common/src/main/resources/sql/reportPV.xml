@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.pv.dao.ReportMapperPV">
+
+    <resultMap id="dataInverter1Result" type="DataInverter1"></resultMap>
+
+    <resultMap id="reportResult" type="report">
+        <result property="id" column="id" />
+        <result property="dateFrom" column="date_from" />
+        <result property="dateTo" column="date_to" />
+        <result property="reportDate" column="report_date" />
+        <result property="deviceName" column="device_name" />
+        <result property="reportId" column="report_id" />
+        <result property="status" column="status" />
+        <result property="url" column="url" />
+        <result property="deviceId" column="device_id" />
+        <result property="deleted" column="delete_flag" />
+        <result property="managerId" column="manager_id" />
+        <result property="percent" column="percent" />
+        <result property="updated" column="updated" />
+        <result property="systemType" column="system_type" />
+        <result property="dateType" column="date_type" />
+    </resultMap>
+
+
+    <select id="getDataInverterPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+       *
+    FROM
+        ${schema}${s3mDataTableInverter} A
+    WHERE
+        <if test="deviceId != null">
+        A.device_id = #{deviceId} and
+    </if>
+        A.sent_date
+        <![CDATA[>=]]>
+        #{fromDate} 
+    AND 
+        A.sent_date
+        <![CDATA[<=]]>
+        #{toDate}
+    LIMIT 5
+    </select>
+
+    <!--    insert report -->
+    <insert id="addReportPV" parameterType="vn.ses.s3m.plus.dto.Report">
+    INSERT INTO 
+        s3m_report_table( report_id, device_id, report_date, updated, url, user_id, system_type, date_type)
+    VALUES
+        ( #{reportId}, #{deviceId}, #{reportDate}, #{updated}, #{url}, #{userId}, #{systemType}, #{dateType})
+    </insert>
+
+    <select id="getUserIdPV" parameterType="String" resultType="java.lang.Integer">
+    SELECT 
+        user_id
+    FROM
+        s3m_user
+    WHERE
+        username =#{userName}
+    </select>
+
+    <select id="getReportPV" parameterType="Integer" resultMap="reportResult">
+    SELECT 
+        *
+    FROM
+        s3m_report_table
+    WHERE 
+        delete_flag = 0 and user_id =#{userId} and system_type = 2 order by id desc
+    </select>
+
+    <select id="getDataInverterInDayPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+        A.Wh as wh
+    FROM 
+        ${schema}s3m_data_inverter_1_view A join s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.view_type = 4 
+    AND
+        A.view_time =#{date} 
+    AND
+        B.project_id =#{projectId}
+    </select>
+
+    <select id="getDataInverterInMonthPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+        A.Wh as wh
+    FROM 
+        ${schema}s3m_data_inverter_1_view A join s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.view_type = 3 
+    AND
+        A.view_time =#{date} 
+    AND
+        B.project_id =#{projectId}
+    </select>
+
+    <select id="getDataInverterInYearPV" parameterType="map" resultMap="dataInverter1Result">
+        SELECT
+        A.Wh as wh
+    FROM 
+        ${schema}s3m_data_inverter_1_view A join s3m_device B ON A.device_id = B.device_id
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.view_type = 2 
+    AND
+        A.view_time =#{date} 
+    AND
+        B.project_id =#{projectId}
+    </select>
+
+    <select id="getListByLimitPV" parameterType="map" resultMap="reportResult">
+    SELECT 
+        A.id,
+        A.user_id,
+        A.report_id,
+        A.report_date,
+        A.status,
+        A.url,
+        A.delete_flag,
+        A.percent,
+        A.updated
+    FROM
+        s3m_report_table A
+    WHERE
+        A.delete_flag = 0 AND A.user_id=#{userId}
+    ORDER BY A.id DESC
+    LIMIT #{limit}
+    </select>
+
+    <select id="getProjectNamePV" parameterType="String" resultType="java.lang.String">
+    SELECT 
+        project_name
+    FROM 
+        s3m_project
+    WHERE 
+        project_id=#{projectId}
+    </select>
+
+    <!--    update percent report -->
+    <update id="updatePercentPV" parameterType="map">
+    UPDATE
+        s3m_report_table
+    SET 
+        percent = #{percent}
+    WHERE 
+        id=#{id}
+    </update>
+
+    <!--    update status report -->
+    <update id="updateStatusPV" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        status=1
+    WHERE 
+        id=#{id}
+    </update>
+
+    <update id="updateTimeFinishPV" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        updated = current_timestamp()
+    WHERE 
+        id = #{id}
+    </update>
+
+    <!--    delete report -->
+    <update id="deleteReportPV" parameterType="map">
+    UPDATE 
+        s3m_report_table
+    SET 
+        delete_flag=1
+    WHERE 
+        id=#{id}
+    </update>
+
+    <!--    getTotal warningPV -->
+
+    <select id="getTotalWarningPv" parameterType="map" resultType="map">
+        SELECT
+        A.Evt1, COUNT(A.Evt1) AS TOTAL
+    FROM
+        ${schema}${s3mDataTableInverter} A
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} and
+        </if>
+        A.sent_date
+        <![CDATA[>=]]>
+        #{fromDate} 
+    AND 
+        A.sent_date
+        <![CDATA[<=]]>
+        #{toDate}
+    GROUP BY
+    A.Evt1
+    </select>
+
+    <select id="getTotalWarning" parameterType="map" resultType="java.lang.String">
+        SELECT 
+        count (A.Evt1) AS EVT1
+    FROM 
+        ${schema}${s3mDataTableInverter} A
+    WHERE
+        <if test="deviceId != null">
+         A.device_id = #{deviceId} 
+     AND
+        </if>
+        A.sent_date
+        <![CDATA[>=]]>
+        #{fromDate} 
+    AND 
+        A.sent_date
+        <![CDATA[<=]]>
+        #{toDate}
+    </select>
+
+    <select id="getDevicePV" parameterType="map" resultType="map">
+    SELECT 
+        A.device_id, A.device_name 
+    from 
+        s3m_device A 
+    WHERE
+        A.system_map_id is not null 
+    AND A.system_type_id = 2 
+    AND A.project_id = #{projectId}
+    </select>
+
+</mapper>

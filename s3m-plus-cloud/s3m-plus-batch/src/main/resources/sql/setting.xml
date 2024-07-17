@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.SettingMapper">
+    
+        <resultMap id="baseResult" type="DataLoadFrame1ViewCache">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="INTEGER" column="device_id" />
+        <result property="viewType" jdbcType="INTEGER" column="view_type" />
+        <result property="ep" jdbcType="INTEGER" column="ep" />
+    </resultMap>
+    <select id="getSetting" parameterType="map" resultType="Setting">
+        SELECT 
+            A.setting_value AS settingValue
+        FROM 
+            s3m_plus.s3m_setting_cost A
+        LEFT JOIN s3m_plus.s3m_project B ON A.project_id = B.project_id
+        LEFT JOIN s3m_plus.s3m_device C ON C.project_id = B.project_id
+        WHERE 
+             A.setting_cost_mst_id = #{setting_mst_id}
+        AND  C.device_id = #{device_id}    
+    </select>
+    
+     <select id="getSettingProject" parameterType="map" resultType="Setting">
+        SELECT 
+            A.emission_factor_co2_charcoal AS emissionFactorCo2Charcoal,
+            A.emission_factor_co2_electric AS emissionFactorCo2Electric,
+            A.emission_factor_co2_gasoline AS emissionFactorCo2Gasoline,
+            A.area_of_floor AS areaOfFloor,
+            A.amount_of_people AS amountOfPeople
+        FROM 
+            s3m_plus.s3m_project A
+        LEFT JOIN s3m_plus.s3m_device B ON A.project_id = B.project_id
+        WHERE 
+            B.device_id = #{deviceId}    
+    </select>
+</mapper>

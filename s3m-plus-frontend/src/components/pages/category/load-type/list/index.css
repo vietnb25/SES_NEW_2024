@@ -1,0 +1,16 @@
+.load_type .btn {
+    font-size: 0.85rem;
+}
+
+.load_type .input-group-text {
+    font-size: 0.85rem;
+}
+
+.load_type .form-control {
+    height: auto;
+}
+
+.load_type .table {
+    word-wrap:break-word;
+    table-layout: fixed;
+}

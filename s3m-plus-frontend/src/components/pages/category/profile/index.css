@@ -1,0 +1,10 @@
+.profileviewImage {
+    display: block;
+    max-width: 200px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+}
+.textSize{
+    font-size: 13px;
+}

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.PlanMapper">
+    <resultMap id="listDataResult" type="Plan">
+        <result column="systemTypeId" property="systemTypeId"/>
+        <result column="projectId" property="projectId"/>
+        <result column="customerId" property="customerId"/>
+        <result column="content" property="content"/>
+        <result column="organizationExecution" property="organizationExecution"/>
+        <result column="completionTime" property="completionTime"/>
+        <result column="resultExecution" property="resultExecution"/>
+        <result column="organizationTest" property="organizationTest"/>
+        <result column="status" property="status"/>
+        <result column="createDate" property="createDate"/>
+        <result column="updateDate" property="updateDate"/>
+        <result column="projectName" property="projectName"/>
+    </resultMap>
+
+    <select id="getAllPlan"  parameterType="map" resultMap="listDataResult">
+        SELECT
+            A.id AS planId,
+            A.system_type_id AS systemTypeId,
+            A.project_id AS projectId,
+            A.customer_id AS customerId,
+            A.organization_create AS organizationCreate,
+            A.content AS content,
+            A.organization_execution AS organizationExecution,
+            A.completion_time AS completionTime,
+            A.result_execution AS resultExecution,
+            A.organization_test AS organizationTest,
+            A.status AS status,
+            A.create_date AS createDate,
+            A.update_date AS updateDate,
+            A.from_date AS startDate,
+            A.to_date AS endDate,
+            B.project_name AS projectName,
+            C.system_type_name AS systemTypeName
+
+        FROM
+            ${schema}s3m_plan A
+        JOIN s3m_project B
+             ON A.project_id = B.project_id
+         JOIN s3m_system_type C
+            ON A.system_type_id = C.system_type_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{startDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{endDate}
+        <if test="projectId != null">
+            AND B.project_id = #{projectId}
+        </if>
+        <if test="systemTypeId != null">
+            AND A.system_type_id = #{systemTypeId}
+        </if>
+    </select>
+
+    <insert id="addPlan" parameterType="Plan" >
+        INSERT INTO ${schema}s3m_plan(
+                 system_type_id,
+                 project_id,
+                 customer_id,
+                 organization_create,
+                 content,
+                 organization_execution,
+                 completion_time,
+                 result_execution,
+                 organization_test,
+                 status,
+                 create_date,
+                 update_date,
+                 from_date,
+                 to_date
+        )
+        VALUES (
+                #{plan.systemTypeId},
+                #{plan.projectId},
+                #{plan.customerId},
+                #{plan.organizationCreate},
+                #{plan.content},
+                #{plan.organizationExecution},
+                #{plan.completionTime},
+                #{plan.resultExecution},
+                #{plan.organizationTest},
+                #{plan.status},
+                #{plan.createDate},
+                #{plan.updateDate},
+                #{plan.startDate},
+                #{plan.endDate}
+        )
+    </insert>
+
+    <update id="updatePlan" parameterType="Plan">
+        UPDATE
+            ${schema}s3m_plan
+        SET
+            organization_create = #{plan.organizationCreate},
+            content = #{plan.content},
+            status = #{plan.status},
+            organization_execution = #{plan.organizationExecution},
+            completion_time = CASE
+                                  WHEN #{plan.status} = 1 THEN #{plan.updateDate}
+                END,
+
+            result_execution = #{plan.resultExecution},
+            organization_test = #{plan.organizationTest},
+            update_date = #{plan.updateDate},
+            to_date = #{plan.endDate},
+            project_id = #{plan.projectId},
+            from_date = #{plan.startDate}
+        WHERE
+            id = #{plan.planId}
+    </update>
+
+    <select id="getPlanById" parameterType="java.lang.Integer" resultMap="listDataResult">
+        SELECT
+            A.id AS planId,
+            A.system_type_id AS systemTypeId,
+            A.project_id AS projectId,
+            A.customer_id AS customerId,
+            A.organization_create AS organizationCreate,
+            A.content AS content,
+            A.organization_execution AS organizationExecution,
+            A.completion_time AS completionTime,
+            A.result_execution AS resultExecution,
+            A.organization_test AS organizationTest,
+            A.status AS status,
+            A.create_date AS createDate,
+            A.update_date AS updateDate,
+            A.from_date AS startDate,
+            A.to_date AS endDate,
+            B.project_name AS projectName,
+            C.system_type_name AS systemTypeName
+
+        FROM
+            ${schema}s3m_plan A
+                LEFT JOIN s3m_project B
+                     ON A.project_id = B.project_id
+                LEFT JOIN s3m_system_type C
+                     ON A.system_type_id = C.system_type_id
+        WHERE
+            A.id = #{id}
+    </select>
+
+
+    <delete id="deletePlanById" parameterType="java.lang.Integer">
+        DELETE FROM  ${schema}s3m_plan
+        WHERE id = #{id}
+    </delete>
+</mapper>

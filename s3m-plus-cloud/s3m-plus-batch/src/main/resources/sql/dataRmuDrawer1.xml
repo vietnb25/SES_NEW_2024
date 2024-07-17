@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataRmuDrawer1Mapper">
+
+    <resultMap id="baseResult" type="DataRmuDrawer1">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="INTEGER" column="device_id" />
+        <result property="pTotal" jdbcType="INTEGER" column="P_Total" />
+        <result property="ep" jdbcType="INTEGER" column="EP" />
+        <result property="sentDate" jdbcType="VARCHAR" column="sent_date" />
+    </resultMap>
+    
+    <select id="selectNewRecord" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.${table} 
+        WHERE 
+            id > #{id} 
+        LIMIT 1000000
+    </select>
+    
+    <select id="selectDataBySentDate" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.${table} 
+        WHERE 
+            device_id = #{deviceId} 
+            AND sent_date <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d %H:%i:%s') 
+            AND sent_date <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d %H:%i:%s')
+    </select>
+    
+    <select id="selectDataByFromDate" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.${table} 
+        WHERE 
+            device_id = #{deviceId} 
+            AND sent_date <![CDATA[>]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d %H:%i:%s') 
+            AND sent_date <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d %H:%i:%s')
+    </select>
+</mapper>

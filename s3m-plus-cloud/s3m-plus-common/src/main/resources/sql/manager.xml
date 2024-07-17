@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ManagerMapper">
+
+    <resultMap id="managerResult" type="Manager">
+        <result property="managerCode" column="manager_code" />
+        <result property="managerId" column="manager_id" />
+        <result property="managerName" column="manager_name" />
+        <result property="superManagerId" column="super_manager_id" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="description" column="description" />
+        <result property="updateDate" column="update_date" />
+        <result property="superManagerName" column="super_manager_name" />
+        <result property="customerId" column="customer_id" />
+    </resultMap>
+    
+
+    <!-- Lấy danh sách cảnh báo. -->
+    <select id="getManagers" parameterType="map" resultMap="managerResult">
+        SELECT
+        A.manager_id, A.manager_name, A.description, A.update_date, B.id as super_manager_id, B.name as super_manager_name, A.latitude,
+        A.longitude
+        FROM
+        s3m_manager A JOIN s3m_super_manager B ON A.super_manager_id = B.id
+        WHERE
+        A.manager_id IS NOT NULL
+        <if test="managerName != null">
+            AND A.manager_name like '%${managerName}%'
+        </if>
+        <if test="superManagerId != null">
+            AND B.name like '%${superManagerName}%'
+        </if>
+        <if test="superManagerId != 'null' and superManagerId != null">
+            AND A.super_manager_id = ${superManagerId}
+        </if>
+        <if test="managerId != 'null' and managerId != null">
+            AND A.manager_id = ${managerId}
+        </if>
+        AND A.delete_flag != 1
+    </select>
+
+    <select id="searchManager" parameterType="java.lang.String" resultMap="managerResult">
+        SELECT
+        *
+        FROM
+        s3m_manager
+        WHERE
+        (
+        manager_name like '%' #{keyword} '%'or
+        description like '%' #{keyword} '%'
+        )
+        AND delete_flag != 1
+    </select>
+
+    <select id="getManagersActive" parameterType="map" resultMap="managerResult">
+    	SELECT
+            DISTINCT A.manager_id,
+            A.manager_name,
+            A.super_manager_id
+        FROM
+            s3m_manager A
+        JOIN
+            s3m_area B ON B.manager_id = A.manager_id
+        JOIN
+            s3m_project C ON C.area_id = B.area_id
+        WHERE
+            A.manager_id is not null
+            <if test="customerId != null">
+                AND C.customer_id = #{customerId}
+            </if>
+    </select>
+
+    <select id="getIds" resultMap="managerResult">
+        SELECT
+        manager_id, manager_name
+        FROM
+        s3m_manager
+        WHERE
+        manager_id IN
+        <foreach item="managerIds" collection="managerIds" open="(" separator="," close=")">
+            #{managerIds}
+        </foreach>
+    </select>
+
+    <select id="getManager" parameterType="map" resultMap="managerResult">
+        SELECT A.manager_id, A.manager_name, A.latitude, A.longitude, A.description, A.update_date, B.id as super_manager_id, B.name
+        as super_manager_name
+        FROM s3m_manager A JOIN s3m_super_manager B ON A.super_manager_id = B.id
+        where A.manager_id = #{managerId}
+    </select>
+
+    <insert id="addManager" parameterType="map">
+        INSERT into s3m_manager(manager_code, manager_name, super_manager_id, latitude, longitude, description) values (#{managerCode}, #{managerName},
+        #{superManagerId}, #{latitude}, #{longitude}, #{description})
+    </insert>
+
+    <update id="updateManager" parameterType="Manager">
+        Update s3m_manager SET
+            manager_code = #{managerCode},
+            manager_name = #{managerName},
+            super_manager_id = #{superManagerId},
+            latitude = #{latitude},
+            longitude = #{longitude},
+            description = #{description}
+        WHERE manager_id = #{managerId}
+    </update>
+
+    <delete id="deleteManager" parameterType="map">
+        Update s3m_manager SET delete_flag =1 WHERE manager_id = #{managerId}
+    </delete>
+
+    <select id="getManagerByCustomerId" parameterType="map" resultMap="managerResult">
+        SELECT DISTINCT A.manager_id,
+        A.manager_name
+        FROM s3m_manager A
+        JOIN s3m_area B ON B.manager_id = A.manager_id
+        JOIN s3m_project C ON C.area_id = B.area_id
+
+        WHERE A.manager_id is not null
+        <if test="customerId != null">
+            AND C.customer_id = #{customerId}
+        </if>
+    </select>
+
+    <select id="getListManager" resultMap="managerResult">
+        SELECT
+        *
+        FROM
+        s3m_manager
+        WHERE
+        delete_flag != 1
+    </select>
+
+    <select id="getManagerFilter" parameterType="map" resultMap="managerResult">
+        SELECT
+        A.manager_id, A.manager_name, A.description, A.update_date, B.id as super_manager_id, B.name as super_manager_name
+        FROM
+        s3m_manager A JOIN s3m_super_manager B ON A.super_manager_id = B.id
+        JOIN s3m_customer C ON A.manager_id = C.manager_id
+        WHERE
+        A.manager_id IS NOT NULL
+        <if test="customerId != null">
+            AND C.customer_id = #{customerId}
+        </if>
+    </select>
+
+    <select id="getManagerByCustomerIdAndSuperManagerId" parameterType="map" resultMap="managerResult">
+        SELECT DISTINCT A.manager_id,
+        A.manager_name
+        FROM s3m_manager A
+        JOIN s3m_area B ON B.manager_id = A.manager_id
+        JOIN s3m_project C ON C.area_id = B.area_id
+
+        WHERE A.manager_id is not null
+        <if test="customerId != null">
+            AND C.customer_id = #{customerId}
+        </if>
+        <if test="superManagerId != null">
+            AND A.super_manager_id = #{superManagerId}
+        </if>
+    </select>
+
+    <select id="getManagerById" parameterType="Integer" resultMap="managerResult">
+        SELECT
+        *
+        FROM
+        s3m_manager
+        WHERE
+        manager_id = ${managerId}
+    </select>
+
+    <select id="getManagerByManagerName" parameterType="java.lang.String" resultMap="managerResult">
+        SELECT
+        *
+        FROM
+        s3m_manager
+        WHERE
+        manager_name = #{managerName}
+    </select>
+
+    <select id="getPowerByMangerId" parameterType="map" resultType="java.lang.Long">
+         SELECT
+            SUM(A.p_total)
+        FROM
+            s3m_data_load_frame_1_2022 A
+            JOIN s3m_device B  ON A.device_id = B.device_id
+            JOIN s3m_project C ON B.project_id = C.project_id
+            JOIN s3m_area D ON C.area_id = D.area_id
+            JOIN s3m_manager E ON D.manager_id = E.manager_id
+        WHERE
+            C.customer_id = ${customerId}
+            AND E.super_manager_id = ${superManagerId} 
+            AND D.manager_id = ${managerId}
+
+    </select>
+    
+
+    <select id="getManagerDownload" parameterType="map" resultMap="managerResult">
+        SELECT DISTINCT A.manager_id,
+        A.manager_name
+        FROM s3m_manager A
+        JOIN s3m_area B ON B.manager_id = A.manager_id
+        JOIN s3m_project C ON C.area_id = B.area_id
+        WHERE A.manager_id is not null
+        <if test="customerId != null">
+            AND C.customer_id = #{customerId}
+        </if>
+        <if test="superManagerId != null">
+            AND A.super_manager_id = #{superManagerId}
+        </if>
+    </select>
+    
+    <select id="getInformationManager" parameterType="map" resultType="map">
+        SELECT DISTINCT
+            C.manager_name AS managerName,
+            D.name AS superManagerName,
+            E.customer_name AS customerName 
+        FROM
+            s3m_project A
+            JOIN s3m_area B ON A.area_id = B.area_id
+            JOIN s3m_manager C ON B.manager_id = C.manager_id
+            JOIN s3m_super_manager D ON C.super_manager_id = D.id
+            JOIN s3m_customer E ON A.customer_id = E.customer_id
+        WHERE
+            A.customer_id = ${customerId}
+            AND D.id = ${superManagerId} 
+            AND C.manager_id = ${managerId}
+    </select>
+</mapper>

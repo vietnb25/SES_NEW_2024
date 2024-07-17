@@ -1,0 +1,23 @@
+.input-number-m {
+    font-family: 'OpenSansRegular', Helvetica, Arial, sans-serif !important;
+    font-size: 13px;
+}
+
+.p-multiselect {
+    border-radius: 3px !important;
+    width: -webkit-fill-available;
+}
+
+.p-multiselect .p-multiselect-label {
+    padding: 8px 8px !important;
+    font-size: 13px !important;
+}
+
+.p-component {
+    font-family: "Montserrat" !important;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+    color: #4338CA;
+    background: #EEF2FF;
+}

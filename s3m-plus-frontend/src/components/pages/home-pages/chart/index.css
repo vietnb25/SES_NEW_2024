@@ -1,0 +1,223 @@
+.chart-div-left {
+    float: left;
+}
+
+.chart-div-right {
+    min-width: 83%;
+    max-width: 100%;
+}
+
+.div-chart {
+    width: 100%;
+    float: left;
+}
+
+.system-type {
+    display: inline-block;
+}
+
+.title-chart {
+    border-top: 30px solid #0a1a5c !important;
+    width: 200px !important;
+}
+
+.inner {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.bg-ses-b-2 {
+    background-color: #9dA3BE;
+    border: 1px solid #9dA3BE !important;
+}
+
+.bg-ses-b-2 p {
+    color: #FFF;
+}
+
+.bg-ses-b-2:hover {
+    background-color: #c0c8ec !important;
+}
+
+.btn-dashboard {
+    border: 1px solid #F37021;
+}
+
+.btn-dashboard:hover {
+    background-color: #FFD4A6;
+}
+
+#chartdivChart {
+    width: 100%;
+    /* height: 540px; */
+    height: 60vh;
+}
+
+.loading-chart {
+    background-color: var(--ses-orange-80-color);
+    border-radius: 15px;
+    height: 30px;
+    color: #FFF;
+    line-height: 2;
+    font-size: 13px;
+}
+
+.name-site {
+    width: fit-content;
+    height: 15%;
+    background-color: #0a1a5c;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 5px;
+    text-align: center;
+}
+
+.name-site h5 {
+    color: white;
+}
+
+.div-chart .option-time {
+    /* width: 1206px; */
+    height: 55px;
+}
+
+.div-chart .option-time .button-time {
+    margin-left: 5px;
+    border-radius: 5px;
+    background-color: #ff671f;
+    color: #FFF;
+    border: 1px solid #fedec7;
+    width: 70px;
+    height: 30px;
+    font-size: 10px;
+}
+
+.div-chart .option-time .button-time-block {
+    margin-left: 5px;
+    border-radius: 5px;
+    background-color: #fff;
+    color: rgb(135, 129, 129);
+    border: 1px solid #fedec7;
+    width: 70px;
+    height: 30px;
+    font-size: 10px;
+}
+
+.div-chart .option-time .button-time-from {
+    margin-left: 5px;
+    border-radius: 5px;
+    color: #FFF;
+    width: 140px;
+    font-size: 10px;
+    border: 0px solid transparent;
+    background-color: rgb(226, 223, 223);
+    height: 30px !important;
+}
+
+.div-chart .button-time-from .p-calendar .p-inputtext {
+    height: 30px !important;
+}
+
+.div-chart .button-time-to .p-calendar .p-inputtext {
+    height: 30px !important;
+}
+
+.div-chart .option-time .button-time-to {
+    margin-left: 5px;
+    border-radius: 5px;
+    color: #FFF;
+    width: 140px;
+    font-size: 10px;
+    border: 0px solid transparent;
+    background-color: rgb(226, 223, 223);
+    height: 30px !important;
+}
+
+.div-chart .option-time .input-name {
+    width: 20%;
+    height: 30px !important;
+}
+
+#table-chart .table-parameter {
+    margin: 0;
+    border-top: none;
+}
+
+#table-chart .table-parameter tr th {
+    border-top: none;
+    border-left: none;
+}
+
+#table-chart .table-parameter tr th:last-child {
+    border-top-right-radius: 5px;
+    border-right: none;
+}
+
+#table-chart .table-parameter .th-view-time {
+    width: 10%;
+    font-size: 15px;
+    border-radius: 5px 0px 0px 0px;
+    background-color: #9da3be;
+    color: #0c0747;
+} 
+#table-chart .table-parameter .th-content {
+    width: 10%; 
+    font-size: 15px;
+    /* border-radius: 5px 0px 0px 0px; */
+    background-color: #9da3be;
+    color: #0c0747;
+}
+
+#table-chart .table-parameter .th-content-last {
+    width: 10%;
+    font-size: 15px;
+    border-radius: 0px 5px 0px 0px;
+    background-color: #9da3be;
+    color: #0c0747;
+}
+
+#table-chart .table-parameter .td-view-time {
+    width: 10%;
+    font-size: 14px;
+    border: 1px solid #D5D6D1;
+    background-color: #9da3be;
+    text-align: center;
+    border-top-right-radius: 0px;
+}
+
+
+#table-chart .table-parameter .td-content-cost {
+    width: 10%;
+    font-size: 14px;
+    border: 1px solid #D5D6D1;
+    background-color: #ffffff;
+    color: #5146e7;
+    border-top-right-radius: 0px;
+}
+
+#table-chart .table-parameter .td-content-en {
+    width: 10%;
+    font-size: 14px;
+    border: 1px solid #D5D6D1;
+    background-color: #ffffff;
+    color: #02010f;
+    border-top-right-radius: 0px;
+}
+
+.div-chart .btn-select-device {
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100px;
+    background-color: var(--ses-blue-80-color);
+    margin-left: 10px;
+
+}
+
+.div-chart .btn-select-device:hover {
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100px;
+    background-color: var(--ses-orange-60-color);
+}

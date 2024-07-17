@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SettingCostMapper">
+    <resultMap id="resultSettingCost" type="SettingCost">
+        <result property="id" column="id"></result>
+        <result property="projectId" column="project_id"></result>
+        <result property="settingCostMstId" column="setting_cost_mst_id"></result>
+        <result property="settingValue" column="setting_value"></result>
+        <result property="description" column="description"></result>
+        <result property="descriptionMst" column="description_mst"></result>
+        <result property="createDate" column="create_date"></result>
+        <result property="updateDate" column="update_date"></result>
+    </resultMap>
+    <resultMap id="resultSettingCostHistory" type="SettingCostHistory">
+        <result property="projectId" column="project_id"></result>
+        <result property="peakHour" column="peak_hour"></result>
+        <result property="nonPeakHour" column="non_peak_hour"></result>
+        <result property="normalHour" column="normal_hour"></result>
+        <result property="vat" column="vat"></result>
+        <result property="fromDate" column="create_date"></result>
+        <result property="toDate" column="to_date"></result>
+    </resultMap>
+    <select id="getListByProject" parameterType="map" resultMap="resultSettingCost">
+        SELECT A.*, B.description  as description_mst
+            FROM s3m_setting_cost A
+            JOIN s3m_setting_cost_mst B
+            ON A.setting_cost_mst_id = B.id
+            JOIN  s3m_project C ON A.project_id = C.project_id
+            where A.project_id = #{project}
+    </select>
+    <select id="getById" parameterType="map" resultMap="resultSettingCost">
+        SELECT A.*, B.description  as description_mst
+        FROM s3m_setting_cost A
+        JOIN s3m_setting_cost_mst B
+         ON A.setting_cost_mst_id = B.id
+         JOIN  s3m_project C ON A.project_id = C.project_id where A.id = #{setingCostId}
+    </select>
+    <update id="update" parameterType="map">
+        UPDATE s3m_setting_cost A
+        SET
+        <if test="settingValue != null and settingValue != ''">
+            A.setting_value = #{settingValue},
+        </if>
+        A.update_date = CURRENT_TIMESTAMP()
+        WHERE A.id = (select B.id from s3m_setting_cost B where B.project_id = #{project} and B.setting_cost_mst_id = #{stId});
+
+    </update>
+    <update id="inset" parameterType="Setting" >
+        INSERT INTO `s3m_plus`.`s3m_setting_cost`
+        (`project_id`, `setting_cost_mst_id`, `setting_value`, `description`, `create_date`, `update_date`)
+        VALUES (
+                   #{projectId}, #{settingCostMstId}, #{settingValue}, #{description}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()
+        );
+    </update>
+    <update id="insertHistory" parameterType="SettingCost" >
+        INSERT INTO `s3m_plus`.`s3m_setting_cost_history`
+        (`project_id`, `setting_cost_id`, `setting_value`, `description`)
+        VALUES (
+                   #{projectId}, #{id}, #{settingValue}, #{description}
+        );
+    </update>
+
+     <insert id="addSettingCost" parameterType="map">
+       INSERT INTO `s3m_setting_cost`
+        (`project_id`, `setting_cost_mst_id`, `setting_value`, `description`)
+        VALUES ( #{projectId}, '1', '3076', 'Giờ cao điểm'),
+		       ( #{projectId}, '2', '1685', 'Giờ bình thường'),
+		       ( #{projectId}, '3', '1100', 'Giờ thấp điểm'),
+		       ( #{projectId}, '4', '10', 'Thuế GTGT');
+    </insert>
+    <select id="getVat" parameterType="String" resultMap="resultSettingCost" >
+        SELECT
+            A.setting_value
+        FROM
+            s3m_plus.s3m_setting_cost A
+                LEFT JOIN s3m_plus.s3m_project B ON A.project_id = B.project_id
+                LEFT JOIN s3m_plus.s3m_device C ON C.project_id = B.project_id
+        WHERE
+            A.setting_cost_mst_id = 4
+          AND  C.device_id IN (${deviceIds})
+        group by A.id
+    </select>
+
+    <select id="getListForReport" parameterType="map" resultMap="resultSettingCost">
+        SELECT date_format(A.create_date, '%Y-%m-%d %H:%i:00') as 'create_date', A.setting_cost_id, A.setting_value, A.description,B.setting_cost_mst_id, A.project_id  FROM s3m_plus.s3m_setting_cost_history A
+         join s3m_plus.s3m_setting_cost B on B.id = A.setting_cost_id
+        where A.project_id = #{project} and date_format(A.create_date, '%Y-%m-%d') between "${fromDate}" and "${toDate}"
+    </select>
+    <select id="getListForReport1" parameterType="map" resultMap="resultSettingCostHistory">
+        select *,LEAD(A.create_date, 1) OVER (ORDER BY create_date) as to_date
+        from s3m_setting_cost_history A
+        where A.project_id = #{project}
+        and
+        <if test="typeTime == 1">
+            date_format(A.create_date, '%Y-%m-%d') between ${fromDate} and ${toDate}
+        </if>
+        <if test="typeTime == 2">
+            date_format(A.create_date, '%Y-%m') between #{fromDate} and #{toDate}
+        </if>
+        <if test="typeTime == 3">
+            date_format(A.create_date, '%Y') between #{fromDate} and #{toDate}
+        </if>
+
+    </select>
+
+    <update id="insertHistoryNew" parameterType="vn.ses.s3m.plus.form.SettingCostForm">
+        INSERT INTO `s3m_setting_cost_history`(`peak_hour`, `non_peak_hour`, `normal_hour`, `project_id`, `vat`)
+        VALUES (#{peakHour}, #{nonPeakHour}, #{normalHour}, #{projectId}, #{vat} )
+    </update>
+
+</mapper>

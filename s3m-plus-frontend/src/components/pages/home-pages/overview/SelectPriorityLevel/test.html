@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tỷ trọng chi phí giáo dục ở các đô thị Việt Nam</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            width: 400px;
+            height: 200px;
+        }
+
+        .analysis {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            clear: both;
+            /* Thêm clear:both để đảm bảo phần phân tích không chồng lấp lên các phần khác */
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 3000px; height: 600px;">
+        <canvas id="myBarChart" width="700px" height="400px"></canvas>
+        <canvas id="myPieChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="analysis">
+        <h2>Phân tích chi tiết:</h2>
+        <ol>
+            <li>Biểu đồ cột thể hiện tổng chi phí giáo dục cho các cấp học từ tiểu học đến đại học. Chi phí giáo dục
+                tăng dần từ cấp học cơ bản đến cấp học cao hơn.</li>
+            <li>Chi phí cho đại học (2,000,000 VND) chiếm tỷ trọng lớn nhất, tiếp theo là chi phí cho trung học phổ
+                thông (1,200,000 VND), trung học cơ sở (800,000 VND), và tiểu học (500,000 VND).</li>
+            <li>Biểu đồ tròn thể hiện tỷ lệ chi tiêu của các khoản phí khác nhau trong chi phí giáo dục.</li>
+            <li>Học phí chiếm tỷ lệ lớn nhất (42%), tiếp theo là sách giáo khoa (21%), đồ dùng học tập (28%), phí phụ
+                huynh (14%), và hoạt động ngoại khóa (35%).</li>
+            <li>Nhìn chung, có thể thấy rằng chi phí giáo dục là một phần quan trọng trong chi tiêu của các gia đình ở
+                các đô thị Việt Nam, đặc biệt là với chi phí cho đại học và học phí là hai khoản chi lớn nhất.</li>
+            <li>Chi phí cho giáo dục tăng dần theo cấp học, phản ánh sự tăng trưởng của hệ thống giáo dục và nhu cầu của
+                học sinh ở các cấp độ khác nhau.</li>
+            <li>Chi phí cho đại học chiếm tỷ trọng lớn nhất, có thể phản ánh việc học tiếp sau trung học được coi là
+                quan trọng trong nền giáo dục Việt Nam.</li>
+            <li>Học phí chiếm tỷ lệ lớn nhất trong tổng chi phí giáo dục, có thể gây áp lực tài chính lớn đối với các
+                gia đình, đặc biệt là những gia đình có thu nhập thấp.</li>
+            <li>Chi phí cho sách giáo khoa và đồ dùng học tập chiếm tỷ lệ cao, đây là những khoản chi không thể tránh
+                khỏi trong quá trình học tập của học sinh.</li>
+            <li>Phí phụ huynh và hoạt động ngoại khóa chiếm tỷ lệ nhỏ hơn trong tổng chi phí giáo dục, nhưng vẫn là một
+                phần quan trọng của chi phí hàng ngày của các gia đình.</li>
+            <li>Các biểu đồ giúp hiểu rõ hơn về cấu trúc và phân bố chi phí giáo dục, từ đó có thể đề xuất các biện pháp
+                hỗ trợ và chính sách phù hợp hơn với thực tế.</li>
+            <li>Tỷ trọng chi phí giáo dục có thể thay đổi tùy thuộc vào địa điểm, điều này có thể phản ánh mức sống, thu
+                nhập và điều kiện giáo dục của từng khu vực.</li>
+            <li>Có thể dựa vào dữ liệu này để đánh giá hiệu quả của các chính sách và chương trình hỗ trợ giáo dục hiện
+                tại và đề xuất các cải tiến hoặc điều chỉnh.</li>
+            <li>Chi phí giáo dục không chỉ là vấn đề của cá nhân mà còn là vấn đề của cộng đồng và xã hội, vì vậy cần
+                phải có sự hợp tác và hỗ trợ từ nhiều bên.</li>
+            <li>Các biểu đồ cung cấp cái nhìn tổng quan và dễ hiểu về chi phí giáo dục, giúp tăng cường nhận thức và sự
+                quan tâm đến vấn đề này.</li>
+            <li>Phân tích dữ liệu giúp phát hiện xu hướng và biến động trong chi phí giáo dục, từ đó có thể đề xuất các
+                giải pháp thích hợp để giảm bớt gánh nặng tài chính cho các gia đình.</li>
+            <li>Việc thu thập và phân tích dữ liệu liên quan đến chi phí giáo dục là một phần quan trọng của quá trình
+                định hình chính sách giáo dục và phát triển xã hội.</li>
+            <li>Các biểu đồ và phân tích cung cấp cái nhìn rõ ràng và khách quan về tình hình chi phí giáo dục, từ đó
+                giúp đưa ra quyết định thông minh và hiệu quả.</li>
+            <li>Những nỗ lực để cải thiện và nâng cao chất lượng giáo dục không thể thiếu sự đầu tư và hỗ trợ về mặt tài
+                chính từ cả chính phủ và cộng đồng.</li>
+            <li>Chi phí giáo dục không chỉ ảnh hưởng đến hiện tại mà còn ảnh hưởng đến tương lai của mỗi cá nhân và xã
+                hội, vì vậy cần phải được đánh giá và quản lý một cách cẩn thận và hiệu quả.</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var barData = {
+                labels: ["Tiểu học", "Trung học cơ sở", "Trung học phổ thông", "Đại học"],
+                datasets: [
+                    {
+                        label: "Chi phí giáo dục",
+                        backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)", "rgba(75, 192, 192, 0.2)"],
+                        borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)", "rgba(75, 192, 192, 1)"],
+                        borderWidth: 1,
+                        data: [500000, 800000, 1200000, 2000000], // Dữ liệu giả định
+                    }
+                ]
+            };
+
+            var pieData = {
+                labels: ["Học phí", "Sách giáo khoa", "Đồ dùng học tập", "Phí phụ huynh", "Hoạt động ngoại khóa"],
+                datasets: [{
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+                    data: [300000, 150000, 200000, 100000, 250000], // Dữ liệu giả định
+                }]
+            };
+
+            var barCtx = document.getElementById('myBarChart').getContext('2d');
+            var pieCtx = document.getElementById('myPieChart').getContext('2d');
+
+            var barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    return value.toLocaleString('vi-VN') + ' VND';
+                                }
+                            }
+                        }]
+                    },
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            formatter: function (value, context) {
+                                return value.toLocaleString('vi-VN') + ' VND';
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            var pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var dataset = data.datasets[tooltipItem.datasetIndex];
+                                var total = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+                                    return previousValue + currentValue;
+                                });
+                                var currentValue = dataset.data[tooltipItem.index];
+                                var percentage = Math.round((currentValue / total) * 100);
+                                return dataset.labels[tooltipItem.index] + ': ' + currentValue.toLocaleString('vi-VN') + ' VND (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.LoadTypeMapper">
+
+<resultMap id="loadTypeResult" type="LoadType"></resultMap>
+<resultMap id="dataLoadType" type="LoadType">
+    <result column="id" property="loadTypeId"></result>
+    <result column="name" property="loadTypeName"></result>
+    <result column="description" property="description"></result>
+</resultMap>
+
+<resultMap id="listLoadTypeResult" type="LoadType"></resultMap>
+
+    <resultMap id="checkLoadTypeDeviceResult" type="Device"></resultMap>
+
+<select id="getListLoadType" resultMap="listLoadTypeResult">
+    SELECT
+        id as loadTypeId,
+        name as loadTypeName
+    FROM
+        s3m_load_type_mst   
+</select>
+
+<select id="getListLoadBySystemTypeIdAndProjectId" resultMap="listLoadTypeResult">
+     SELECT
+        A.id as loadTypeId,
+        A.name as loadTypeName
+    FROM 
+        s3m_load_type_mst A
+    LEFT JOIN s3m_device B ON B.load_type_id = A.id
+    WHERE
+        B.project_id = #{projectId}
+        AND B.system_type_id = #{systemTypeId}
+        AND B.delete_flag = 0
+    GROUP BY A.id
+</select>
+
+<select id="getListLoadTypeByListId" resultMap="listLoadTypeResult">
+    SELECT
+        id as loadTypeId,
+        name as loadTypeName
+    FROM
+        s3m_load_type_mst
+    WHERE 
+        id IN (${loadTypeIds})
+</select>
+ <select id="getAllLoadType"  parameterType="map" resultMap="listLoadTypeResult">
+        SELECT
+            id as loadTypeId,
+            name as loadTypeName,
+            description as description,
+            create_date as createDate,
+            update_date as updateDate
+        FROM
+            s3m_load_type_mst
+	    <if test="keyword != null and keyword != ''">
+	    WHERE (
+                name LIKE '%${keyword}%'
+	           )          
+	     </if>       
+    </select>
+    <select id="getLoadTypeById" parameterType="java.lang.Integer" resultMap="listLoadTypeResult">
+        SELECT
+            id as loadTypeId,
+            name as loadTypeName,
+            description as description,
+            create_date as createDate,
+            update_date as updateDate
+        FROM
+            s3m_load_type_mst
+        WHERE
+            id = #{id}
+    </select>
+
+    <insert id="addLoadType" parameterType="LoadType" >
+        INSERT INTO s3m_load_type_mst(
+            name,
+            description,
+            create_date
+        )
+        VALUES (
+           #{loadType.loadTypeName},
+           #{loadType.description},
+           #{loadType.createDate}
+               )
+    </insert>
+
+    <update id="updateLoadType" parameterType="LoadType">
+        UPDATE
+           s3m_load_type_mst
+        SET
+            name = #{loadType.loadTypeName},
+            description = #{loadType.description},
+            update_date = #{loadType.updateDate}
+        WHERE
+            id = #{loadType.loadTypeId}
+    </update>
+
+    <delete id="deleteLoadTypeById" parameterType="java.lang.Integer">
+        DELETE FROM  s3m_load_type_mst
+        WHERE id = #{id}
+    </delete>
+<select id="getListLoadTypeMst" resultMap="listLoadTypeResult">
+    SELECT
+        id as loadTypeId,
+        name as loadTypeName
+    FROM
+        s3m_load_type_mst    
+</select>
+    <select id="checkLoadTypeDevice"  parameterType="java.lang.Integer" resultMap="checkLoadTypeDeviceResult">
+        SELECT
+        *
+        FROM
+        s3m_device
+        WHERE
+            load_type_id = #{id}
+    </select>
+    <select id="getLoadTypeByProjectAndSystemType"  parameterType="map" resultMap="dataLoadType">
+        SELECT A.*
+        FROM s3m_load_type_mst A
+                 JOIN s3m_device B on A.id = B.load_type_id
+        where B.customer_id = #{customer}
+          and B.project_id = #{project}
+          and B.system_type_id = #{typeSystem}
+          and A.delete_flag = 0
+        group by A.id
+
+    </select>
+</mapper>

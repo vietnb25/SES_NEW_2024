@@ -1,0 +1,2175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.CustomerMapper">
+
+    <resultMap id="customerResult" type="Customer">
+        <result property="customerId" column="customer_id" />
+        <result property="idSchema" column="id_schema" />
+        <result property="customerName" column="customer_name" />
+        <result property="customerCode" column="customer_code" />
+        <result property="description" column="description" />
+        <result property="updateDate" column="update_date" />
+    </resultMap>
+
+    <resultMap id="projectResult" type="Project">
+        <result property="projectName" column="project_name" />
+    </resultMap>
+
+    <select id="getProjectsByCustomerId" parameterType="map" resultMap="projectResult">
+        SELECT project_name
+        FROM s3m_project
+        WHERE
+            customer_id IS NOT NULL
+        <if test="customerId != null">
+            AND customer_id = #{customerId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="getListCustomer" parameterType="map" resultMap="customerResult">
+        SELECT customer_id, customer_name, customer_code
+        FROM s3m_customer
+        WHERE 
+            customer_id IS NOT NULL
+            AND delete_flag = 0
+        <if test="customerId != null">
+            AND customer_id = #{customerId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="checkCustomerIdInUserTable" parameterType="map" resultMap="customerResult">
+        SELECT
+            customer_id
+        FROM s3m_user
+        WHERE
+            customer_id IS NOT NULL
+        <if test="customerId != null">
+            AND customer_id = #{customerId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="checkCustomerIdInProjectTable" parameterType="map" resultMap="customerResult">
+        SELECT
+            customer_id
+        FROM s3m_project
+        WHERE
+            customer_id IS NOT NULL
+        <if test="customerId != null">
+            AND customer_id = #{customerId}
+        </if>
+        AND delete_flag != 1
+    </select>
+
+    <select id="getIds" resultMap="customerResult">
+        SELECT
+            customer_id, customer_name
+        FROM
+            s3m_customer
+        WHERE
+            customer_id IN
+        <foreach item="customerId" collection="customerIds" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </select>
+
+    <select id="searchCustomer" parameterType="map" resultMap="customerResult">
+        SELECT A.customer_id, A.customer_name, A.customer_code, A.description, A.update_date 
+        FROM s3m_customer A
+        WHERE (A.customer_name like "%${keyword}%" OR A.customer_code like "%${keyword}%" OR A.description like "%${keyword}%") AND A.delete_flag != 1
+    </select>
+
+    <select id="getCustomers" resultMap="customerResult">  
+        SELECT A.customer_id, A.customer_name, A.customer_code, A.description, A.update_date 
+        FROM s3m_customer A
+        WHERE 
+             A.delete_flag != 1
+    </select>
+
+    <select id="getCustomerByCode" parameterType="map" resultMap="customerResult">
+        SELECT A.customer_id, A.customer_name, A.customer_code, A.description, A.update_date 
+        FROM s3m_customer  A
+           WHERE A.customer_code = #{customerCode}
+           AND A.delete_flag != 1
+        <if test="customerId != null">
+                AND A.customer_id != #{customerId}
+           </if>
+    </select>
+
+    <select id="getCustomer" parameterType="map" resultMap="customerResult">  
+        SELECT A.customer_id, A.customer_name, A.customer_code, A.description, A.update_date 
+        FROM s3m_customer  A
+           where A.customer_id = #{customerId}
+    </select>
+
+    <insert id="addCustomer" parameterType="map">  
+        INSERT into s3m_customer(customer_name, description, customer_code) values (#{customerName}, #{customerDesc}, #{customerCode});
+    </insert>
+
+    <select id="getCustomerMax" parameterType="map" resultMap="customerResult">  
+        SELECT MAX(customer_id) as id_schema FROM s3m_plus.s3m_customer
+     </select>
+
+    <insert id="addSchema" parameterType="map">
+        CREATE DATABASE ${schema};
+        -- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+        --
+        -- Host: 192.168.1.254    Database: s3m_plus_customer_${schema}
+        -- ------------------------------------------------------
+        -- Server version   5.5.5-10.8.5-MariaDB-1:10.8.5+maria~ubu2204
+
+        /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+        /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+        /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+        /*!50503 SET NAMES utf8 */;
+        /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+        /*!40103 SET TIME_ZONE='+00:00' */;
+        /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+        /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+        /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+        /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+        --
+        -- Table structure for table `s3m_data_combiner_1`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_combiner_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_combiner_1_${year} (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `DCAMax` int(16) unsigned DEFAULT NULL,
+          `N` int(16) unsigned DEFAULT NULL,
+          `Evt` int(32) unsigned DEFAULT NULL,
+          `LOW_VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `LOW_POWER` int(32) unsigned DEFAULT NULL,
+          `LOW_EFFICIENCY` int(32) unsigned DEFAULT NULL,
+          `CURRENT` int(32) unsigned DEFAULT NULL,
+          `VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `POWER` int(32) unsigned DEFAULT NULL,
+          `DISCONNECTED` int(32) unsigned DEFAULT NULL,
+          `FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_CABINET_OPEN` int(32) unsigned DEFAULT NULL,
+          `TEMP` int(32) unsigned DEFAULT NULL,
+          `GROUNDFAULT` int(32) unsigned DEFAULT NULL,
+          `REVERSED_POLARITY` int(32) unsigned DEFAULT NULL,
+          `INCOMPATIBLE` int(32) unsigned DEFAULT NULL,
+          `COMM_ERROR` int(32) unsigned DEFAULT NULL,
+          `INTERNAL_ERROR` int(32) unsigned DEFAULT NULL,
+          `THEFT` int(32) unsigned DEFAULT NULL,
+          `ARC_DETECTED` int(32) unsigned DEFAULT NULL,
+          `IdcCombiner` float DEFAULT NULL,
+          `DCAh` float DEFAULT NULL,
+          `VdcCombiner` float DEFAULT NULL,
+          `T` float DEFAULT NULL,
+          `PdcCombiner` float DEFAULT NULL,
+          `PR` float DEFAULT NULL,
+          `EpCombiner` float DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `sent_date` (`sent_date`),
+          KEY `transaction_date` (`transaction_date`),
+          KEY `device_id` (`device_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_combiner_1_view`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_combiner_1_view`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_combiner_1_view` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `view_time` varchar(255) DEFAULT NULL,
+          `POWER` int(16) DEFAULT NULL,
+          `PdcCombiner` float DEFAULT NULL,
+          `EpCombiner` float DEFAULT NULL,
+          `sent_date` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `device_id` (`device_id`),
+          KEY `sent_date` (`sent_date`),
+          KEY `view_time` (`view_time`),
+          KEY `view_type` (`view_type`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        INSERT INTO ${schema}.`s3m_data_combiner_1_view` (`view_type`, `view_time`, `sent_date`) VALUES ('0', '0', ${year});
+        --
+        -- Table structure for table `s3m_data_combiner_1_view_cache`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_combiner_1_view_cache`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_combiner_1_view_cache` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `EpCombiner` float DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_inverter_1`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_inverter_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_inverter_1_${year} (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `I` float DEFAULT NULL,
+          `Ia` float DEFAULT NULL,
+          `Ib` float DEFAULT NULL,
+          `Ic` float DEFAULT NULL,
+          `Vab` float DEFAULT NULL,
+          `Vbc` float DEFAULT NULL,
+          `Vca` float DEFAULT NULL,
+          `Va` float DEFAULT NULL,
+          `Vb` float DEFAULT NULL,
+          `Vc` int(11) DEFAULT NULL,
+          `F` float DEFAULT NULL,
+          `PF` float DEFAULT NULL,
+          `Idc` float DEFAULT NULL,
+          `Udc` float DEFAULT NULL,
+          `Pdc` float DEFAULT NULL,
+          `TmpCab` int(11) DEFAULT NULL,
+          `TmpSnk` int(11) DEFAULT NULL,
+          `TmpTrns` int(11) DEFAULT NULL,
+          `TmpOt` int(11) DEFAULT NULL,
+          `St` int(11) DEFAULT NULL,
+          `StVnd` int(11) DEFAULT NULL,
+          `Evt1` int(11) DEFAULT NULL,
+          `Evt2` int(11) DEFAULT NULL,
+          `EvtVnd1` int(11) DEFAULT NULL,
+          `EvtVnd2` int(11) DEFAULT NULL,
+          `EvtVnd3` int(11) DEFAULT NULL,
+          `EvtVnd4` int(11) DEFAULT NULL,
+          `TmSrc` int(11) DEFAULT NULL,
+          `Tms` int(11) DEFAULT NULL,
+          `PVConn` int(16) unsigned DEFAULT NULL,
+          `ECPConn` int(16) unsigned DEFAULT NULL,
+          `Conn` int(16) unsigned DEFAULT NULL,
+          `Wmax` int(32) DEFAULT NULL,
+          `Vref` float DEFAULT NULL,
+          `VRefofs` float DEFAULT NULL,
+          `VAMax` int(32) DEFAULT NULL,
+          `VAMaxQ1` int(32) DEFAULT NULL,
+          `VAMaxQ2` int(32) DEFAULT NULL,
+          `VAMaxQ3` int(32) DEFAULT NULL,
+          `VAMaxQ4` int(32) DEFAULT NULL,
+          `F_normal` float DEFAULT NULL,
+          `WMaxLimPct` float DEFAULT NULL,
+          `WMaxLimPct_WinTms` int(32) DEFAULT NULL,
+          `WMaxLimPct_RvrtTms` int(32) DEFAULT NULL,
+          `WMaxLimPct_RmpTms` int(32) DEFAULT NULL,
+          `WMaxLim_Ena` int(32) DEFAULT NULL,
+          `OutPFSet` float DEFAULT NULL,
+          `OutPFSet_WinTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_RvrtTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_RmpTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_Ena` int(16) unsigned DEFAULT NULL,
+          `VArWMaxPct` float DEFAULT NULL,
+          `VArMaxPct` float DEFAULT NULL,
+          `VArAvalPct` float DEFAULT NULL,
+          `VArPct_WinTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_RvrtTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_RmpTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_Mod` int(16) unsigned DEFAULT NULL,
+          `VArPct_Ena` int(16) unsigned DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) DEFAULT NULL,
+          `Ptotal` float DEFAULT NULL,
+          `Pa` float DEFAULT NULL,
+          `Pb` float DEFAULT NULL,
+          `Pc` float DEFAULT NULL,
+          `Stotal` float DEFAULT NULL,
+          `Sa` float DEFAULT NULL,
+          `Sb` float DEFAULT NULL,
+          `Sc` float DEFAULT NULL,
+          `Qtotal` float DEFAULT NULL,
+          `Qa` float DEFAULT NULL,
+          `Qb` float DEFAULT NULL,
+          `Qc` float DEFAULT NULL,
+          `PFa` float DEFAULT NULL,
+          `PFb` float DEFAULT NULL,
+          `PFc` float DEFAULT NULL,
+          `Ep` int(64) unsigned DEFAULT NULL,
+          `EpDC` int(32) unsigned DEFAULT NULL,
+          `CRC16` varchar(45) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `id` (`id`),
+          KEY `sent_date` (`sent_date`),
+          KEY `transaction_date` (`transaction_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_inverter_1_view`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_inverter_1_view`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_inverter_1_view` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `view_time` varchar(255) DEFAULT NULL,
+          `Ptotal` float DEFAULT NULL,
+          `Pdc` float DEFAULT NULL,
+          `Ep` int(11) DEFAULT NULL,
+          `sent_date` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `id` (`id`),
+          KEY `sent_date` (`sent_date`),
+          KEY `view_type` (`view_type`),
+          KEY `view_time` (`view_time`),
+          KEY `device_id` (`device_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        INSERT INTO ${schema}.`s3m_data_inverter_1_view` (`view_type`, `view_time`, `sent_date`) VALUES ('0', '0', ${year});
+
+        --
+        -- Table structure for table `s3m_data_inverter_1_view_cache`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_inverter_1_view_cache`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_inverter_1_view_cache` (
+          `id` int(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `Ep` int(20) DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_meter_1_${year}`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_meter_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_meter_1_${year} (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID bản tin',
+          `device_id` bigint(20) unsigned NOT NULL COMMENT 'ID thiết bị',
+          `uab` float DEFAULT NULL COMMENT 'Điện áp dây A-B',
+          `ubc` float DEFAULT NULL COMMENT 'Điện áp dây B-C',
+          `uca` float DEFAULT NULL COMMENT 'Điện áp dây C-A',
+          `ull` float DEFAULT NULL COMMENT 'Điện áp dây trung bình',
+          `uan` float DEFAULT NULL COMMENT 'Điện áp pha A',
+          `ubn` float DEFAULT NULL COMMENT 'Điện áp pha B',
+          `ucn` float DEFAULT NULL COMMENT 'Điện áp pha C',
+          `uln` float DEFAULT NULL COMMENT 'Điện áp pha trung bình',
+          `ia` float DEFAULT NULL COMMENT 'Dòng điện pha A',
+          `ib` float DEFAULT NULL COMMENT 'Dòng điện pha B',
+          `ic` float DEFAULT NULL COMMENT 'Dòng điện pha C',
+          `in` float DEFAULT NULL COMMENT 'Dòng trung tính',
+          `ig` float DEFAULT NULL COMMENT 'Dòng rò',
+          `iavg` float DEFAULT NULL COMMENT 'Dòng điện pha trung binh',
+          `pa` float DEFAULT NULL COMMENT 'Công suât hiệu dụng A',
+          `pb` float DEFAULT NULL COMMENT 'Công suât hiệu dụng B',
+          `pc` float DEFAULT NULL COMMENT 'Công suât hiệu dụng C',
+          `p_total` float DEFAULT NULL COMMENT 'Tổng công suất hiệu dụng',
+          `qa` float DEFAULT NULL COMMENT 'Công suât phản kháng A',
+          `qb` float DEFAULT NULL COMMENT 'Công suât phản kháng B',
+          `qc` float DEFAULT NULL COMMENT 'Công suât phản kháng C',
+          `q_total` float DEFAULT NULL COMMENT 'Tổng công suất phản kháng',
+          `sa` float DEFAULT NULL COMMENT 'Công suât biểu kiến A',
+          `sb` float DEFAULT NULL COMMENT 'Công suât biểu kiến B',
+          `sc` float DEFAULT NULL COMMENT 'Công suât biểu kiến C',
+          `s_total` float DEFAULT NULL COMMENT 'Tổng công suất biểu kiến',
+          `pfa` float DEFAULT NULL COMMENT 'Hệ số công suất A',
+          `pfb` float DEFAULT NULL COMMENT 'Hệ số công suất B',
+          `pfc` float DEFAULT NULL COMMENT 'Hệ số công suất C',
+          `pfavg` float DEFAULT NULL COMMENT 'Hệ số công suất trung bình',
+          `f` float DEFAULT NULL COMMENT 'Tần số',
+          `ep` int(10) DEFAULT NULL COMMENT 'Active Energy Delivered (Into Load) Công suất tiêu thụ',
+          `ep_r` int(10) DEFAULT NULL COMMENT 'Active Energy Received (Out of Load)',
+          `ep_dr` int(10) DEFAULT NULL COMMENT 'Active Energy Delivered + Received',
+          `ep_drr` int(10) DEFAULT NULL COMMENT 'Active Energy Delivered- Received',
+          `eq` int(10) DEFAULT NULL COMMENT 'Reactive Energy Delivered',
+          `eq_r` int(10) DEFAULT NULL COMMENT 'Reactive Energy Received',
+          `eq_dr` int(10) DEFAULT NULL COMMENT 'Reactive Energy Delivered + Received',
+          `eq_drr` int(10) DEFAULT NULL COMMENT 'Reactive Energy Delivered - Received',
+          `es` int(10) DEFAULT NULL COMMENT 'Apparent Energy Delivered',
+          `es_r` int(10) DEFAULT NULL COMMENT 'Apparent Energy Received',
+          `es_dr` int(10) DEFAULT NULL COMMENT 'Apparent Energy Delivered + Received',
+          `es_drr` int(10) DEFAULT NULL COMMENT 'Apparent Energy Delivered - Received',
+          `t1` float DEFAULT NULL COMMENT 'Nhiệt độ điểm pha A',
+          `t2` float DEFAULT NULL COMMENT 'Nhiệt độ điểm pha B',
+          `t3` float DEFAULT NULL COMMENT 'Nhiệt độ điểm pha C',
+          `command_data1` mediumint(9) DEFAULT NULL COMMENT 'Command data 1',
+          `command_data2` mediumint(9) DEFAULT NULL COMMENT 'Command data 2',
+          `command_data3` mediumint(9) DEFAULT NULL COMMENT 'Command data 3',
+          `command_data4` mediumint(9) DEFAULT NULL COMMENT 'Command data 4',
+          `command_data5` mediumint(9) DEFAULT NULL COMMENT 'Command data 5',
+          `command_data6` mediumint(9) DEFAULT NULL COMMENT 'Command data 6',
+          `thd_ia` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài IA',
+          `thd_ib` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài IB',
+          `thd_ic` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài IC',
+          `thd_in` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài IN',
+          `thd_ig` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài IG',
+          `thd_vab` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VA-B',
+          `thd_vbc` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VB-C',
+          `thd_vca` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VC-A',
+          `thd_vll` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VL-L',
+          `thd_van` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VA-N',
+          `thd_vbn` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VB-N',
+          `thd_vcn` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VC-N',
+          `thd_vln` float unsigned DEFAULT NULL COMMENT 'Tổng sóng hài VL-N',
+          `sent_date` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Thời gian gửi tin',
+          `transaction_date` bigint(20) NOT NULL DEFAULT (current_timestamp()) COMMENT 'Thời gian gửi tin dùng để phân loại partiion',
+          PRIMARY KEY (`id`,`transaction_date`),
+          KEY `idx_search` (`device_id`,`transaction_date`),
+          KEY `device_id_index` (`device_id`),
+          KEY `sent_date_index` (`sent_date`),
+          KEY `transaction_date` (`transaction_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_load_frame_1_view`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_load_frame_1_view`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_load_frame_1_view` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `view_time` varchar(255) DEFAULT NULL,
+          `p_total` float DEFAULT NULL,
+          `ep` bigint(20) DEFAULT NULL,
+          `sent_date` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `combo_index` (`device_id`,`view_type`,`view_time`, `sent_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+        INSERT INTO ${schema}.`s3m_data_load_frame_1_view` (`view_type`, `view_time`, `sent_date`) VALUES ('0', '0', ${year});
+
+
+        --
+        -- Table structure for table `s3m_data_load_frame_1_view_cache`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_load_frame_1_view_cache`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_load_frame_1_view_cache` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `ep` bigint(20) DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_meter_2_${year}`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_meter_2_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_meter_2_${year} (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `IA_H1` float DEFAULT NULL,
+          `IA_H2` float DEFAULT NULL,
+          `IA_H3` float DEFAULT NULL,
+          `IA_H4` float DEFAULT NULL,
+          `IA_H5` float DEFAULT NULL,
+          `IA_H6` float DEFAULT NULL,
+          `IA_H7` float DEFAULT NULL,
+          `IA_H8` float DEFAULT NULL,
+          `IA_H9` float DEFAULT NULL,
+          `IA_H10` float DEFAULT NULL,
+          `IA_H11` float DEFAULT NULL,
+          `IA_H12` float DEFAULT NULL,
+          `IA_H13` float DEFAULT NULL,
+          `IA_H14` float DEFAULT NULL,
+          `IA_H15` float DEFAULT NULL,
+          `IA_H16` float DEFAULT NULL,
+          `IA_H17` float DEFAULT NULL,
+          `IA_H18` float DEFAULT NULL,
+          `IA_H19` float DEFAULT NULL,
+          `IA_H20` float DEFAULT NULL,
+          `IA_H21` float DEFAULT NULL,
+          `IA_H22` float DEFAULT NULL,
+          `IA_H23` float DEFAULT NULL,
+          `IA_H24` float DEFAULT NULL,
+          `IA_H25` float DEFAULT NULL,
+          `IA_H26` float DEFAULT NULL,
+          `IA_H27` float DEFAULT NULL,
+          `IA_H28` float DEFAULT NULL,
+          `IA_H29` float DEFAULT NULL,
+          `IA_H30` float DEFAULT NULL,
+          `IA_H31` float DEFAULT NULL,
+          `IB_H1` float DEFAULT NULL,
+          `IB_H2` float DEFAULT NULL,
+          `IB_H3` float DEFAULT NULL,
+          `IB_H4` float DEFAULT NULL,
+          `IB_H5` float DEFAULT NULL,
+          `IB_H6` float DEFAULT NULL,
+          `IB_H7` float DEFAULT NULL,
+          `IB_H8` float DEFAULT NULL,
+          `IB_H9` float DEFAULT NULL,
+          `IB_H10` float DEFAULT NULL,
+          `IB_H11` float DEFAULT NULL,
+          `IB_H12` float DEFAULT NULL,
+          `IB_H13` float DEFAULT NULL,
+          `IB_H14` float DEFAULT NULL,
+          `IB_H15` float DEFAULT NULL,
+          `IB_H16` float DEFAULT NULL,
+          `IB_H17` float DEFAULT NULL,
+          `IB_H18` float DEFAULT NULL,
+          `IB_H19` float DEFAULT NULL,
+          `IB_H20` float DEFAULT NULL,
+          `IB_H21` float DEFAULT NULL,
+          `IB_H22` float DEFAULT NULL,
+          `IB_H23` float DEFAULT NULL,
+          `IB_H24` float DEFAULT NULL,
+          `IB_H25` float DEFAULT NULL,
+          `IB_H26` float DEFAULT NULL,
+          `IB_H27` float DEFAULT NULL,
+          `IB_H28` float DEFAULT NULL,
+          `IB_H29` float DEFAULT NULL,
+          `IB_H30` float DEFAULT NULL,
+          `IB_H31` float DEFAULT NULL,
+          `IC_H1` float DEFAULT NULL,
+          `IC_H2` float DEFAULT NULL,
+          `IC_H3` float DEFAULT NULL,
+          `IC_H4` float DEFAULT NULL,
+          `IC_H5` float DEFAULT NULL,
+          `IC_H6` float DEFAULT NULL,
+          `IC_H7` float DEFAULT NULL,
+          `IC_H8` float DEFAULT NULL,
+          `IC_H9` float DEFAULT NULL,
+          `IC_H10` float DEFAULT NULL,
+          `IC_H11` float DEFAULT NULL,
+          `IC_H12` float DEFAULT NULL,
+          `IC_H13` float DEFAULT NULL,
+          `IC_H14` float DEFAULT NULL,
+          `IC_H15` float DEFAULT NULL,
+          `IC_H16` float DEFAULT NULL,
+          `IC_H17` float DEFAULT NULL,
+          `IC_H18` float DEFAULT NULL,
+          `IC_H19` float DEFAULT NULL,
+          `IC_H20` float DEFAULT NULL,
+          `IC_H21` float DEFAULT NULL,
+          `IC_H22` float DEFAULT NULL,
+          `IC_H23` float DEFAULT NULL,
+          `IC_H24` float DEFAULT NULL,
+          `IC_H25` float DEFAULT NULL,
+          `IC_H26` float DEFAULT NULL,
+          `IC_H27` float DEFAULT NULL,
+          `IC_H28` float DEFAULT NULL,
+          `IC_H29` float DEFAULT NULL,
+          `IC_H30` float DEFAULT NULL,
+          `IC_H31` float DEFAULT NULL,
+          `VAB_H1` float DEFAULT NULL,
+          `VAB_H2` float DEFAULT NULL,
+          `VAB_H3` float DEFAULT NULL,
+          `VAB_H4` float DEFAULT NULL,
+          `VAB_H5` float DEFAULT NULL,
+          `VAB_H6` float DEFAULT NULL,
+          `VAB_H7` float DEFAULT NULL,
+          `VAB_H8` float DEFAULT NULL,
+          `VAB_H9` float DEFAULT NULL,
+          `VAB_H10` float DEFAULT NULL,
+          `VAB_H11` float DEFAULT NULL,
+          `VAB_H12` float DEFAULT NULL,
+          `VAB_H13` float DEFAULT NULL,
+          `VAB_H14` float DEFAULT NULL,
+          `VAB_H15` float DEFAULT NULL,
+          `VAB_H16` float DEFAULT NULL,
+          `VAB_H17` float DEFAULT NULL,
+          `VAB_H18` float DEFAULT NULL,
+          `VAB_H19` float DEFAULT NULL,
+          `VAB_H20` float DEFAULT NULL,
+          `VAB_H21` float DEFAULT NULL,
+          `VAB_H22` float DEFAULT NULL,
+          `VAB_H23` float DEFAULT NULL,
+          `VAB_H24` float DEFAULT NULL,
+          `VAB_H25` float DEFAULT NULL,
+          `VAB_H26` float DEFAULT NULL,
+          `VAB_H27` float DEFAULT NULL,
+          `VAB_H28` float DEFAULT NULL,
+          `VAB_H29` float DEFAULT NULL,
+          `VAB_H30` float DEFAULT NULL,
+          `VAB_H31` float DEFAULT NULL,
+          `VBC_H1` float DEFAULT NULL,
+          `VBC_H2` float DEFAULT NULL,
+          `VBC_H3` float DEFAULT NULL,
+          `VBC_H4` float DEFAULT NULL,
+          `VBC_H5` float DEFAULT NULL,
+          `VBC_H6` float DEFAULT NULL,
+          `VBC_H7` float DEFAULT NULL,
+          `VBC_H8` float DEFAULT NULL,
+          `VBC_H9` float DEFAULT NULL,
+          `VBC_H10` float DEFAULT NULL,
+          `VBC_H11` float DEFAULT NULL,
+          `VBC_H12` float DEFAULT NULL,
+          `VBC_H13` float DEFAULT NULL,
+          `VBC_H14` float DEFAULT NULL,
+          `VBC_H15` float DEFAULT NULL,
+          `VBC_H16` float DEFAULT NULL,
+          `VBC_H17` float DEFAULT NULL,
+          `VBC_H18` float DEFAULT NULL,
+          `VBC_H19` float DEFAULT NULL,
+          `VBC_H20` float DEFAULT NULL,
+          `VBC_H21` float DEFAULT NULL,
+          `VBC_H22` float DEFAULT NULL,
+          `VBC_H23` float DEFAULT NULL,
+          `VBC_H24` float DEFAULT NULL,
+          `VBC_H25` float DEFAULT NULL,
+          `VBC_H26` float DEFAULT NULL,
+          `VBC_H27` float DEFAULT NULL,
+          `VBC_H28` float DEFAULT NULL,
+          `VBC_H29` float DEFAULT NULL,
+          `VBC_H30` float DEFAULT NULL,
+          `VBC_H31` float DEFAULT NULL,
+          `VCA_H1` float DEFAULT NULL,
+          `VCA_H2` float DEFAULT NULL,
+          `VCA_H3` float DEFAULT NULL,
+          `VCA_H4` float DEFAULT NULL,
+          `VCA_H5` float DEFAULT NULL,
+          `VCA_H6` float DEFAULT NULL,
+          `VCA_H7` float DEFAULT NULL,
+          `VCA_H8` float DEFAULT NULL,
+          `VCA_H9` float DEFAULT NULL,
+          `VCA_H10` float DEFAULT NULL,
+          `VCA_H11` float DEFAULT NULL,
+          `VCA_H12` float DEFAULT NULL,
+          `VCA_H13` float DEFAULT NULL,
+          `VCA_H14` float DEFAULT NULL,
+          `VCA_H15` float DEFAULT NULL,
+          `VCA_H16` float DEFAULT NULL,
+          `VCA_H17` float DEFAULT NULL,
+          `VCA_H18` float DEFAULT NULL,
+          `VCA_H19` float DEFAULT NULL,
+          `VCA_H20` float DEFAULT NULL,
+          `VCA_H21` float DEFAULT NULL,
+          `VCA_H22` float DEFAULT NULL,
+          `VCA_H23` float DEFAULT NULL,
+          `VCA_H24` float DEFAULT NULL,
+          `VCA_H25` float DEFAULT NULL,
+          `VCA_H26` float DEFAULT NULL,
+          `VCA_H27` float DEFAULT NULL,
+          `VCA_H28` float DEFAULT NULL,
+          `VCA_H29` float DEFAULT NULL,
+          `VCA_H30` float DEFAULT NULL,
+          `VCA_H31` float DEFAULT NULL,
+          `VAN_H1` float DEFAULT NULL,
+          `VAN_H2` float DEFAULT NULL,
+          `VAN_H3` float DEFAULT NULL,
+          `VAN_H4` float DEFAULT NULL,
+          `VAN_H5` float DEFAULT NULL,
+          `VAN_H6` float DEFAULT NULL,
+          `VAN_H7` float DEFAULT NULL,
+          `VAN_H8` float DEFAULT NULL,
+          `VAN_H9` float DEFAULT NULL,
+          `VAN_H10` float DEFAULT NULL,
+          `VAN_H11` float DEFAULT NULL,
+          `VAN_H12` float DEFAULT NULL,
+          `VAN_H13` float DEFAULT NULL,
+          `VAN_H14` float DEFAULT NULL,
+          `VAN_H15` float DEFAULT NULL,
+          `VAN_H16` float DEFAULT NULL,
+          `VAN_H17` float DEFAULT NULL,
+          `VAN_H18` float DEFAULT NULL,
+          `VAN_H19` float DEFAULT NULL,
+          `VAN_H20` float DEFAULT NULL,
+          `VAN_H21` float DEFAULT NULL,
+          `VAN_H22` float DEFAULT NULL,
+          `VAN_H23` float DEFAULT NULL,
+          `VAN_H24` float DEFAULT NULL,
+          `VAN_H25` float DEFAULT NULL,
+          `VAN_H26` float DEFAULT NULL,
+          `VAN_H27` float DEFAULT NULL,
+          `VAN_H28` float DEFAULT NULL,
+          `VAN_H29` float DEFAULT NULL,
+          `VAN_H30` float DEFAULT NULL,
+          `VAN_H31` float DEFAULT NULL,
+          `VBN_H1` float DEFAULT NULL,
+          `VBN_H2` float DEFAULT NULL,
+          `VBN_H3` float DEFAULT NULL,
+          `VBN_H4` float DEFAULT NULL,
+          `VBN_H5` float DEFAULT NULL,
+          `VBN_H6` float DEFAULT NULL,
+          `VBN_H7` float DEFAULT NULL,
+          `VBN_H8` float DEFAULT NULL,
+          `VBN_H9` float DEFAULT NULL,
+          `VBN_H10` float DEFAULT NULL,
+          `VBN_H11` float DEFAULT NULL,
+          `VBN_H12` float DEFAULT NULL,
+          `VBN_H13` float DEFAULT NULL,
+          `VBN_H14` float DEFAULT NULL,
+          `VBN_H15` float DEFAULT NULL,
+          `VBN_H16` float DEFAULT NULL,
+          `VBN_H17` float DEFAULT NULL,
+          `VBN_H18` float DEFAULT NULL,
+          `VBN_H19` float DEFAULT NULL,
+          `VBN_H20` float DEFAULT NULL,
+          `VBN_H21` float DEFAULT NULL,
+          `VBN_H22` float DEFAULT NULL,
+          `VBN_H23` float DEFAULT NULL,
+          `VBN_H24` float DEFAULT NULL,
+          `VBN_H25` float DEFAULT NULL,
+          `VBN_H26` float DEFAULT NULL,
+          `VBN_H27` float DEFAULT NULL,
+          `VBN_H28` float DEFAULT NULL,
+          `VBN_H29` float DEFAULT NULL,
+          `VBN_H30` float DEFAULT NULL,
+          `VBN_H31` float DEFAULT NULL,
+          `VCN_H1` float DEFAULT NULL,
+          `VCN_H2` float DEFAULT NULL,
+          `VCN_H3` float DEFAULT NULL,
+          `VCN_H4` float DEFAULT NULL,
+          `VCN_H5` float DEFAULT NULL,
+          `VCN_H6` float DEFAULT NULL,
+          `VCN_H7` float DEFAULT NULL,
+          `VCN_H8` float DEFAULT NULL,
+          `VCN_H9` float DEFAULT NULL,
+          `VCN_H10` float DEFAULT NULL,
+          `VCN_H11` float DEFAULT NULL,
+          `VCN_H12` float DEFAULT NULL,
+          `VCN_H13` float DEFAULT NULL,
+          `VCN_H14` float DEFAULT NULL,
+          `VCN_H15` float DEFAULT NULL,
+          `VCN_H16` float DEFAULT NULL,
+          `VCN_H17` float DEFAULT NULL,
+          `VCN_H18` float DEFAULT NULL,
+          `VCN_H19` float DEFAULT NULL,
+          `VCN_H20` float DEFAULT NULL,
+          `VCN_H21` float DEFAULT NULL,
+          `VCN_H22` float DEFAULT NULL,
+          `VCN_H23` float DEFAULT NULL,
+          `VCN_H24` float DEFAULT NULL,
+          `VCN_H25` float DEFAULT NULL,
+          `VCN_H26` float DEFAULT NULL,
+          `VCN_H27` float DEFAULT NULL,
+          `VCN_H28` float DEFAULT NULL,
+          `VCN_H29` float DEFAULT NULL,
+          `VCN_H30` float DEFAULT NULL,
+          `VCN_H31` float DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) NOT NULL DEFAULT 1546276200,
+          `device_id` int(11) DEFAULT NULL,
+          PRIMARY KEY (`id`,`transaction_date`),
+          KEY `device_id_index` (`device_id`),
+          KEY `sent_date_index` (`sent_date`),
+          KEY `transaction_date` (`transaction_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_panel_1_${year}`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_panel_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_panel_1_${year} (
+          `id` int unsigned NOT NULL AUTO_INCREMENT,
+          `device_id` bigint DEFAULT NULL,
+          `ven` varchar(45) DEFAULT NULL,
+          `p` float DEFAULT NULL,
+          `u` float DEFAULT NULL,
+          `i` float DEFAULT NULL,
+          `sent_date` varchar(45) NOT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_string_1_${year}`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_string_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_string_1_${year} (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `InID` int(16) unsigned DEFAULT NULL,
+          `InEvt` int(32) unsigned DEFAULT NULL,
+          `LOW_VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `LOW_POWER` int(32) unsigned DEFAULT NULL,
+          `LOW_EFFICIENCY` int(32) unsigned DEFAULT NULL,
+          `CURRENT` int(32) unsigned DEFAULT NULL,
+          `VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `POWER` int(32) unsigned DEFAULT NULL,
+          `PR` int(32) unsigned DEFAULT NULL,
+          `DISCONNECTED` int(32) unsigned DEFAULT NULL,
+          `FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_CABINET_OPEN` int(32) unsigned DEFAULT NULL,
+          `TEMP` int(32) unsigned DEFAULT NULL,
+          `GROUNDFAULT` int(32) unsigned DEFAULT NULL,
+          `REVERSED_POLARITY` int(32) unsigned DEFAULT NULL,
+          `INCOMPATIBLE` int(32) unsigned DEFAULT NULL,
+          `COMM_ERROR` int(32) unsigned DEFAULT NULL,
+          `INTERNAL_ERROR` int(32) unsigned DEFAULT NULL,
+          `THEFT` int(32) unsigned DEFAULT NULL,
+          `ARC_DETECTED` int(32) unsigned DEFAULT NULL,
+          `IdcStr` float DEFAULT NULL,
+          `InDCAhr` float DEFAULT NULL,
+          `VdcStr` float DEFAULT NULL,
+          `PdcStr` float DEFAULT NULL,
+          `InDCWh` int(16) DEFAULT NULL,
+          `InDCPR` float DEFAULT NULL,
+          `InN` float DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) DEFAULT NULL,
+          `Tstr` float DEFAULT NULL,
+          `EpStr` float DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `device_id` (`device_id`),
+          KEY `transaction_date` (`transaction_date`),
+          KEY `sent_date` (`sent_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_string_1_view`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_string_1_view`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_string_1_view` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `view_time` varchar(255) DEFAULT NULL,
+          `POWER` int(32) DEFAULT NULL,
+          `VdcStr` float DEFAULT NULL,
+          `PdcStr` float DEFAULT NULL,
+          `sen_date` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `view_type` (`view_type`),
+          KEY `device_id` (`device_id`),
+          KEY `view_time` (`view_time`),
+          KEY `sen_date` (`sen_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+        INSERT INTO ${schema}.`s3m_data_string_1_view` (`view_type`, `view_time`, `sen_date`) VALUES ('0', '0', ${year});
+
+        --
+        -- Table structure for table `s3m_data_weather_1_${year}`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.s3m_data_weather_1_${year};
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.s3m_data_weather_1_${year} (
+          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `Wind_sp` int(11) DEFAULT NULL,
+          `Wind_dir` int(11) DEFAULT NULL,
+          `Rad` int(11) DEFAULT NULL,
+          `Temp` int(11) DEFAULT NULL,
+          `H` int(11) DEFAULT NULL,
+          `Rain` int(11) DEFAULT NULL,
+          `Atmos` int(11) DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `sent_date` (`sent_date`),
+          KEY `transaction_date` (`transaction_date`),
+          KEY `device_id` (`device_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        --
+        -- Table structure for table `s3m_data_weather_1_view`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_weather_1_view`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_weather_1_view` (
+          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+          `device_id` bigint(20) DEFAULT NULL,
+          `view_type` smallint(5) DEFAULT NULL,
+          `view_time` varchar(255) DEFAULT NULL,
+          `Rad` int(11) DEFAULT NULL,
+          `Temp` int(11) DEFAULT NULL,
+          `send_date` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `device_id` (`device_id`),
+          KEY `view_time` (`view_time`),
+          KEY `view_type` (`view_type`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+        INSERT INTO ${schema}.`s3m_data_weather_1_view` (`view_type`, `view_time`, `send_date`) VALUES ('0', '0', ${year});
+
+        --
+        -- Table structure for table `s3m_instant_data`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_instant_data`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_instant_data` (
+          `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID bản tin',
+          `device_id` bigint(20) unsigned NOT NULL COMMENT 'ID thiết bị',
+          `device_type` smallint(16) unsigned DEFAULT NULL,
+          `uab` float DEFAULT NULL COMMENT 'Điện áp dây A-B',
+          `ubc` float DEFAULT NULL COMMENT 'Điện áp dây B-C',
+          `uca` float DEFAULT NULL COMMENT 'Điện áp dây C-A',
+          `ull` float DEFAULT NULL COMMENT 'Điện áp dây trung bình',
+          `uan` float DEFAULT NULL COMMENT 'Điện áp pha A',
+          `ubn` float DEFAULT NULL COMMENT 'Điện áp pha B',
+          `ucn` float DEFAULT NULL COMMENT 'Điện áp pha C',
+          `uln` float DEFAULT NULL COMMENT 'Điện áp pha trung bình',
+          `ia` float DEFAULT NULL COMMENT 'Dòng điện pha A',
+          `ib` float DEFAULT NULL COMMENT 'Dòng điện pha B',
+          `ic` float DEFAULT NULL COMMENT 'Dòng điện pha C',
+          `in` float DEFAULT NULL COMMENT 'Dòng trung tính',
+          `ig` float DEFAULT NULL COMMENT 'Dòng rò',
+          `iavg` float DEFAULT NULL COMMENT 'Dòng điện pha trung binh',
+          `pa` float DEFAULT NULL COMMENT 'Công suât hiệu dụng A',
+          `pb` float DEFAULT NULL COMMENT 'Công suât hiệu dụng B',
+          `pc` float DEFAULT NULL COMMENT 'Công suât hiệu dụng C',
+          `p_total` float DEFAULT NULL COMMENT 'Tổng công suất hiệu dụng',
+          `qa` float DEFAULT NULL COMMENT 'Công suât phản kháng A',
+          `qb` float DEFAULT NULL COMMENT 'Công suât phản kháng B',
+          `qc` float DEFAULT NULL COMMENT 'Công suât phản kháng C',
+          `q_total` float DEFAULT NULL COMMENT 'Tổng công suất phản kháng',
+          `sa` float DEFAULT NULL COMMENT 'Công suât biểu kiến A',
+          `sb` float DEFAULT NULL COMMENT 'Công suât biểu kiến B',
+          `sc` float DEFAULT NULL COMMENT 'Công suât biểu kiến C',
+          `s_total` float DEFAULT NULL COMMENT 'Tổng công suất biểu kiến',
+          `pfa` float DEFAULT NULL COMMENT 'Hệ số công suất A',
+          `pfb` float DEFAULT NULL COMMENT 'Hệ số công suất B',
+          `pfc` float DEFAULT NULL COMMENT 'Hệ số công suất C',
+          `pfavg` float DEFAULT NULL COMMENT 'Hệ số công suất trung bình',
+          `f` float DEFAULT NULL COMMENT 'Tần số',
+          `ep` int(64) DEFAULT NULL COMMENT 'Active Energy Delivered (Into Load)',
+          `ep_r` int(64) DEFAULT NULL COMMENT 'Active Energy Received (Out of Load)',
+          `ep_dr` int(64) DEFAULT NULL COMMENT 'Active Energy Delivered + Received',
+          `ep_drr` int(64) DEFAULT NULL COMMENT 'Active Energy Delivered- Received',
+          `eq` int(64) DEFAULT NULL COMMENT 'Reactive Energy Delivered',
+          `eq_r` int(64) DEFAULT NULL COMMENT 'Reactive Energy Received',
+          `eq_dr` int(64) DEFAULT NULL COMMENT 'Reactive Energy Delivered + Received',
+          `eq_drr` int(64) DEFAULT NULL COMMENT 'Reactive Energy Delivered - Received',
+          `es` int(64) DEFAULT NULL COMMENT 'Apparent Energy Delivered',
+          `es_r` int(64) DEFAULT NULL COMMENT 'Apparent Energy Received',
+          `es_dr` int(64) DEFAULT NULL COMMENT 'Apparent Energy Delivered + Received',
+          `es_drr` int(64) DEFAULT NULL COMMENT 'Apparent Energy Delivered - Received',
+          `t1` smallint(5) unsigned DEFAULT NULL COMMENT 'Nhiệt độ điểm pha A',
+          `t2` smallint(5) unsigned DEFAULT NULL COMMENT 'Nhiệt độ điểm pha B',
+          `t3` smallint(5) unsigned DEFAULT NULL COMMENT 'Nhiệt độ điểm pha C',
+          `command_data1` mediumint(9) DEFAULT NULL COMMENT 'Command data 1',
+          `command_data2` mediumint(9) DEFAULT NULL COMMENT 'Command data 2',
+          `command_data3` mediumint(9) DEFAULT NULL COMMENT 'Command data 3',
+          `command_data4` mediumint(9) DEFAULT NULL COMMENT 'Command data 4',
+          `command_data5` mediumint(9) DEFAULT NULL COMMENT 'Command data 5',
+          `command_data6` mediumint(9) DEFAULT NULL COMMENT 'Command data 6',
+          `thd_ia` float DEFAULT NULL COMMENT 'Tổng sóng hài IA',
+          `thd_ib` float DEFAULT NULL COMMENT 'Tổng sóng hài IB',
+          `thd_ic` float DEFAULT NULL COMMENT 'Tổng sóng hài IC',
+          `thd_in` float DEFAULT NULL COMMENT 'Tổng sóng hài IN',
+          `thd_ig` float DEFAULT NULL COMMENT 'Tổng sóng hài IG',
+          `thd_vab` float DEFAULT NULL COMMENT 'Tổng sóng hài VA-B',
+          `thd_vbc` float DEFAULT NULL COMMENT 'Tổng sóng hài VB-C',
+          `thd_vca` float DEFAULT NULL COMMENT 'Tổng sóng hài VC-A',
+          `thd_vll` float DEFAULT NULL COMMENT 'Tổng sóng hài VL-L',
+          `thd_van` float DEFAULT NULL COMMENT 'Tổng sóng hài VA-N',
+          `thd_vbn` float DEFAULT NULL COMMENT 'Tổng sóng hài VB-N',
+          `thd_vcn` float DEFAULT NULL COMMENT 'Tổng sóng hài VC-N',
+          `thd_vln` float DEFAULT NULL COMMENT 'Tổng sóng hài VL-N',
+          `device_status` smallint(6) DEFAULT NULL,
+          `IA_H1` float DEFAULT NULL,
+          `IA_H2` float DEFAULT NULL,
+          `IA_H3` float DEFAULT NULL,
+          `IA_H4` float DEFAULT NULL,
+          `IA_H5` float DEFAULT NULL,
+          `IA_H6` float DEFAULT NULL,
+          `IA_H7` float DEFAULT NULL,
+          `IA_H8` float DEFAULT NULL,
+          `IA_H9` float DEFAULT NULL,
+          `IA_H10` float DEFAULT NULL,
+          `IA_H11` float DEFAULT NULL,
+          `IA_H12` float DEFAULT NULL,
+          `IA_H13` float DEFAULT NULL,
+          `IA_H14` float DEFAULT NULL,
+          `IA_H15` float DEFAULT NULL,
+          `IA_H16` float DEFAULT NULL,
+          `IA_H17` float DEFAULT NULL,
+          `IA_H18` float DEFAULT NULL,
+          `IA_H19` float DEFAULT NULL,
+          `IA_H20` float DEFAULT NULL,
+          `IA_H21` float DEFAULT NULL,
+          `IA_H22` float DEFAULT NULL,
+          `IA_H23` float DEFAULT NULL,
+          `IA_H24` float DEFAULT NULL,
+          `IA_H25` float DEFAULT NULL,
+          `IA_H26` float DEFAULT NULL,
+          `IA_H27` float DEFAULT NULL,
+          `IA_H28` float DEFAULT NULL,
+          `IA_H29` float DEFAULT NULL,
+          `IA_H30` float DEFAULT NULL,
+          `IA_H31` float DEFAULT NULL,
+          `IB_H1` float DEFAULT NULL,
+          `IB_H2` float DEFAULT NULL,
+          `IB_H3` float DEFAULT NULL,
+          `IB_H4` float DEFAULT NULL,
+          `IB_H5` float DEFAULT NULL,
+          `IB_H6` float DEFAULT NULL,
+          `IB_H7` float DEFAULT NULL,
+          `IB_H8` float DEFAULT NULL,
+          `IB_H9` float DEFAULT NULL,
+          `IB_H10` float DEFAULT NULL,
+          `IB_H11` float DEFAULT NULL,
+          `IB_H12` float DEFAULT NULL,
+          `IB_H13` float DEFAULT NULL,
+          `IB_H14` float DEFAULT NULL,
+          `IB_H15` float DEFAULT NULL,
+          `IB_H16` float DEFAULT NULL,
+          `IB_H17` float DEFAULT NULL,
+          `IB_H18` float DEFAULT NULL,
+          `IB_H19` float DEFAULT NULL,
+          `IB_H20` float DEFAULT NULL,
+          `IB_H21` float DEFAULT NULL,
+          `IB_H22` float DEFAULT NULL,
+          `IB_H23` float DEFAULT NULL,
+          `IB_H24` float DEFAULT NULL,
+          `IB_H25` float DEFAULT NULL,
+          `IB_H26` float DEFAULT NULL,
+          `IB_H27` float DEFAULT NULL,
+          `IB_H28` float DEFAULT NULL,
+          `IB_H29` float DEFAULT NULL,
+          `IB_H30` float DEFAULT NULL,
+          `IB_H31` float DEFAULT NULL,
+          `IC_H1` float DEFAULT NULL,
+          `IC_H2` float DEFAULT NULL,
+          `IC_H3` float DEFAULT NULL,
+          `IC_H4` float DEFAULT NULL,
+          `IC_H5` float DEFAULT NULL,
+          `IC_H6` float DEFAULT NULL,
+          `IC_H7` float DEFAULT NULL,
+          `IC_H8` float DEFAULT NULL,
+          `IC_H9` float DEFAULT NULL,
+          `IC_H10` float DEFAULT NULL,
+          `IC_H11` float DEFAULT NULL,
+          `IC_H12` float DEFAULT NULL,
+          `IC_H13` float DEFAULT NULL,
+          `IC_H14` float DEFAULT NULL,
+          `IC_H15` float DEFAULT NULL,
+          `IC_H16` float DEFAULT NULL,
+          `IC_H17` float DEFAULT NULL,
+          `IC_H18` float DEFAULT NULL,
+          `IC_H19` float DEFAULT NULL,
+          `IC_H20` float DEFAULT NULL,
+          `IC_H21` float DEFAULT NULL,
+          `IC_H22` float DEFAULT NULL,
+          `IC_H23` float DEFAULT NULL,
+          `IC_H24` float DEFAULT NULL,
+          `IC_H25` float DEFAULT NULL,
+          `IC_H26` float DEFAULT NULL,
+          `IC_H27` float DEFAULT NULL,
+          `IC_H28` float DEFAULT NULL,
+          `IC_H29` float DEFAULT NULL,
+          `IC_H30` float DEFAULT NULL,
+          `IC_H31` float DEFAULT NULL,
+          `VAB_H1` float DEFAULT NULL,
+          `VAB_H2` float DEFAULT NULL,
+          `VAB_H3` float DEFAULT NULL,
+          `VAB_H4` float DEFAULT NULL,
+          `VAB_H5` float DEFAULT NULL,
+          `VAB_H6` float DEFAULT NULL,
+          `VAB_H7` float DEFAULT NULL,
+          `VAB_H8` float DEFAULT NULL,
+          `VAB_H9` float DEFAULT NULL,
+          `VAB_H10` float DEFAULT NULL,
+          `VAB_H11` float DEFAULT NULL,
+          `VAB_H12` float DEFAULT NULL,
+          `VAB_H13` float DEFAULT NULL,
+          `VAB_H14` float DEFAULT NULL,
+          `VAB_H15` float DEFAULT NULL,
+          `VAB_H16` float DEFAULT NULL,
+          `VAB_H17` float DEFAULT NULL,
+          `VAB_H18` float DEFAULT NULL,
+          `VAB_H19` float DEFAULT NULL,
+          `VAB_H20` float DEFAULT NULL,
+          `VAB_H21` float DEFAULT NULL,
+          `VAB_H22` float DEFAULT NULL,
+          `VAB_H23` float DEFAULT NULL,
+          `VAB_H24` float DEFAULT NULL,
+          `VAB_H25` float DEFAULT NULL,
+          `VAB_H26` float DEFAULT NULL,
+          `VAB_H27` float DEFAULT NULL,
+          `VAB_H28` float DEFAULT NULL,
+          `VAB_H29` float DEFAULT NULL,
+          `VAB_H30` float DEFAULT NULL,
+          `VAB_H31` float DEFAULT NULL,
+          `VBC_H1` float DEFAULT NULL,
+          `VBC_H2` float DEFAULT NULL,
+          `VBC_H3` float DEFAULT NULL,
+          `VBC_H4` float DEFAULT NULL,
+          `VBC_H5` float DEFAULT NULL,
+          `VBC_H6` float DEFAULT NULL,
+          `VBC_H7` float DEFAULT NULL,
+          `VBC_H8` float DEFAULT NULL,
+          `VBC_H9` float DEFAULT NULL,
+          `VBC_H10` float DEFAULT NULL,
+          `VBC_H11` float DEFAULT NULL,
+          `VBC_H12` float DEFAULT NULL,
+          `VBC_H13` float DEFAULT NULL,
+          `VBC_H14` float DEFAULT NULL,
+          `VBC_H15` float DEFAULT NULL,
+          `VBC_H16` float DEFAULT NULL,
+          `VBC_H17` float DEFAULT NULL,
+          `VBC_H18` float DEFAULT NULL,
+          `VBC_H19` float DEFAULT NULL,
+          `VBC_H20` float DEFAULT NULL,
+          `VBC_H21` float DEFAULT NULL,
+          `VBC_H22` float DEFAULT NULL,
+          `VBC_H23` float DEFAULT NULL,
+          `VBC_H24` float DEFAULT NULL,
+          `VBC_H25` float DEFAULT NULL,
+          `VBC_H26` float DEFAULT NULL,
+          `VBC_H27` float DEFAULT NULL,
+          `VBC_H28` float DEFAULT NULL,
+          `VBC_H29` float DEFAULT NULL,
+          `VBC_H30` float DEFAULT NULL,
+          `VBC_H31` float DEFAULT NULL,
+          `VCA_H1` float DEFAULT NULL,
+          `VCA_H2` float DEFAULT NULL,
+          `VCA_H3` float DEFAULT NULL,
+          `VCA_H4` float DEFAULT NULL,
+          `VCA_H5` float DEFAULT NULL,
+          `VCA_H6` float DEFAULT NULL,
+          `VCA_H7` float DEFAULT NULL,
+          `VCA_H8` float DEFAULT NULL,
+          `VCA_H9` float DEFAULT NULL,
+          `VCA_H10` float DEFAULT NULL,
+          `VCA_H11` float DEFAULT NULL,
+          `VCA_H12` float DEFAULT NULL,
+          `VCA_H13` float DEFAULT NULL,
+          `VCA_H14` float DEFAULT NULL,
+          `VCA_H15` float DEFAULT NULL,
+          `VCA_H16` float DEFAULT NULL,
+          `VCA_H17` float DEFAULT NULL,
+          `VCA_H18` float DEFAULT NULL,
+          `VCA_H19` float DEFAULT NULL,
+          `VCA_H20` float DEFAULT NULL,
+          `VCA_H21` float DEFAULT NULL,
+          `VCA_H22` float DEFAULT NULL,
+          `VCA_H23` float DEFAULT NULL,
+          `VCA_H24` float DEFAULT NULL,
+          `VCA_H25` float DEFAULT NULL,
+          `VCA_H26` float DEFAULT NULL,
+          `VCA_H27` float DEFAULT NULL,
+          `VCA_H28` float DEFAULT NULL,
+          `VCA_H29` float DEFAULT NULL,
+          `VCA_H30` float DEFAULT NULL,
+          `VCA_H31` float DEFAULT NULL,
+          `VAN_H1` float DEFAULT NULL,
+          `VAN_H2` float DEFAULT NULL,
+          `VAN_H3` float DEFAULT NULL,
+          `VAN_H4` float DEFAULT NULL,
+          `VAN_H5` float DEFAULT NULL,
+          `VAN_H6` float DEFAULT NULL,
+          `VAN_H7` float DEFAULT NULL,
+          `VAN_H8` float DEFAULT NULL,
+          `VAN_H9` float DEFAULT NULL,
+          `VAN_H10` float DEFAULT NULL,
+          `VAN_H11` float DEFAULT NULL,
+          `VAN_H12` float DEFAULT NULL,
+          `VAN_H13` float DEFAULT NULL,
+          `VAN_H14` float DEFAULT NULL,
+          `VAN_H15` float DEFAULT NULL,
+          `VAN_H16` float DEFAULT NULL,
+          `VAN_H17` float DEFAULT NULL,
+          `VAN_H18` float DEFAULT NULL,
+          `VAN_H19` float DEFAULT NULL,
+          `VAN_H20` float DEFAULT NULL,
+          `VAN_H21` float DEFAULT NULL,
+          `VAN_H22` float DEFAULT NULL,
+          `VAN_H23` float DEFAULT NULL,
+          `VAN_H24` float DEFAULT NULL,
+          `VAN_H25` float DEFAULT NULL,
+          `VAN_H26` float DEFAULT NULL,
+          `VAN_H27` float DEFAULT NULL,
+          `VAN_H28` float DEFAULT NULL,
+          `VAN_H29` float DEFAULT NULL,
+          `VAN_H30` float DEFAULT NULL,
+          `VAN_H31` float DEFAULT NULL,
+          `VBN_H1` float DEFAULT NULL,
+          `VBN_H2` float DEFAULT NULL,
+          `VBN_H3` float DEFAULT NULL,
+          `VBN_H4` float DEFAULT NULL,
+          `VBN_H5` float DEFAULT NULL,
+          `VBN_H6` float DEFAULT NULL,
+          `VBN_H7` float DEFAULT NULL,
+          `VBN_H8` float DEFAULT NULL,
+          `VBN_H9` float DEFAULT NULL,
+          `VBN_H10` float DEFAULT NULL,
+          `VBN_H11` float DEFAULT NULL,
+          `VBN_H12` float DEFAULT NULL,
+          `VBN_H13` float DEFAULT NULL,
+          `VBN_H14` float DEFAULT NULL,
+          `VBN_H15` float DEFAULT NULL,
+          `VBN_H16` float DEFAULT NULL,
+          `VBN_H17` float DEFAULT NULL,
+          `VBN_H18` float DEFAULT NULL,
+          `VBN_H19` float DEFAULT NULL,
+          `VBN_H20` float DEFAULT NULL,
+          `VBN_H21` float DEFAULT NULL,
+          `VBN_H22` float DEFAULT NULL,
+          `VBN_H23` float DEFAULT NULL,
+          `VBN_H24` float DEFAULT NULL,
+          `VBN_H25` float DEFAULT NULL,
+          `VBN_H26` float DEFAULT NULL,
+          `VBN_H27` float DEFAULT NULL,
+          `VBN_H28` float DEFAULT NULL,
+          `VBN_H29` float DEFAULT NULL,
+          `VBN_H30` float DEFAULT NULL,
+          `VBN_H31` float DEFAULT NULL,
+          `VCN_H1` float DEFAULT NULL,
+          `VCN_H2` float DEFAULT NULL,
+          `VCN_H3` float DEFAULT NULL,
+          `VCN_H4` float DEFAULT NULL,
+          `VCN_H5` float DEFAULT NULL,
+          `VCN_H6` float DEFAULT NULL,
+          `VCN_H7` float DEFAULT NULL,
+          `VCN_H8` float DEFAULT NULL,
+          `VCN_H9` float DEFAULT NULL,
+          `VCN_H10` float DEFAULT NULL,
+          `VCN_H11` float DEFAULT NULL,
+          `VCN_H12` float DEFAULT NULL,
+          `VCN_H13` float DEFAULT NULL,
+          `VCN_H14` float DEFAULT NULL,
+          `VCN_H15` float DEFAULT NULL,
+          `VCN_H16` float DEFAULT NULL,
+          `VCN_H17` float DEFAULT NULL,
+          `VCN_H18` float DEFAULT NULL,
+          `VCN_H19` float DEFAULT NULL,
+          `VCN_H20` float DEFAULT NULL,
+          `VCN_H21` float DEFAULT NULL,
+          `VCN_H22` float DEFAULT NULL,
+          `VCN_H23` float DEFAULT NULL,
+          `VCN_H24` float DEFAULT NULL,
+          `VCN_H25` float DEFAULT NULL,
+          `VCN_H26` float DEFAULT NULL,
+          `VCN_H27` float DEFAULT NULL,
+          `VCN_H28` float DEFAULT NULL,
+          `VCN_H29` float DEFAULT NULL,
+          `VCN_H30` float DEFAULT NULL,
+          `VCN_H31` float DEFAULT NULL,
+          `I` float DEFAULT NULL,
+          `AphaA` int(11) DEFAULT NULL,
+          `AphaB` int(11) DEFAULT NULL,
+          `AphaC` int(11) DEFAULT NULL,
+          `Vab` float DEFAULT NULL,
+          `Vbc` float DEFAULT NULL,
+          `Vca` float DEFAULT NULL,
+          `PPVphA` int(11) DEFAULT NULL,
+          `PPVphB` int(11) DEFAULT NULL,
+          `PPVphC` int(11) DEFAULT NULL,
+          `Hz` int(11) DEFAULT NULL,
+          `VA` int(11) DEFAULT NULL,
+          `VAr` int(11) DEFAULT NULL,
+          `PF` float DEFAULT NULL,
+          `TmpCab` int(11) DEFAULT NULL,
+          `TmpSnk` int(11) DEFAULT NULL,
+          `TmpTrns` int(11) DEFAULT NULL,
+          `TmpOt` int(11) DEFAULT NULL,
+          `St` int(11) DEFAULT NULL,
+          `StVnd` int(11) DEFAULT NULL,
+          `Evt1` int(11) DEFAULT NULL,
+          `Evt2` int(11) DEFAULT NULL,
+          `EvtVnd1` int(11) DEFAULT NULL,
+          `EvtVnd2` int(11) DEFAULT NULL,
+          `EvtVnd3` int(11) DEFAULT NULL,
+          `EvtVnd4` int(11) DEFAULT NULL,
+          `TmSrc` int(11) DEFAULT NULL,
+          `Tms` int(11) DEFAULT NULL,
+          `PVConn` int(16) unsigned DEFAULT NULL,
+          `ECPConn` int(16) unsigned DEFAULT NULL,
+          `Conn` int(16) unsigned DEFAULT NULL,
+          `Wmax` int(32) DEFAULT NULL,
+          `Vref` float DEFAULT NULL,
+          `VRefofs` float DEFAULT NULL,
+          `VAMax` int(32) DEFAULT NULL,
+          `VAMaxQ1` int(32) DEFAULT NULL,
+          `VAMaxQ2` int(32) DEFAULT NULL,
+          `VAMaxQ3` int(32) DEFAULT NULL,
+          `VAMaxQ4` int(32) DEFAULT NULL,
+          `F_normal` float DEFAULT NULL,
+          `WMaxLimPct` float DEFAULT NULL,
+          `WMaxLimPct_WinTms` int(32) DEFAULT NULL,
+          `WMaxLimPct_RvrtTms` int(32) DEFAULT NULL,
+          `WMaxLimPct_RmpTms` int(32) DEFAULT NULL,
+          `WMaxLim_Ena` int(32) DEFAULT NULL,
+          `OutPFSet` float DEFAULT NULL,
+          `OutPFSet_WinTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_RvrtTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_RmpTms` int(16) unsigned DEFAULT NULL,
+          `OutPFSet_Ena` int(16) unsigned DEFAULT NULL,
+          `VArWMaxPct` float DEFAULT NULL,
+          `VArMaxPct` float DEFAULT NULL,
+          `VArAvalPct` float DEFAULT NULL,
+          `VArPct_WinTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_RvrtTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_RmpTms` int(16) unsigned DEFAULT NULL,
+          `VArPct_Mod` int(16) unsigned DEFAULT NULL,
+          `VArPct_Ena` int(16) unsigned DEFAULT NULL,
+          `DCAMax` int(16) unsigned DEFAULT NULL,
+          `N` int(16) unsigned DEFAULT NULL,
+          `Evt` int(32) unsigned DEFAULT NULL,
+          `DISCONNECTED` int(32) unsigned DEFAULT NULL,
+          `FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_FUSE_FAULT` int(32) unsigned DEFAULT NULL,
+          `COMBINER_CABINET_OPEN` int(32) unsigned DEFAULT NULL,
+          `ARC_DETECTED` int(32) unsigned DEFAULT NULL,
+          `Idc` float DEFAULT NULL,
+          `Udc` float DEFAULT NULL,
+          `Pdc` float DEFAULT NULL,
+          `T` float DEFAULT NULL,
+          `DCW` int(16) DEFAULT NULL,
+          `Watt_hours` int(32) DEFAULT NULL,
+          `InID` int(16) unsigned DEFAULT NULL,
+          `InEvt` int(32) unsigned DEFAULT NULL,
+          `LOW_VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `LOW_POWER` int(32) unsigned DEFAULT NULL,
+          `LOW_EFFICIENCY` int(32) unsigned DEFAULT NULL,
+          `CURRENT` int(32) unsigned DEFAULT NULL,
+          `VOLTAGE` int(32) unsigned DEFAULT NULL,
+          `POWER` int(32) unsigned DEFAULT NULL,
+          `PR` int(32) unsigned DEFAULT NULL,
+          `TEMP` int(32) unsigned DEFAULT NULL,
+          `GROUNDFAULT` int(32) unsigned DEFAULT NULL,
+          `REVERSED_POLARITY` int(32) unsigned DEFAULT NULL,
+          `INCOMPATIBLE` int(32) unsigned DEFAULT NULL,
+          `COMM_ERROR` int(32) unsigned DEFAULT NULL,
+          `INTERNAL_ERROR` int(32) unsigned DEFAULT NULL,
+          `THEFT` int(32) unsigned DEFAULT NULL,
+          `InDCA` int(32) DEFAULT NULL,
+          `InDCAhr` int(16) DEFAULT NULL,
+          `InDCV` int(16) DEFAULT NULL,
+          `InDCW` int(32) DEFAULT NULL,
+          `InDCWh` int(16) DEFAULT NULL,
+          `InDCPR` int(16) DEFAULT NULL,
+          `InN` int(16) DEFAULT NULL,
+          `Temp_panel` int(16) DEFAULT NULL,
+          `V` float DEFAULT NULL,
+          `JA_SOLAR` int(16) DEFAULT NULL,
+          `EA_SOLAR` int(16) DEFAULT NULL,
+          `LONGI_SOLAR` int(16) DEFAULT NULL,
+          `P` float DEFAULT NULL,
+          `Wind_sp` int(11) DEFAULT NULL,
+          `Wind_dir` int(11) DEFAULT NULL,
+          `Rad` int(11) DEFAULT NULL,
+          `H` float DEFAULT NULL,
+          `Rain` int(11) DEFAULT NULL,
+          `Atmos` int(11) DEFAULT NULL,
+          `SAW_ID1` float DEFAULT NULL,
+          `SAW_ID2` float DEFAULT NULL,
+          `SAW_ID3` float DEFAULT NULL,
+          `SAW_ID4` float DEFAULT NULL,
+          `SAW_ID5` float DEFAULT NULL,
+          `SAW_ID6` float DEFAULT NULL,
+          `GROUPA_MEAN_MEANSUREMENT` float DEFAULT NULL,
+          `GROUPA_ALARM_STATUS` int(16) DEFAULT NULL,
+          `GROUPB_MEAN_MEANSUREMENT` float DEFAULT NULL,
+          `GROUPB_ALARM_STATUS` int(16) DEFAULT NULL,
+          `ALARM_STATUS_BIT` int(16) DEFAULT NULL,
+          `LFB_RATIO` float DEFAULT NULL,
+          `LFB_EPPC` float DEFAULT NULL,
+          `MFB_RATIO` float DEFAULT NULL,
+          `MFB_EPPC` float DEFAULT NULL,
+          `HFB_RATIO` float DEFAULT NULL,
+          `HFB_EPPC` float DEFAULT NULL,
+          `MEAN_RATIO` float DEFAULT NULL,
+          `MEAN_EPPC` float DEFAULT NULL,
+          `RATIOxEPPC_Hi` float DEFAULT NULL,
+          `RATIOxEPPC_Lo` float DEFAULT NULL,
+          `INDICATOR` int(16) DEFAULT NULL,
+          `sent_date` timestamp NULL DEFAULT current_timestamp(),
+          `transaction_date` bigint(20) DEFAULT NULL,
+          `EpDC` float DEFAULT NULL,
+          `Vb` float DEFAULT NULL,
+          `Vc` float DEFAULT NULL,
+          `DCAh` float DEFAULT NULL,
+          `VdcCombiner` float DEFAULT NULL,
+          `PdcCombiner` float DEFAULT NULL,
+          `EpCombiner` float DEFAULT NULL,
+          `IdcCombiner` float DEFAULT NULL,
+          `Tstr` float DEFAULT NULL,
+          `U` float DEFAULT NULL,
+          `IdcStr` float DEFAULT NULL,
+          `VdcStr` float DEFAULT NULL,
+          `PdcStr` float DEFAULT NULL,
+          `EpStr` float DEFAULT NULL,
+          `Battery` int DEFAULT NULL,
+          `Online` int DEFAULT NULL,
+          `Status` int DEFAULT NULL,
+          `CRC16` varchar(45) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+          `sng` VARCHAR(255) DEFAULT NULL,
+		  `hwv` VARCHAR(255) DEFAULT NULL,
+		  `fwv` VARCHAR(255) DEFAULT NULL,
+		  `sim` VARCHAR(255) DEFAULT NULL,
+		  `bat` FLOAT DEFAULT NULL,
+		  `ip` VARCHAR(255) DEFAULT NULL,
+		  `n_rtu` INT DEFAULT NULL,
+		  `n_mbtcp` INT DEFAULT NULL,
+		  `n_plc` INT DEFAULT NULL,
+		  `n_ws` INT DEFAULT NULL,
+		  `CRC` VARCHAR(255) DEFAULT NULL,
+		  `unique_key` VARCHAR(1000) DEFAULT NULL,
+		  `uid` VARCHAR(1000) DEFAULT NULL,
+		  `ip_sid` VARCHAR(1000) DEFAULT NULL,
+		  `statusCon` VARCHAR(1000) DEFAULT NULL,
+		  `sid` VARCHAR(1000) DEFAULT NULL,
+		  `fs` FLOAT DEFAULT NULL,
+		  `fm` FLOAT DEFAULT NULL,
+		  `fh` FLOAT DEFAULT NULL,
+		  `ratio` FLOAT DEFAULT NULL,
+		  `eppc` FLOAT DEFAULT NULL,
+		  `pd_level` FLOAT DEFAULT NULL,
+		  `notifier` FLOAT DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        /*!40101 SET character_set_client = @saved_cs_client */;
+
+         DROP TABLE IF EXISTS ${schema}.`s3m_data_pqs`;
+		/*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_data_pqs` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `device_id` BIGINT NULL,
+        `project_id` BIGINT NULL,
+        `system_type_id` SMALLINT NULL,
+        `device_type` VARCHAR(45) NULL,
+        `view_type` SMALLINT NULL,
+        `view_time` VARCHAR(255) NULL,
+        `p_total` FLOAT NULL,
+        `ep` FLOAT NULL,
+        `low_cost_in` FLOAT NULL,
+        `normal_cost_in` FLOAT NULL,
+        `high_cost_in` FLOAT NULL,
+        `low_cost_out` FLOAT NULL,
+        `normal_cost_out` FLOAT NULL,
+        `high_cost_out` FLOAT NULL,
+        `sent_date` VARCHAR(255) NULL,
+        PRIMARY KEY (`id`));
+
+        ALTER TABLE ${schema}.`s3m_data_pqs`
+        ADD COLUMN `ep_cache` BIGINT NULL AFTER `ep`,
+        ADD COLUMN `ep_at_a_time` FLOAT NULL AFTER `ep_cache`,
+        ADD COLUMN `low_ep` FLOAT NULL AFTER `ep_at_a_time`,
+        ADD COLUMN `normal_ep` FLOAT NULL AFTER `low_ep`,
+        ADD COLUMN `high_ep` FLOAT NULL AFTER `normal_ep`;
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_manufacture`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_manufacture` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `system_type_id` BIGINT NULL,
+        `project_id` BIGINT NULL,
+        `device_ids` VARCHAR(255) NULL,
+        `area` VARCHAR(255) NULL,
+        `load_type_id` BIGINT NULL,
+        `view_type` INT NULL,
+        `view_time` VARCHAR(255) NULL,
+        `unit_id` BIGINT NULL,
+        `shift_1` FLOAT NULL,
+        `shift_2` FLOAT NULL,
+        `shift_3` FLOAT NULL,
+        `total_unit` FLOAT NULL,
+        `update_date` VARCHAR(255) NULL,
+        PRIMARY KEY (`id`));
+
+        ALTER TABLE ${schema}.`s3m_manufacture`
+        ADD COLUMN `ravenue` FLOAT NULL DEFAULT NULL AFTER `total_unit`,
+        ADD COLUMN `object_type_id` BIGINT NULL DEFAULT NULL AFTER `load_type_id`,
+        ADD COLUMN `production_id` BIGINT NULL AFTER `ravenue`,
+        ADD COLUMN `production_step_id` BIGINT NULL AFTER `production_id`;
+
+        --
+        -- Table structure for table `s3m_plan`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_plan`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_plan` (
+        `id` INT NOT NULL AUTO_INCREMENT,
+        `system_type_id` INT NULL,
+        `project_id` INT NULL,
+        `customer_id` BIGINT NULL,
+        `organization_create` VARCHAR(1000) NULL,
+        `content` VARCHAR(1000) NULL,
+        `organization_execution` VARCHAR(1000) NULL,
+        `completion_time` VARCHAR(45) NULL,
+        `result_execution` VARCHAR(1000) NULL,
+        `organization_test` VARCHAR(1000) NULL,
+        `status` INT NULL,
+        `create_date` VARCHAR(45) NULL,
+        `update_date` VARCHAR(45) NULL,
+        PRIMARY KEY (`id`));
+
+        ALTER TABLE ${schema}.`s3m_plan`
+        ADD COLUMN `from_date` VARCHAR(45) NULL AFTER `update_date`,
+        ADD COLUMN `to_date` VARCHAR(45) NULL AFTER `from_date`;
+
+        --
+        -- Table structure for table `s3m_production_tracking`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_production_tracking`;
+		/*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_production_tracking` (
+          `id` INT NOT NULL AUTO_INCREMENT,
+          `customer_id` BIGINT NULL,
+          `system_type_id` BIGINT NULL,
+          `project_id` BIGINT NULL,
+          `production_id` BIGINT NULL,
+          `production_step_id` BIGINT NULL,
+          `device_ids` VARCHAR(255) NULL,
+          `shift_1` FLOAT NULL,
+          `shift_2` FLOAT NULL,
+          `shift_3` FLOAT NULL,
+          `total_unit` FLOAT NULL,
+          `ravenue` FLOAT NULL,
+          `create_date` VARCHAR(45) NULL,
+          `update_date` VARCHAR(45) NULL,
+          PRIMARY KEY (`id`));
+
+          --
+          -- Table structure for table `s3m_production`
+          --
+
+          DROP TABLE IF EXISTS ${schema}.`s3m_production`;
+		/*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_production` (
+          `production_id` INT NOT NULL AUTO_INCREMENT,
+          `production_name` VARCHAR(255) NULL,
+          `project_id` BIGINT NULL,
+          PRIMARY KEY (`production_id`));
+
+          --
+          -- Table structure for table `s3m_production_step`
+          --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_production_step`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_production_step` (
+          `production_step_id` INT NOT NULL AUTO_INCREMENT,
+          `production_id` BIGINT NULL,
+          `production_step_name` VARCHAR(1000) NULL,
+          PRIMARY KEY (`production_step_id`));
+          
+          DROP TABLE IF EXISTS ${schema}.s3m_data_temp_humidity_1_${year};
+          /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        	/*!50503 SET character_set_client = utf8mb4 */;
+          CREATE TABLE ${schema}.s3m_data_temp_humidity_1_${year} (
+          `id` INT NOT NULL AUTO_INCREMENT,
+          `device_id` BIGINT NULL,
+          `t` FLOAT NULL,
+          `h` FLOAT NULL,
+          `online` FLOAT NULL,
+          `battery` FLOAT NULL,
+          `current` FLOAT NULL,
+          `crc` VARCHAR(1000) NULL,
+          `sent_date` timestamp NOT NULL DEFAULT current_timestamp(),
+          `transaction_date` VARCHAR(45) NULL,
+          PRIMARY KEY (`id`));
+          
+          DROP TABLE IF EXISTS ${schema}.s3m_data_status_1_${year};
+          /*!40101 SET @saved_cs_client     = @@character_set_client */;
+          /*!50503 SET character_set_client = utf8mb4 */;
+          CREATE TABLE ${schema}.s3m_data_status_1_${year} (
+          `id` INT NOT NULL AUTO_INCREMENT,
+          `device_id` BIGINT NULL,
+          `status` INT NULL,
+          `crc` VARCHAR(1000) NULL,
+          `sent_date`  timestamp NOT NULL DEFAULT current_timestamp(),
+          `transaction_date` VARCHAR(255) NULL,
+          PRIMARY KEY (`id`));
+
+		--
+        -- Table structure for table `s3m_data_pressure`
+        --
+		  DROP TABLE IF EXISTS ${schema}.s3m_data_pressure_1_${year};
+          /*!40101 SET @saved_cs_client     = @@character_set_client */;
+          /*!50503 SET character_set_client = utf8mb4 */;
+          
+		  CREATE TABLE  ${schema}.s3m_data_pressure_1_${year} (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `device_id` bigint(20) DEFAULT NULL,
+		  `p` int(11) DEFAULT NULL,
+		  `crc` varchar(1000) DEFAULT NULL,
+		  `sent_date` timestamp NOT NULL DEFAULT current_timestamp(),
+		  `transaction_date` varchar(255) DEFAULT NULL,
+		  PRIMARY KEY (`id`));
+		  
+		--
+        -- Table structure for table `s3m_data_flow`
+        --
+		  DROP TABLE IF EXISTS ${schema}.s3m_data_flow_1_${year};
+          /*!40101 SET @saved_cs_client     = @@character_set_client */;
+          /*!50503 SET character_set_client = utf8mb4 */;
+
+		CREATE TABLE  ${schema}.`s3m_data_flow_1_${year} (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `device_id` bigint(20) DEFAULT NULL,
+		  `fs` float DEFAULT NULL,
+		  `fm` float DEFAULT NULL,
+		  `fh` float DEFAULT NULL,
+		  `v` float DEFAULT NULL,
+		  `t` float DEFAULT NULL,
+		  `crc` varchar(1000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+		  `sent_date` timestamp NOT NULL DEFAULT current_timestamp(),
+		  `transaction_date` varchar(45) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+		  PRIMARY KEY (`id`));
+
+        --
+        -- Table structure for table `s3m_warning_car`
+        --
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+         CREATE TABLE ${schema}.`s3m_warning_car` (
+          `id` INT NOT NULL AUTO_INCREMENT,
+          `system_type_id` INT NULL,
+          `project_id` INT NULL,
+          `device_id` INT NULL,
+          `status` INT NULL,
+          `create_id` INT NULL,
+          `organization_create` VARCHAR(1000) NULL,
+          `content` VARCHAR(1000) NULL,
+          `reason_method` VARCHAR(1000) NULL,
+          `organization_execution` VARCHAR(1000) NULL,
+          `completion_time` VARCHAR(45) NULL,
+          `result_execution` VARCHAR(1000) NULL,
+          `organization_test` VARCHAR(1000) NULL,
+          `create_date` VARCHAR(45) NULL,
+          `update_date` VARCHAR(45) NULL,
+           PRIMARY KEY (`id`));
+
+           DROP TABLE IF EXISTS ${schema}.`s3m_object`;
+           /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        	/*!50503 SET character_set_client = utf8mb4 */;
+            CREATE TABLE ${schema}.`s3m_object` (
+          `id` int(20) NOT NULL AUTO_INCREMENT,
+          `object_name` varchar(45) DEFAULT NULL,
+          `object_type_id` varchar(45) DEFAULT NULL,
+          `description` varchar(225) DEFAULT NULL,
+          `create_id` smallint(6) DEFAULT NULL,
+          `create_date` timestamp NOT NULL DEFAULT current_timestamp(),
+          `update_id` smallint(6) DEFAULT NULL,
+          `update_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+          PRIMARY KEY (`id`)
+          );
+
+           DROP TABLE IF EXISTS ${schema}.`s3m_object_type`;
+           /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        	/*!50503 SET character_set_client = utf8mb4 */;
+           CREATE TABLE ${schema}.`s3m_object_type` (
+          `object_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `object_type_name` varchar(45) DEFAULT NULL,
+          `type_class` int(20) DEFAULT NULL,
+          `system_type_id` int(20) DEFAULT NULL,
+          `img` longtext DEFAULT NULL,
+          `type_default` int(20) DEFAULT NULL,
+          `delete_flag` int(20) DEFAULT NULL,
+          `description` varchar(225) DEFAULT NULL,
+          `create_id` smallint(6) DEFAULT NULL,
+          `create_date` timestamp NOT NULL DEFAULT current_timestamp(),
+          `update_id` smallint(6) DEFAULT NULL,
+          `update_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+          PRIMARY KEY (`object_type_id`),
+          UNIQUE KEY `object_type_id_UNIQUE` (`object_type_id`)
+          );
+
+          INSERT INTO ${schema}.`s3m_object_type` (`object_type_id`, `object_type_name`, `type_class`, `system_type_id`, `img`, `type_default`, `delete_flag`)
+            VALUES
+            (1,'Máy biến áp',0,NULL,'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyNjguNyAyNzIuNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjY4LjcgMjcyLjc7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MXtmaWxsOiMwQTFBNUM7fQ0KCS5zdDJ7ZmlsbDojOURBM0JFO30NCgkuc3Qze2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNjU5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NntmaWxsOiM5OTk5OTk7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDd7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDh7ZmlsbDpub25lO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDl7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwe2ZpbGw6I0NDQ0NDQzt9DQoJLnN0MTF7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEye2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTN7ZmlsbDpub25lO30NCgkuc3QxNHtmaWxsOiNGRkZGRkY7fQ0KCS5zdDE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6NTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTZ7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDo1O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MTUuNjY2NywxNS42NjY3O30NCgkuc3QxN3tmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTczNztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTh7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDE5e2ZpbGw6I0YzNzAyMTt9DQoJLnN0MjB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjk3Mzc7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIxe2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MjJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ3Njk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIze2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MzczO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI1e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4zNjM2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI3e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4yODIxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMTIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOXtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjcuNTMxODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzB7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDMxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6ODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzJ7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzM3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM0e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC45NjU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM1e2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6My45MzAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzNntvcGFjaXR5OjAuNjtmaWxsOiMwQTFBNUM7fQ0KCS5zdDM3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Mzh7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjYzNDU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM5e29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40Njg2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0MHtvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDF7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ2ODY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMDk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0M3tmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI3MTk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQ1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMTgxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0NntmaWxsOiMwQTE5NUM7fQ0KCS5zdDQ3e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4wMTYzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDh7ZmlsbDojRjI2RjIxO30NCgkuc3Q0OXtkaXNwbGF5Om5vbmU7fQ0KCS5zdDUwe2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzAxMjE2OTt9DQoJLnN0NTF7ZGlzcGxheTppbmxpbmU7fQ0KCS5zdDUye2ZpbGw6I0M4MTAyRTt9DQoJLnN0NTN7ZGlzcGxheTppbmxpbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRTIxOTM2O30NCgkuc3Q1NHtkaXNwbGF5OmlubGluZTtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkQyMDA7fQ0KCS5zdDU1e2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0NTZ7ZGlzcGxheTppbmxpbmU7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjAyMDk0MWUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCQ0KCQkuc3Q1N3tkaXNwbGF5OmlubGluZTtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuMTI2NjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDU4e2ZpbGw6bm9uZTtzdHJva2U6I0YzNzAyMTtzdHJva2Utd2lkdGg6NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NTl7ZmlsbDpub25lO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2MHtmaWxsOm5vbmU7c3Ryb2tlOiNDQ0NDQ0M7c3Ryb2tlLXdpZHRoOjAuOTY4OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjk1NTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYye2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjN7ZmlsbDojOTk5OTk5O3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjU4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY0e2ZpbGw6I0NDQ0NDQztzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fQ0KCS5zdDY2e2ZpbGw6I0ZGRkZGRjtzdHJva2U6I0ZGRkZGRjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Njd7ZmlsbDojRkZGRkZGO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjMyNjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY4e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0Njl7ZmlsbDojRkZGRkZFO30NCgkuc3Q3MHtmaWxsOiNBQUFBQUE7fQ0KCS5zdDcxe2ZpbGw6I0UyRTJFMjt9DQoJLnN0NzJ7ZmlsbDojNTY1NjU2O30NCgkuc3Q3M3tvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7fQ0KCS5zdDc0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MS43NzMxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NzZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4OTQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDc3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zNzg3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3OHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjQ5NztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Nzl7ZmlsbDojOTk5OTk5O3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo5LjQ2Nzk4MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgwe2ZpbGw6IzAwRkYwMDt9DQoJLnN0ODF7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjg4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MDU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4M3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuMDM4MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI0NzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yNzg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4NntmaWxsOiNDQ0NDQ0M7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNzczMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODd7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg4e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTcxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4OXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDkxe2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MjE3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5MntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNDU2NjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTN7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozLjA2NDY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk0e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjQ0MTQ7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk1e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6My4yNTUyO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5NntmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjIuNDQxNDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTd7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjgxMzg7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC4zOTI2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5OXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNTkyNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAwe2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40MDUyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDF7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjgxMDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwMntmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU3MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAze29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xODk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDR7b3BhY2l0eTowLjg7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIxOTI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwNXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA2e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC41MDYyNTZlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDd7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo4LjUxNzE1NGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA5e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC44Mzg2NjllLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTB7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4MzY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExMXtmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjAuMTI0NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTEye2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MC4xMjQ0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTN7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjEyNDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg2MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4xMTY4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTZ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4NjE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExN3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuODYxMztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS44NjEzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6NS40NTE4LDUuNDUxODt9DQoJLnN0MTE5e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjB7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIwMTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyMXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjc7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjJ7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDoxLjAyMDg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyM3tmaWxsOiNGRkZGRkY7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTE1NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI1e2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6Ny44MTc4NzBlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDo3LjgxNzg3MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyN3tmaWxsOiNBQUFBQUE7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjcuODE3ODcwZS0wMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI4e2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC42OTQ4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjl7ZmlsbDojOTk5OTk5O30NCgkuc3QxMzB7ZmlsbDojRkZGRkZGO3N0cm9rZTojQjNCM0IzO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzF7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjc3MzI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzJ7ZmlsbDojMEExQTVDO3N0cm9rZTojMEExQTVDO3N0cm9rZS13aWR0aDowLjg0MjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzM3tmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjAuODQyMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTM0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MC44NDIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCjwvc3R5bGU+DQo8Zz4NCgk8Zz4NCgkJPGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iMjA4IiBjeT0iODQuNyIgcj0iNiIvPg0KCQk8Y2lyY2xlIGNsYXNzPSJzdDE0IiBjeD0iMjA4IiBjeT0iODUuNyIgcj0iMyIvPg0KCTwvZz4NCgk8Zz4NCgkJPGNpcmNsZSBjbGFzcz0ic3QxIiBjeD0iODMiIGN5PSI4NC43IiByPSI2Ii8+DQoJCTxjaXJjbGUgY2xhc3M9InN0MTQiIGN4PSI4MyIgY3k9Ijg1LjciIHI9IjMiLz4NCgk8L2c+DQoJPHJlY3QgeD0iNTQuNCIgeT0iOTIuNyIgY2xhc3M9InN0MSIgd2lkdGg9IjE2MS44IiBoZWlnaHQ9IjE0Mi44Ii8+DQoJPHBvbHlnb24gY2xhc3M9InN0MiIgcG9pbnRzPSIyMjYuNiwyNDkuOSA0NCwyNDkuOSAzNS4xLDIzNS41IDIzNS42LDIzNS41IAkiLz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0MzUiIGQ9Ik05Ny40LDI2MS43SDc2LjNjLTAuNywwLTEuMy0wLjYtMS4zLTEuM3YtOS4zYzAtMC43LDAuNi0xLjMsMS4zLTEuM2gyMS4xYzAuNywwLDEuMywwLjYsMS4zLDEuM3Y5LjMNCgkJCUM5OC43LDI2MS4xLDk4LjEsMjYxLjcsOTcuNCwyNjEuN3oiLz4NCgkJPHBhdGggY2xhc3M9InN0MzUiIGQ9Ik0xOTMuOSwyNjEuN2gtMjAuMWMtMSwwLTEuOC0wLjgtMS44LTEuOHYtOC4zYzAtMSwwLjgtMS44LDEuOC0xLjhoMjAuMWMxLDAsMS44LDAuOCwxLjgsMS44djguMw0KCQkJQzE5NS42LDI2MC45LDE5NC44LDI2MS43LDE5My45LDI2MS43eiIvPg0KCTwvZz4NCgk8cmVjdCB4PSIxMy41IiB5PSI5Ny43IiBjbGFzcz0ic3QzNiIgd2lkdGg9IjQwLjYiIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTYuOCIgeT0iMTA4LjQiIGNsYXNzPSJzdDM2IiB3aWR0aD0iMzQuMSIgaGVpZ2h0PSIxMTEuNSIvPg0KCTxyZWN0IHg9IjIxNi41IiB5PSI5Ny43IiBjbGFzcz0ic3QzNiIgd2lkdGg9IjQwLjYiIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMjE5LjgiIHk9IjEwOC40IiBjbGFzcz0ic3QzNiIgd2lkdGg9IjM0LjEiIGhlaWdodD0iMTExLjUiLz4NCgk8cmVjdCB4PSI0NC4zIiB5PSI4NC43IiBjbGFzcz0ic3QyIiB3aWR0aD0iMTgyIiBoZWlnaHQ9IjgiLz4NCgk8cmVjdCB4PSI1OCIgeT0iOTcuNiIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjE4OS4yIiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTk3LjQiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSIyMDUuNiIgeT0iOTcuNyIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjY2LjIiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSI3NC40IiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iODIuNiIgeT0iOTcuNyIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjkwLjgiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSI5OSIgeT0iOTcuNyIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjEwNy4yIiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTE1LjQiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSIxMjMuNiIgeT0iOTcuNyIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjEzMS44IiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTQwIiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTQ4LjIiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSIxNTYuNCIgeT0iOTcuNyIgY2xhc3M9InN0MjYiIHdpZHRoPSI3IiBoZWlnaHQ9IjEzMyIvPg0KCTxyZWN0IHg9IjE2NC42IiB5PSI5Ny43IiBjbGFzcz0ic3QyNiIgd2lkdGg9IjciIGhlaWdodD0iMTMzIi8+DQoJPHJlY3QgeD0iMTcyLjgiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8cmVjdCB4PSIxODEiIHk9Ijk3LjciIGNsYXNzPSJzdDI2IiB3aWR0aD0iNyIgaGVpZ2h0PSIxMzMiLz4NCgk8bGluZSBjbGFzcz0ic3QzNyIgeDE9IjEzIiB5MT0iMTI5LjciIHgyPSIyNTciIHkyPSIxMjkuNyIvPg0KCTxsaW5lIGNsYXNzPSJzdDM3IiB4MT0iMTMuNSIgeTE9IjIwMC4yIiB4Mj0iMjU3IiB5Mj0iMjAwLjIiLz4NCgk8cmVjdCB4PSI2Mi41IiB5PSIyNy41IiBjbGFzcz0ic3QzOCIgd2lkdGg9IjE0LjYiIGhlaWdodD0iNTcuMSIvPg0KCTxnPg0KCQk8cmVjdCB4PSI2My4xIiB5PSIxNy44IiBjbGFzcz0ic3QzOSIgd2lkdGg9IjQiIGhlaWdodD0iMy42Ii8+DQoJCTxyZWN0IHg9IjY3LjEiIHk9IjE3LjgiIGNsYXNzPSJzdDQwIiB3aWR0aD0iNS4zIiBoZWlnaHQ9IjMuNiIvPg0KCQk8cmVjdCB4PSI3Mi40IiB5PSIxNy44IiBjbGFzcz0ic3QzOSIgd2lkdGg9IjQiIGhlaWdodD0iMy42Ii8+DQoJPC9nPg0KCTxwYXRoIGNsYXNzPSJzdDQxIiBkPSJNNzguOCwyOC4ySDYwLjdjLTIuMywwLTQuMi0xLjktNC4yLTQuMnYtMy4xSDgzVjI0QzgzLDI2LjMsODEuMSwyOC4yLDc4LjgsMjguMnoiLz4NCgk8cGF0aCBjbGFzcz0ic3Q0MSIgZD0iTTc3LjEsMTcuOEg2Mi40Yy0xLjEsMC0xLjktMC45LTEuOS0xLjlWNy42YzAtMS4xLDAuOS0xLjksMS45LTEuOWgxNC43YzEuMSwwLDEuOSwwLjksMS45LDEuOXY4LjMNCgkJQzc5LDE3LDc4LjIsMTcuOCw3Ny4xLDE3Ljh6Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTEyNSwyOS43di0zaC0xLjVjLTEuNywwLTMtMS44LTMtNHYwaC0xMi45djBjMCwyLjItMS40LDQtMyw0SDEwM3YzaDQuNnYzLjVjMCwyLjItMS40LDQtMyw0SDEwM3YzaDQuNnYzLjUNCgkJYzAsMi4yLTEuNCw0LTMsNEgxMDN2M2g0LjZ2My41YzAsMi4yLTEuNCw0LTMsNEgxMDN2M2g0LjZ2My41YzAsMi4yLTEuNCw0LTMsNEgxMDN2M2g0LjZ2MTNoMTIuOXYtMTNoNC42di0zaC0xLjUNCgkJYy0xLjcsMC0zLTEuOC0zLTR2LTMuNWg0LjZ2LTNoLTEuNWMtMS43LDAtMy0xLjgtMy00di0zLjVoNC42di0zaC0xLjVjLTEuNywwLTMtMS44LTMtNHYtMy41aDQuNnYtM2gtMS41Yy0xLjcsMC0zLTEuOC0zLTR2LTMuNQ0KCQlIMTI1eiIvPg0KCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xNTQuNSwyOS43di0zSDE1M2MtMS43LDAtMy0xLjgtMy00djBoLTEyLjl2MGMwLDIuMi0xLjQsNC0zLDRoLTEuNXYzaDQuNnYzLjVjMCwyLjItMS40LDQtMyw0aC0xLjV2M2g0LjYNCgkJdjMuNWMwLDIuMi0xLjQsNC0zLDRoLTEuNXYzaDQuNnYzLjVjMCwyLjItMS40LDQtMyw0aC0xLjV2M2g0LjZ2My41YzAsMi4yLTEuNCw0LTMsNGgtMS41djNoNC42djEzaDEyLjl2LTEzaDQuNnYtM0gxNTMNCgkJYy0xLjcsMC0zLTEuOC0zLTR2LTMuNWg0LjZ2LTNIMTUzYy0xLjcsMC0zLTEuOC0zLTR2LTMuNWg0LjZ2LTNIMTUzYy0xLjcsMC0zLTEuOC0zLTR2LTMuNWg0LjZ2LTNIMTUzYy0xLjcsMC0zLTEuOC0zLTR2LTMuNQ0KCQlIMTU0LjV6Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTE4NCwyOS43di0zaC0xLjVjLTEuNywwLTMtMS44LTMtNHYwaC0xMi45djBjMCwyLjItMS40LDQtMyw0SDE2MnYzaDQuNnYzLjVjMCwyLjItMS40LDQtMyw0SDE2MnYzaDQuNnYzLjUNCgkJYzAsMi4yLTEuNCw0LTMsNEgxNjJ2M2g0LjZ2My41YzAsMi4yLTEuNCw0LTMsNEgxNjJ2M2g0LjZ2My41YzAsMi4yLTEuNCw0LTMsNEgxNjJ2M2g0LjZ2MTNoMTIuOXYtMTNoNC42di0zaC0xLjUNCgkJYy0xLjcsMC0zLTEuOC0zLTR2LTMuNWg0LjZ2LTNoLTEuNWMtMS43LDAtMy0xLjgtMy00di0zLjVoNC42di0zaC0xLjVjLTEuNywwLTMtMS44LTMtNHYtMy41aDQuNnYtM2gtMS41Yy0xLjcsMC0zLTEuOC0zLTR2LTMuNQ0KCQlIMTg0eiIvPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q0MiIgcG9pbnRzPSIxMDQuMiw2MC4yIDkyLjEsNjAuMiA4OS45LDU2LjEgMTA2LjgsNTYuMSAJCSIvPg0KCQk8cmVjdCB4PSI4OS45IiB5PSI0MC43IiBjbGFzcz0ic3Q0MyIgd2lkdGg9IjE2LjkiIGhlaWdodD0iMTUuOSIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0NCIgZD0iTTEwOS45LDgxLjRIODcuM2MtMC43LDAtMS4zLTAuNi0xLjMtMS4zbDAsMGMwLTIuMiwxLjgtNC4xLDQuMS00LjFoMTcuMWMyLjIsMCw0LjEsMS44LDQuMSw0LjFsMCwwDQoJCQlDMTExLjIsODAuOCwxMTAuNiw4MS40LDEwOS45LDgxLjR6Ii8+DQoJCTxyZWN0IHg9Ijg5IiB5PSI4MS40IiBjbGFzcz0ic3Q0MyIgd2lkdGg9IjE4LjIiIGhlaWdodD0iMy4zIi8+DQoJCTxyZWN0IHg9IjkyLjkiIHk9IjYwLjIiIGNsYXNzPSJzdDQ1IiB3aWR0aD0iMTAuNCIgaGVpZ2h0PSIxMS40Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDQ0IiBkPSJNMTA5LjksNzYuNUg4Ny4zYy0wLjcsMC0xLjMtMC42LTEuMy0xLjN2MGMwLTIuMiwxLjgtNC4xLDQuMS00LjFoMTcuMWMyLjIsMCw0LjEsMS44LDQuMSw0LjF2MA0KCQkJQzExMS4yLDc1LjksMTEwLjYsNzYuNSwxMDkuOSw3Ni41eiIvPg0KCQk8Zz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iOTMuMiIgY3k9IjQzLjkiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iMTAzLjYiIGN5PSI0My45IiByeD0iMS43IiByeT0iMS42Ii8+DQoJCTwvZz4NCgkJPGc+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjkyLjkiIGN5PSI1MS4zIiByeD0iMS43IiByeT0iMS42Ii8+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjEwMy40IiBjeT0iNTEuMyIgcng9IjEuNyIgcnk9IjEuNiIvPg0KCQk8L2c+DQoJPC9nPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q0MiIgcG9pbnRzPSIxMzUuMiw2MC4yIDEyMyw2MC4yIDEyMC45LDU2LjEgMTM3LjgsNTYuMSAJCSIvPg0KCQk8cmVjdCB4PSIxMjAuOSIgeT0iNDAuNyIgY2xhc3M9InN0NDMiIHdpZHRoPSIxNi45IiBoZWlnaHQ9IjE1LjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NDQiIGQ9Ik0xNDAuOCw4MS40aC0yMi42Yy0wLjcsMC0xLjMtMC42LTEuMy0xLjNsMCwwYzAtMi4yLDEuOC00LjEsNC4xLTQuMWgxNy4xYzIuMiwwLDQuMSwxLjgsNC4xLDQuMWwwLDANCgkJCUMxNDIuMSw4MC44LDE0MS41LDgxLjQsMTQwLjgsODEuNHoiLz4NCgkJPHJlY3QgeD0iMTIwIiB5PSI4MS40IiBjbGFzcz0ic3Q0MyIgd2lkdGg9IjE4LjIiIGhlaWdodD0iMy4zIi8+DQoJCTxyZWN0IHg9IjEyMy45IiB5PSI2MC4yIiBjbGFzcz0ic3Q0NSIgd2lkdGg9IjEwLjQiIGhlaWdodD0iMTEuNCIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0NCIgZD0iTTE0MC44LDc2LjVoLTIyLjZjLTAuNywwLTEuMy0wLjYtMS4zLTEuM3YwYzAtMi4yLDEuOC00LjEsNC4xLTQuMWgxNy4xYzIuMiwwLDQuMSwxLjgsNC4xLDQuMXYwDQoJCQlDMTQyLjEsNzUuOSwxNDEuNSw3Ni41LDE0MC44LDc2LjV6Ii8+DQoJCTxnPg0KCQkJPGVsbGlwc2UgY2xhc3M9InN0MTQiIGN4PSIxMjQuMSIgY3k9IjQzLjkiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iMTM0LjUiIGN5PSI0My45IiByeD0iMS43IiByeT0iMS42Ii8+DQoJCTwvZz4NCgkJPGc+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjEyMy45IiBjeT0iNTEuMyIgcng9IjEuNyIgcnk9IjEuNiIvPg0KCQkJPGVsbGlwc2UgY2xhc3M9InN0MTQiIGN4PSIxMzQuMyIgY3k9IjUxLjMiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJPC9nPg0KCTwvZz4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NDIiIHBvaW50cz0iMTY2LjEsNjAuMiAxNTQsNjAuMiAxNTEuOCw1Ni4xIDE2OC43LDU2LjEgCQkiLz4NCgkJPHJlY3QgeD0iMTUxLjgiIHk9IjQwLjciIGNsYXNzPSJzdDQzIiB3aWR0aD0iMTYuOSIgaGVpZ2h0PSIxNS45Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDQ0IiBkPSJNMTcxLjcsODEuNGgtMjIuNmMtMC43LDAtMS4zLTAuNi0xLjMtMS4zbDAsMGMwLTIuMiwxLjgtNC4xLDQuMS00LjFIMTY5YzIuMiwwLDQuMSwxLjgsNC4xLDQuMWwwLDANCgkJCUMxNzMuMSw4MC44LDE3Mi41LDgxLjQsMTcxLjcsODEuNHoiLz4NCgkJPHJlY3QgeD0iMTUwLjkiIHk9IjgxLjQiIGNsYXNzPSJzdDQzIiB3aWR0aD0iMTguMiIgaGVpZ2h0PSIzLjMiLz4NCgkJPHJlY3QgeD0iMTU0LjgiIHk9IjYwLjIiIGNsYXNzPSJzdDQ1IiB3aWR0aD0iMTAuNCIgaGVpZ2h0PSIxMS40Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDQ0IiBkPSJNMTcxLjcsNzYuNWgtMjIuNmMtMC43LDAtMS4zLTAuNi0xLjMtMS4zdjBjMC0yLjIsMS44LTQuMSw0LjEtNC4xSDE2OWMyLjIsMCw0LjEsMS44LDQuMSw0LjF2MA0KCQkJQzE3My4xLDc1LjksMTcyLjUsNzYuNSwxNzEuNyw3Ni41eiIvPg0KCQk8Zz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iMTU1LjEiIGN5PSI0My45IiByeD0iMS43IiByeT0iMS42Ii8+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjE2NS41IiBjeT0iNDMuOSIgcng9IjEuNyIgcnk9IjEuNiIvPg0KCQk8L2c+DQoJCTxnPg0KCQkJPGVsbGlwc2UgY2xhc3M9InN0MTQiIGN4PSIxNTQuOCIgY3k9IjUxLjMiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iMTY1LjIiIGN5PSI1MS4zIiByeD0iMS43IiByeT0iMS42Ii8+DQoJCTwvZz4NCgk8L2c+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDQyIiBwb2ludHM9IjE5Ny4xLDYwLjIgMTg0LjksNjAuMiAxODIuNyw1Ni4xIDE5OS43LDU2LjEgCQkiLz4NCgkJPHJlY3QgeD0iMTgyLjciIHk9IjQwLjciIGNsYXNzPSJzdDQzIiB3aWR0aD0iMTYuOSIgaGVpZ2h0PSIxNS45Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDQ0IiBkPSJNMjAyLjcsODEuNGgtMjIuNmMtMC43LDAtMS4zLTAuNi0xLjMtMS4zbDAsMGMwLTIuMiwxLjgtNC4xLDQuMS00LjFoMTcuMWMyLjIsMCw0LjEsMS44LDQuMSw0LjFsMCwwDQoJCQlDMjA0LDgwLjgsMjAzLjQsODEuNCwyMDIuNyw4MS40eiIvPg0KCQk8cmVjdCB4PSIxODEuOSIgeT0iODEuNCIgY2xhc3M9InN0NDMiIHdpZHRoPSIxOC4yIiBoZWlnaHQ9IjMuMyIvPg0KCQk8cmVjdCB4PSIxODUuOCIgeT0iNjAuMiIgY2xhc3M9InN0NDUiIHdpZHRoPSIxMC40IiBoZWlnaHQ9IjExLjQiLz4NCgkJPHBhdGggY2xhc3M9InN0NDQiIGQ9Ik0yMDIuNyw3Ni41aC0yMi42Yy0wLjcsMC0xLjMtMC42LTEuMy0xLjN2MGMwLTIuMiwxLjgtNC4xLDQuMS00LjFoMTcuMWMyLjIsMCw0LjEsMS44LDQuMSw0LjF2MA0KCQkJQzIwNCw3NS45LDIwMy40LDc2LjUsMjAyLjcsNzYuNXoiLz4NCgkJPGc+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjE4NiIgY3k9IjQzLjkiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJCTxlbGxpcHNlIGNsYXNzPSJzdDE0IiBjeD0iMTk2LjQiIGN5PSI0My45IiByeD0iMS43IiByeT0iMS42Ii8+DQoJCTwvZz4NCgkJPGc+DQoJCQk8ZWxsaXBzZSBjbGFzcz0ic3QxNCIgY3g9IjE4NS44IiBjeT0iNTEuMyIgcng9IjEuNyIgcnk9IjEuNiIvPg0KCQkJPGVsbGlwc2UgY2xhc3M9InN0MTQiIGN4PSIxOTYuMiIgY3k9IjUxLjMiIHJ4PSIxLjciIHJ5PSIxLjYiLz4NCgkJPC9nPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K',1,0)
+            ,(2,'Tủ điện hạ thế',1,NULL,'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyMTMuNyAyNzIuNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjEzLjcgMjcyLjc7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MXtmaWxsOiMwQTFBNUM7fQ0KCS5zdDJ7ZmlsbDojOURBM0JFO30NCgkuc3Qze2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNjU5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NntmaWxsOiM5OTk5OTk7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDd7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDh7ZmlsbDpub25lO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDl7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwe2ZpbGw6I0ZGRkZGRjt9DQoJLnN0MTF7Zm9udC1mYW1pbHk6J0FyaWFsLUJvbGRNVCc7fQ0KCS5zdDEye2ZvbnQtc2l6ZTo2Ljc3NTNweDt9DQoJLnN0MTN7ZmlsbDojQ0NDQ0NDO30NCgkuc3QxNHtmaWxsOiNBQUFBQUE7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjAuMzM4ODtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTV7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxNntmaWxsOm5vbmU7fQ0KCS5zdDE3e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6NTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTh7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDo1O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MTUuNjY2NywxNS42NjY3O30NCgkuc3QxOXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTczNztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MjB7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIxe2ZpbGw6I0YzNzAyMTt9DQoJLnN0MjJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjk3Mzc7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIze2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MjR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ3Njk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MzczO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNntmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI3e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4zNjM2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI5e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4yODIxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzMHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMTIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzMXtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjcuNTMxODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzJ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDMze2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6ODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzR7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzNXtmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM2e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC45NjU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM3e2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6My45MzAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzOHtvcGFjaXR5OjAuNjtmaWxsOiMwQTFBNUM7fQ0KCS5zdDM5e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDB7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjYzNDU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQxe29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40Njg2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0MntvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDN7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ2ODY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQ0e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMDk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDZ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI3MTk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQ3e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMTgxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0OHtmaWxsOiMwQTE5NUM7fQ0KCS5zdDQ5e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4wMTYzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NTB7ZmlsbDojRjI2RjIxO30NCgkuc3Q1MXtkaXNwbGF5Om5vbmU7fQ0KCS5zdDUye2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzAxMjE2OTt9DQoJLnN0NTN7ZGlzcGxheTppbmxpbmU7fQ0KCS5zdDU0e2ZpbGw6I0M4MTAyRTt9DQoJLnN0NTV7ZGlzcGxheTppbmxpbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRTIxOTM2O30NCgkuc3Q1NntkaXNwbGF5OmlubGluZTtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkQyMDA7fQ0KCS5zdDU3e2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0NTh7ZGlzcGxheTppbmxpbmU7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjAyMDk0MWUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCQ0KCQkuc3Q1OXtkaXNwbGF5OmlubGluZTtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuMTI2NjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYwe2ZpbGw6bm9uZTtzdHJva2U6I0YzNzAyMTtzdHJva2Utd2lkdGg6NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDpub25lO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2MntmaWxsOm5vbmU7c3Ryb2tlOiNDQ0NDQ0M7c3Ryb2tlLXdpZHRoOjAuOTY4OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjN7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjk1NTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY0e2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjV7ZmlsbDojOTk5OTk5O3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjU4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY2e2ZpbGw6I0NDQ0NDQztzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2N3tmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fQ0KCS5zdDY4e2ZpbGw6I0ZGRkZGRjtzdHJva2U6I0ZGRkZGRjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Njl7ZmlsbDojRkZGRkZGO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjMyNjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDcwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0NzF7ZmlsbDojRkZGRkZFO30NCgkuc3Q3MntmaWxsOiNBQUFBQUE7fQ0KCS5zdDcze2ZpbGw6I0UyRTJFMjt9DQoJLnN0NzR7ZmlsbDojNTY1NjU2O30NCgkuc3Q3NXtvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7fQ0KCS5zdDc2e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MS43NzMxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3N3tmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Nzh7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4OTQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDc5e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zNzg3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4MHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjQ5NztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODF7ZmlsbDojOTk5OTk5O3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo5LjQ2Nzk4MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgye2ZpbGw6IzAwRkYwMDt9DQoJLnN0ODN7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjg4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg0e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MDU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4NXtmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuMDM4MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODZ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI0NzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg3e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yNzg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4OHtmaWxsOiNDQ0NDQ0M7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNzczMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODl7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDkwe2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTcxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5MXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDkze2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MjE3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5NHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNDU2NjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTV7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozLjA2NDY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk2e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjQ0MTQ7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6My4yNTUyO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5OHtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjIuNDQxNDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTl7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjgxMzg7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwMHtmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjAuMzkyNjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAxe2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MS41OTI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQwNTI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwM3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuODEwNDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA0e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yNTcxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDV7b3BhY2l0eTowLjg7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4OTk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwNntvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjE5MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA3e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xODk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDh7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo4LjUwNjI1NmUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwOXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjguNTE3MTU0ZS0wMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTEwe2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xMTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTF7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo4LjgzODY2OWUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExMntmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTgzNjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTEze2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MC4xMjQ0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTR7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjEyNDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExNXtmaWxsOiNBQUFBQUE7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjAuMTI0NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE2e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xODYxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTd7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDoxLjExNjg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg2MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE5e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS44NjEzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjB7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDoxLjg2MTM7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7c3Ryb2tlLWRhc2hhcnJheTo1LjQ1MTgsNS40NTE4O30NCgkuc3QxMjF7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5MjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyMntmaWxsOiNDQ0NDQ0M7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjAxNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTIze2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6NztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyNHtmaWxsOiNGRkZGRkY7c3Ryb2tlOiNDQ0NDQ0M7c3Ryb2tlLXdpZHRoOjEuMDIwODtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI1e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI2e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xMTU0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjd7ZmlsbDpub25lO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDo3LjgxNzg3MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyOHtmaWxsOiNGRkZGRkY7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjcuODE3ODcwZS0wMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI5e2ZpbGw6I0FBQUFBQTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6Ny44MTc4NzBlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzB7ZmlsbDpub25lO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjY5NDg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzMXtmaWxsOiM5OTk5OTk7fQ0KCS5zdDEzMntmaWxsOiNGRkZGRkY7c3Ryb2tlOiNCM0IzQjM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzM3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjAuNzczMjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjAuODQyMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTM1e2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MC44NDIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMEExQTVDO3N0cm9rZS13aWR0aDowLjg0MjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8Zz4NCgkJCTxyZWN0IHg9IjMxLjQiIHk9IjE0LjYiIGNsYXNzPSJzdDIiIHdpZHRoPSIxNTMuOCIgaGVpZ2h0PSIyNDUuMyIvPg0KCQkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTE4Ni4yLDI2MC45SDMwLjRWMTMuNmgxNTUuOFYyNjAuOXogTTMyLjQsMjU4LjhoMTUxLjhWMTUuNkgzMi40VjI1OC44eiIvPg0KCQk8L2c+DQoJCTxwYXRoIGNsYXNzPSJzdDciIGQ9Ik0yNS4xLDUuOHYyNjIuOWgxNjYuNFY1LjhIMjUuMXogTTMyLjcsMjU4LjlWMTUuNWgxNTEuMXYyNDMuNEgzMi43eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPGc+DQoJCQk8cGF0aCBjbGFzcz0ic3Q4IiBkPSJNMTIxLjcsNDhjLTEsMC0xLjksMC44LTEuOSwxLjljMCwxLDAuOCwxLjksMS45LDEuOWMxLDAsMS45LTAuOCwxLjktMS45QzEyMy41LDQ4LjksMTIyLjcsNDgsMTIxLjcsNDh6Ii8+DQoJCQk8cGF0aCBjbGFzcz0ic3Q4IiBkPSJNOTQuOSw0OGMtMSwwLTEuOSwwLjgtMS45LDEuOWMwLDEsMC44LDEuOSwxLjksMS45YzEsMCwxLjktMC44LDEuOS0xLjlDOTYuOCw0OC45LDk2LDQ4LDk0LjksNDh6Ii8+DQoJCQk8cGF0aCBjbGFzcz0ic3Q4IiBkPSJNMTIzLDI3LjVIOTMuNmMtMC42LDAtMS4xLDAuNS0xLjEsMS4xdjE2LjVjMCwwLjYsMC41LDEuMSwxLjEsMS4xSDEyM2MwLjYsMCwxLjEtMC41LDEuMS0xLjFWMjguNw0KCQkJCUMxMjQuMSwyOCwxMjMuNiwyNy41LDEyMywyNy41eiIvPg0KCQkJPHBhdGggY2xhc3M9InN0OSIgZD0iTTEyNS4zLDI1LjFoLTM0Yy0wLjYsMC0xLjEsMC41LTEuMSwxLjF2MzQuNGMwLDAuNiwwLjUsMS4xLDEuMSwxLjFoMzRjMC42LDAsMS4xLTAuNSwxLjEtMS4xVjI2LjINCgkJCQlDMTI2LjQsMjUuNiwxMjUuOSwyNS4xLDEyNS4zLDI1LjF6IE05NC45LDUxLjhjLTEsMC0xLjktMC44LTEuOS0xLjljMC0xLDAuOC0xLjksMS45LTEuOWMxLDAsMS45LDAuOCwxLjksMS45DQoJCQkJQzk2LjgsNTAuOSw5Niw1MS44LDk0LjksNTEuOHogTTExNS4zLDUxLjhoLTE0LjF2LTQuMmgxNC4xVjUxLjh6IE0xMjEuNyw1MS44Yy0xLDAtMS45LTAuOC0xLjktMS45YzAtMSwwLjgtMS45LDEuOS0xLjkNCgkJCQljMSwwLDEuOSwwLjgsMS45LDEuOUMxMjMuNSw1MC45LDEyMi43LDUxLjgsMTIxLjcsNTEuOHogTTEyNC4xLDQ1LjFjMCwwLjYtMC41LDEuMS0xLjEsMS4xSDkzLjZjLTAuNiwwLTEuMS0wLjUtMS4xLTEuMVYyOC43DQoJCQkJYzAtMC42LDAuNS0xLjEsMS4xLTEuMUgxMjNjMC42LDAsMS4xLDAuNSwxLjEsMS4xVjQ1LjF6Ii8+DQoJCTwvZz4NCgk8L2c+DQoJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSA5Ni40Mzc1IDM1LjQyNzQpIiBjbGFzcz0ic3QxMCBzdDExIHN0MTIiPk1FVEVSPC90ZXh0Pg0KCTxnPg0KCQk8cmVjdCB4PSIxODIuMyIgeT0iNjQuNyIgY2xhc3M9InN0MTMiIHdpZHRoPSIzLjQiIGhlaWdodD0iMzAuNSIvPg0KCQk8cmVjdCB4PSIxODIuMyIgeT0iMTc5LjIiIGNsYXNzPSJzdDEzIiB3aWR0aD0iMy40IiBoZWlnaHQ9IjMwLjUiLz4NCgk8L2c+DQoJPHBhdGggY2xhc3M9InN0MTMiIGQ9Ik00My43LDE2NC43aC0yLjVjLTEsMC0xLjgtMC44LTEuOC0xLjh2LTUwLjZjMC0xLDAuOC0xLjgsMS44LTEuOGgyLjVjMSwwLDEuOCwwLjgsMS44LDEuOHY1MC42DQoJCUM0NS41LDE2My45LDQ0LjcsMTY0LjcsNDMuNywxNjQuN3oiLz4NCgk8Zz4NCgkJPHJlY3QgeD0iNjAuNSIgeT0iMjAxLjYiIGNsYXNzPSJzdDkiIHdpZHRoPSIzNS4yIiBoZWlnaHQ9IjQuMSIvPg0KCQk8cmVjdCB4PSI2MC41IiB5PSIyMTcuOSIgY2xhc3M9InN0OSIgd2lkdGg9IjM1LjIiIGhlaWdodD0iNC4xIi8+DQoJCTxwYXRoIGNsYXNzPSJzdDkiIGQ9Ik05My45LDIzMEg2Mi4zYy0xLDAtMS44LTAuOC0xLjgtMS44VjIyNmgzNS4ydjIuM0M5NS44LDIyOS4yLDk0LjksMjMwLDkzLjksMjMweiIvPg0KCQk8cmVjdCB4PSI2MC41IiB5PSIyMDkuNyIgY2xhc3M9InN0OSIgd2lkdGg9IjM1LjIiIGhlaWdodD0iNC4xIi8+DQoJCTxyZWN0IHg9IjYwLjUiIHk9IjIwNS43IiBjbGFzcz0ic3QxNCIgd2lkdGg9IjM1LjIiIGhlaWdodD0iNC4xIi8+DQoJCTxwYXRoIGNsYXNzPSJzdDE0IiBkPSJNOTUuOCwyMDEuNkg2MC41di0yLjljMC0wLjYsMC41LTEuMiwxLjItMS4yaDMyLjljMC42LDAsMS4yLDAuNSwxLjIsMS4yVjIwMS42eiIvPg0KCQk8cmVjdCB4PSI2MC41IiB5PSIyMTMuOCIgY2xhc3M9InN0MTQiIHdpZHRoPSIzNS4yIiBoZWlnaHQ9IjQuMSIvPg0KCQk8cmVjdCB4PSI2MC41IiB5PSIyMjEuOSIgY2xhc3M9InN0MTQiIHdpZHRoPSIzNS4yIiBoZWlnaHQ9IjQuMSIvPg0KCTwvZz4NCgk8Zz4NCgkJPHJlY3QgeD0iMTIwLjgiIHk9IjIwMS42IiBjbGFzcz0ic3Q5IiB3aWR0aD0iMzUuMiIgaGVpZ2h0PSI0LjEiLz4NCgkJPHJlY3QgeD0iMTIwLjgiIHk9IjIxNy45IiBjbGFzcz0ic3Q5IiB3aWR0aD0iMzUuMiIgaGVpZ2h0PSI0LjEiLz4NCgkJPHBhdGggY2xhc3M9InN0OSIgZD0iTTE1NC4yLDIzMGgtMzEuNmMtMSwwLTEuOC0wLjgtMS44LTEuOFYyMjZoMzUuMnYyLjNDMTU2LjEsMjI5LjIsMTU1LjIsMjMwLDE1NC4yLDIzMHoiLz4NCgkJPHJlY3QgeD0iMTIwLjgiIHk9IjIwOS43IiBjbGFzcz0ic3Q5IiB3aWR0aD0iMzUuMiIgaGVpZ2h0PSI0LjEiLz4NCgkJPHJlY3QgeD0iMTIwLjgiIHk9IjIwNS43IiBjbGFzcz0ic3QxNCIgd2lkdGg9IjM1LjIiIGhlaWdodD0iNC4xIi8+DQoJCTxwYXRoIGNsYXNzPSJzdDE0IiBkPSJNMTU2LjEsMjAxLjZoLTM1LjJ2LTIuOWMwLTAuNiwwLjUtMS4yLDEuMi0xLjJoMzIuOWMwLjYsMCwxLjIsMC41LDEuMiwxLjJWMjAxLjZ6Ii8+DQoJCTxyZWN0IHg9IjEyMC44IiB5PSIyMTMuOCIgY2xhc3M9InN0MTQiIHdpZHRoPSIzNS4yIiBoZWlnaHQ9IjQuMSIvPg0KCQk8cmVjdCB4PSIxMjAuOCIgeT0iMjIxLjkiIGNsYXNzPSJzdDE0IiB3aWR0aD0iMzUuMiIgaGVpZ2h0PSI0LjEiLz4NCgk8L2c+DQo8L2c+DQo8L3N2Zz4NCg==',1,0)
+            ,(3,'Động cơ điện',0,NULL,NULL,1,0)
+            ,(4,'Máy bơm',0,NULL,NULL,1,0)
+            ,(5,'Máy nén khí',0,NULL,NULL,1,0)
+            ,(6,'Điều hoà',0,NULL,NULL,1,0)
+            ,(7,'Quạt',0,NULL,NULL,1,0)
+            ,(8,'Máy CNC',0,NULL,NULL,1,0)
+            ,(9,'Máy tính',0,NULL,NULL,1,0)
+            ,(10,'Đèn',0,NULL,NULL,1,0)
+            ,(11,'Máy PCB',0,NULL,NULL,1,0)
+            ,(12,'Lò nung',0,NULL,NULL,1,0)
+            ,(13,'Lò sấy',0,NULL,NULL,1,0)
+            ,(14,'Chiller',0,NULL,NULL,1,0)
+            ,(15,'AHU',0,NULL,NULL,1,0)
+            ,(16,'Máy hàn',0,NULL,NULL,1,0)
+            ,(17,'Máy cắt',0,NULL,NULL,1,0)
+            ,(18,'Máy dập khuôn',0,NULL,NULL,1,0)
+            ,(19,'Máy phát điện',0,NULL,NULL,1,0)
+            ,(20,'Tủ trung thế',1,NULL,NULL,1,0)
+            ,(21,'Inverter',0,NULL,'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyMTMuNyAyNzIuNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjEzLjcgMjcyLjc7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MXtmaWxsOiMwQTFBNUM7fQ0KCS5zdDJ7ZmlsbDojOURBM0JFO30NCgkuc3Qze2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNjU5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NntmaWxsOiM5OTk5OTk7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDd7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDh7ZmlsbDpub25lO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDl7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwe2ZpbGw6I0NDQ0NDQzt9DQoJLnN0MTF7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEye2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTN7ZmlsbDpub25lO30NCgkuc3QxNHtmaWxsOiNGRkZGRkY7fQ0KCS5zdDE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6NTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTZ7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDo1O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MTUuNjY2NywxNS42NjY3O30NCgkuc3QxN3tmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTczNztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTh7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDE5e2ZpbGw6I0YzNzAyMTt9DQoJLnN0MjB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjk3Mzc7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIxe2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MjJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ3Njk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIze2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MzczO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI1e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4zNjM2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI3e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4yODIxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMTIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOXtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjcuNTMxODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzB7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDMxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6ODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzJ7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzM3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM0e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC45NjU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM1e2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6My45MzAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzNntvcGFjaXR5OjAuNjtmaWxsOiMwQTFBNUM7fQ0KCS5zdDM3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Mzh7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjYzNDU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM5e29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40Njg2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0MHtvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDF7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ2ODY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMDk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0M3tmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI3MTk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQ1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMTgxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0NntmaWxsOiMwQTE5NUM7fQ0KCS5zdDQ3e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4wMTYzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDh7ZmlsbDojRjI2RjIxO30NCgkuc3Q0OXtkaXNwbGF5Om5vbmU7fQ0KCS5zdDUwe2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzAxMjE2OTt9DQoJLnN0NTF7ZGlzcGxheTppbmxpbmU7fQ0KCS5zdDUye2ZpbGw6I0M4MTAyRTt9DQoJLnN0NTN7ZGlzcGxheTppbmxpbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRTIxOTM2O30NCgkuc3Q1NHtkaXNwbGF5OmlubGluZTtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkQyMDA7fQ0KCS5zdDU1e2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0NTZ7ZGlzcGxheTppbmxpbmU7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjAyMDk0MWUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCQ0KCQkuc3Q1N3tkaXNwbGF5OmlubGluZTtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuMTI2NjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDU4e2ZpbGw6bm9uZTtzdHJva2U6I0YzNzAyMTtzdHJva2Utd2lkdGg6NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NTl7ZmlsbDpub25lO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2MHtmaWxsOm5vbmU7c3Ryb2tlOiNDQ0NDQ0M7c3Ryb2tlLXdpZHRoOjAuOTY4OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjk1NTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYye2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjN7ZmlsbDojOTk5OTk5O3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjU4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY0e2ZpbGw6I0NDQ0NDQztzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fQ0KCS5zdDY2e2ZpbGw6I0ZGRkZGRjtzdHJva2U6I0ZGRkZGRjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Njd7ZmlsbDojRkZGRkZGO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjMyNjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY4e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0Njl7ZmlsbDojRkZGRkZFO30NCgkuc3Q3MHtmaWxsOiNBQUFBQUE7fQ0KCS5zdDcxe2ZpbGw6I0UyRTJFMjt9DQoJLnN0NzJ7ZmlsbDojNTY1NjU2O30NCgkuc3Q3M3tvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7fQ0KCS5zdDc0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MS43NzMxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NzZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4OTQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDc3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zNzg3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3OHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjQ5NztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Nzl7ZmlsbDojOTk5OTk5O3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo5LjQ2Nzk4MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgwe2ZpbGw6IzAwRkYwMDt9DQoJLnN0ODF7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjg4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MDU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4M3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuMDM4MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI0NzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yNzg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4NntmaWxsOiNDQ0NDQ0M7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNzczMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODd7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg4e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTcxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4OXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDkxe2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MjE3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5MntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNDU2NjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTN7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozLjA2NDY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk0e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjQ0MTQ7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk1e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6My4yNTUyO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5NntmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjIuNDQxNDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTd7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjgxMzg7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC4zOTI2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5OXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNTkyNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAwe2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40MDUyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDF7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjgxMDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwMntmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU3MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAze29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xODk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDR7b3BhY2l0eTowLjg7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIxOTI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwNXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA2e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC41MDYyNTZlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDd7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo4LjUxNzE1NGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA5e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC44Mzg2NjllLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTB7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4MzY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExMXtmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjAuMTI0NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTEye2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MC4xMjQ0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTN7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjEyNDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg2MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4xMTY4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTZ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4NjE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExN3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuODYxMztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS44NjEzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6NS40NTE4LDUuNDUxODt9DQoJLnN0MTE5e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjB7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIwMTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyMXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjc7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjJ7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDoxLjAyMDg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyM3tmaWxsOiNGRkZGRkY7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTE1NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI1e2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6Ny44MTc4NzBlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDo3LjgxNzg3MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyN3tmaWxsOiNBQUFBQUE7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjcuODE3ODcwZS0wMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI4e2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC42OTQ4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjl7ZmlsbDojOTk5OTk5O30NCgkuc3QxMzB7ZmlsbDojRkZGRkZGO3N0cm9rZTojQjNCM0IzO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzF7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjc3MzI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzJ7ZmlsbDojMEExQTVDO3N0cm9rZTojMEExQTVDO3N0cm9rZS13aWR0aDowLjg0MjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzM3tmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjAuODQyMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTM0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MC44NDIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCjwvc3R5bGU+DQo8Zz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0MCIgZD0iTTcxLjEsNzUuMkgxMy45Yy0yLjQsMC00LjQtMi00LjQtNC40VjEwLjVjMC0yLjQsMi00LjQsNC40LTQuNGg1Ny4zYzIuNCwwLDQuNCwyLDQuNCw0LjR2NjAuMg0KCQkJQzc1LjUsNzMuMiw3My41LDc1LjIsNzEuMSw3NS4yeiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNzEuMSwxNDQuMkgxMy45Yy0yLjQsMC00LjQtMi00LjQtNC40Vjc5LjVjMC0yLjQsMi00LjQsNC40LTQuNGg1Ny4zYzIuNCwwLDQuNCwyLDQuNCw0LjR2NjAuMw0KCQkJQzc1LjUsMTQyLjIsNzMuNSwxNDQuMiw3MS4xLDE0NC4yeiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNjYuMywyNi4ySDIzLjhjLTEuMiwwLTIuMy0xLTIuMy0yLjN2LTYuNWMwLTEuMiwxLTIuMiwyLjMtMi4yaDQyLjVjMS4yLDAsMi4zLDEsMi4zLDIuMnY2LjUNCgkJCUM2OC41LDI1LjIsNjcuNSwyNi4yLDY2LjMsMjYuMnoiLz4NCgkJPHBhdGggY2xhc3M9InN0MSIgZD0iTTY2LDQwLjdINDNjLTEuNCwwLTIuNS0xLjEtMi41LTIuNXYtOS41YzAtMS40LDEuMS0yLjUsMi41LTIuNWgyM2MxLjQsMCwyLjUsMS4xLDIuNSwyLjV2OS41DQoJCQlDNjguNSwzOS41LDY3LjQsNDAuNyw2Niw0MC43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNNDcsMzcuNEw0NywzNy40Yy0yLjIsMC00LTEuOC00LTR2MGMwLTIuMiwxLjgtNCw0LTRoMGMyLjIsMCw0LDEuOCw0LDR2MEM1MSwzNS42LDQ5LjIsMzcuNCw0NywzNy40eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNjYsNzAuN0g0M2MtMS40LDAtMi41LTEuMS0yLjUtMi41di05LjVjMC0xLjQsMS4xLTIuNSwyLjUtMi41aDIzYzEuNCwwLDIuNSwxLjEsMi41LDIuNXY5LjUNCgkJCUM2OC41LDY5LjUsNjcuNCw3MC43LDY2LDcwLjd6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik00Nyw2Ny40TDQ3LDY3LjRjLTIuMiwwLTQtMS44LTQtNHYwYzAtMi4yLDEuOC00LDQtNGgwYzIuMiwwLDQsMS44LDQsNHYwQzUxLDY1LjYsNDkuMiw2Ny40LDQ3LDY3LjR6Ii8+DQoJCTxjaXJjbGUgY2xhc3M9InN0MyIgY3g9IjU5IiBjeT0iNDguNyIgcj0iMyIvPg0KCQk8bGluZSBjbGFzcz0ic3Q0IiB4MT0iOS41IiB5MT0iMjYuMiIgeDI9Ijc1LjUiIHkyPSIyNi4yIi8+DQoJCTxsaW5lIGNsYXNzPSJzdDQiIHgxPSI1OSIgeTE9IjI2LjIiIHgyPSI1OSIgeTI9Ijc1LjIiLz4NCgk8L2c+DQoJPGc+DQoJCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMzcuMSw3NS4ySDc5LjljLTIuNCwwLTQuNC0yLTQuNC00LjRWMTAuNWMwLTIuNCwyLTQuNCw0LjQtNC40aDU3LjNjMi40LDAsNC40LDIsNC40LDQuNHY2MC4yDQoJCQlDMTQxLjUsNzMuMiwxMzkuNSw3NS4yLDEzNy4xLDc1LjJ6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xMzIuMywyNi4ySDg5LjhjLTEuMiwwLTIuMy0xLTIuMy0yLjN2LTYuNWMwLTEuMiwxLTIuMiwyLjMtMi4yaDQyLjVjMS4yLDAsMi4zLDEsMi4zLDIuMnY2LjUNCgkJCUMxMzQuNSwyNS4yLDEzMy41LDI2LjIsMTMyLjMsMjYuMnoiLz4NCgkJPHBhdGggY2xhc3M9InN0MSIgZD0iTTEzMiw0MC43aC0yM2MtMS40LDAtMi41LTEuMS0yLjUtMi41di05LjVjMC0xLjQsMS4xLTIuNSwyLjUtMi41aDIzYzEuNCwwLDIuNSwxLjEsMi41LDIuNXY5LjUNCgkJCUMxMzQuNSwzOS41LDEzMy40LDQwLjcsMTMyLDQwLjd6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0xMTMsMzcuNEwxMTMsMzcuNGMtMi4yLDAtNC0xLjgtNC00djBjMC0yLjIsMS44LTQsNC00aDBjMi4yLDAsNCwxLjgsNCw0djBDMTE3LDM1LjYsMTE1LjIsMzcuNCwxMTMsMzcuNHoiDQoJCQkvPg0KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTMyLDcwLjdoLTIzYy0xLjQsMC0yLjUtMS4xLTIuNS0yLjV2LTkuNWMwLTEuNCwxLjEtMi41LDIuNS0yLjVoMjNjMS40LDAsMi41LDEuMSwyLjUsMi41djkuNQ0KCQkJQzEzNC41LDY5LjUsMTMzLjQsNzAuNywxMzIsNzAuN3oiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTExMyw2Ny40TDExMyw2Ny40Yy0yLjIsMC00LTEuOC00LTR2MGMwLTIuMiwxLjgtNCw0LTRoMGMyLjIsMCw0LDEuOCw0LDR2MEMxMTcsNjUuNiwxMTUuMiw2Ny40LDExMyw2Ny40eiINCgkJCS8+DQoJCTxjaXJjbGUgY2xhc3M9InN0MyIgY3g9IjEyNSIgY3k9IjQ4LjciIHI9IjMiLz4NCgkJPGxpbmUgY2xhc3M9InN0NCIgeDE9Ijc1LjUiIHkxPSIyNi4yIiB4Mj0iMTQxLjUiIHkyPSIyNi4yIi8+DQoJCTxsaW5lIGNsYXNzPSJzdDQiIHgxPSIxMjUiIHkxPSIyNi4yIiB4Mj0iMTI1IiB5Mj0iNzUuMiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0MCIgZD0iTTIwMy4xLDc1LjJoLTU3LjNjLTIuNCwwLTQuNC0yLTQuNC00LjRWMTAuNWMwLTIuNCwyLTQuNCw0LjQtNC40aDU3LjNjMi40LDAsNC40LDIsNC40LDQuNHY2MC4yDQoJCQlDMjA3LjUsNzMuMiwyMDUuNSw3NS4yLDIwMy4xLDc1LjJ6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xOTguMywyNi4yaC00Mi41Yy0xLjIsMC0yLjMtMS0yLjMtMi4zdi02LjVjMC0xLjIsMS0yLjIsMi4zLTIuMmg0Mi41YzEuMiwwLDIuMywxLDIuMywyLjJ2Ni41DQoJCQlDMjAwLjUsMjUuMiwxOTkuNSwyNi4yLDE5OC4zLDI2LjJ6Ii8+DQoJCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xOTgsNDAuN2gtMjNjLTEuNCwwLTIuNS0xLjEtMi41LTIuNXYtOS41YzAtMS40LDEuMS0yLjUsMi41LTIuNWgyM2MxLjQsMCwyLjUsMS4xLDIuNSwyLjV2OS41DQoJCQlDMjAwLjUsMzkuNSwxOTkuNCw0MC43LDE5OCw0MC43eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTc5LDM3LjRMMTc5LDM3LjRjLTIuMiwwLTQtMS44LTQtNHYwYzAtMi4yLDEuOC00LDQtNGwwLDBjMi4yLDAsNCwxLjgsNCw0djBDMTgzLDM1LjYsMTgxLjIsMzcuNCwxNzksMzcuNHoNCgkJCSIvPg0KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTk4LDcwLjdoLTIzYy0xLjQsMC0yLjUtMS4xLTIuNS0yLjV2LTkuNWMwLTEuNCwxLjEtMi41LDIuNS0yLjVoMjNjMS40LDAsMi41LDEuMSwyLjUsMi41djkuNQ0KCQkJQzIwMC41LDY5LjUsMTk5LjQsNzAuNywxOTgsNzAuN3oiLz4NCgkJPHBhdGggY2xhc3M9InN0MiIgZD0iTTE3OSw2Ny40TDE3OSw2Ny40Yy0yLjIsMC00LTEuOC00LTR2MGMwLTIuMiwxLjgtNCw0LTRsMCwwYzIuMiwwLDQsMS44LDQsNHYwQzE4Myw2NS42LDE4MS4yLDY3LjQsMTc5LDY3LjR6DQoJCQkiLz4NCgkJPGNpcmNsZSBjbGFzcz0ic3QzIiBjeD0iMTkxIiBjeT0iNDguNyIgcj0iMyIvPg0KCQk8bGluZSBjbGFzcz0ic3Q0IiB4MT0iMTQxLjUiIHkxPSIyNi4yIiB4Mj0iMjA3LjUiIHkyPSIyNi4yIi8+DQoJCTxsaW5lIGNsYXNzPSJzdDQiIHgxPSIxOTEiIHkxPSIyNi4yIiB4Mj0iMTkxIiB5Mj0iNzUuMiIvPg0KCTwvZz4NCgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTM3LjEsMTQ0LjJINzkuOWMtMi40LDAtNC40LTItNC40LTQuNFY3OS41YzAtMi40LDItNC40LDQuNC00LjRoNTcuM2MyLjQsMCw0LjQsMiw0LjQsNC40djYwLjMNCgkJQzE0MS41LDE0Mi4yLDEzOS41LDE0NC4yLDEzNy4xLDE0NC4yeiIvPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMDMuMSwxNDQuMmgtNTcuM2MtMi40LDAtNC40LTItNC40LTQuNFY3OS41YzAtMi40LDItNC40LDQuNC00LjRoNTcuM2MyLjQsMCw0LjQsMiw0LjQsNC40djYwLjMNCgkJQzIwNy41LDE0Mi4yLDIwNS41LDE0NC4yLDIwMy4xLDE0NC4yeiIvPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjAzLjEsMjY0LjJoLTU3LjNjLTIuNCwwLTQuNC0yLTQuNC00LjRWMTQ4LjVjMC0yLjQsMi00LjQsNC40LTQuNGg1Ny4zYzIuNCwwLDQuNCwyLDQuNCw0LjR2MTExLjINCgkJCUMyMDcuNSwyNjIuMiwyMDUuNSwyNjQuMiwyMDMuMSwyNjQuMnoiLz4NCgkJPGc+DQoJCQk8Y2lyY2xlIGNsYXNzPSJzdDYiIGN4PSIxNDcuMyIgY3k9IjE1MC4yIiByPSIyIi8+DQoJCQk8Y2lyY2xlIGNsYXNzPSJzdDYiIGN4PSIyMDEuOCIgY3k9IjE1MC43IiByPSIyIi8+DQoJCTwvZz4NCgkJPHJlY3QgeD0iMTUxIiB5PSIyNTcuMiIgY2xhc3M9InN0MSIgd2lkdGg9IjQ3IiBoZWlnaHQ9IjciLz4NCgk8L2c+DQoJPGc+DQoJCTxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik0xMzcuMSwyNjQuMkg3OS45Yy0yLjQsMC00LjQtMi00LjQtNC40VjE0OC41YzAtMi40LDItNC40LDQuNC00LjRoNTcuM2MyLjQsMCw0LjQsMiw0LjQsNC40djExMS4yDQoJCQlDMTQxLjUsMjYyLjIsMTM5LjUsMjY0LjIsMTM3LjEsMjY0LjJ6Ii8+DQoJCTxnPg0KCQkJPGNpcmNsZSBjbGFzcz0ic3Q2IiBjeD0iODEuMyIgY3k9IjE1MC4yIiByPSIyIi8+DQoJCQk8Y2lyY2xlIGNsYXNzPSJzdDYiIGN4PSIxMzUuOCIgY3k9IjE1MC43IiByPSIyIi8+DQoJCTwvZz4NCgkJPHJlY3QgeD0iODUiIHk9IjI1Ny4yIiBjbGFzcz0ic3QxIiB3aWR0aD0iNDciIGhlaWdodD0iNyIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTcxLjEsMjY0LjJIMTMuOWMtMi40LDAtNC40LTItNC40LTQuNFYxNDguNWMwLTIuNCwyLTQuNCw0LjQtNC40aDU3LjNjMi40LDAsNC40LDIsNC40LDQuNHYxMTEuMg0KCQkJQzc1LjUsMjYyLjIsNzMuNSwyNjQuMiw3MS4xLDI2NC4yeiIvPg0KCQk8Zz4NCgkJCTxjaXJjbGUgY2xhc3M9InN0NiIgY3g9IjE1LjMiIGN5PSIxNTAuMiIgcj0iMiIvPg0KCQkJPGNpcmNsZSBjbGFzcz0ic3Q2IiBjeD0iNjkuOCIgY3k9IjE1MC43IiByPSIyIi8+DQoJCTwvZz4NCgkJPHJlY3QgeD0iMTkiIHk9IjI1Ny4yIiBjbGFzcz0ic3QxIiB3aWR0aD0iNDciIGhlaWdodD0iNyIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K',1,0)
+            ,(22,'String',0,NULL,'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyMi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyMTMuNyAyNzIuNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjEzLjcgMjcyLjc7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MXtmaWxsOiMwQTFBNUM7fQ0KCS5zdDJ7ZmlsbDojOURBM0JFO30NCgkuc3Qze2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNjU5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NntmaWxsOiM5OTk5OTk7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDd7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDh7ZmlsbDpub25lO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDl7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwe2ZpbGw6I0NDQ0NDQzt9DQoJLnN0MTF7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjMzODg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEye2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTN7ZmlsbDpub25lO30NCgkuc3QxNHtmaWxsOiNGRkZGRkY7fQ0KCS5zdDE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6NTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTZ7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDo1O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6MTUuNjY2NywxNS42NjY3O30NCgkuc3QxN3tmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTczNztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTh7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDE5e2ZpbGw6I0YzNzAyMTt9DQoJLnN0MjB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjk3Mzc7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIxe2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MjJ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ3Njk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDIze2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MzczO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI1e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4zNjM2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyNntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDI3e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4yODIxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMTIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QyOXtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjcuNTMxODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzB7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDMxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6ODtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MzJ7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzM3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM0e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC45NjU7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM1e2ZpbGw6bm9uZTtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6My45MzAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QzNntvcGFjaXR5OjAuNjtmaWxsOiMwQTFBNUM7fQ0KCS5zdDM3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Mzh7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjYzNDU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDM5e29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40Njg2O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0MHtvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDF7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjQ2ODY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMDk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0M3tmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI3MTk7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDQ1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yMTgxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0NntmaWxsOiMwQTE5NUM7fQ0KCS5zdDQ3e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4wMTYzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NDh7ZmlsbDojRjI2RjIxO30NCgkuc3Q0OXtkaXNwbGF5Om5vbmU7fQ0KCS5zdDUwe2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzAxMjE2OTt9DQoJLnN0NTF7ZGlzcGxheTppbmxpbmU7fQ0KCS5zdDUye2ZpbGw6I0M4MTAyRTt9DQoJLnN0NTN7ZGlzcGxheTppbmxpbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRTIxOTM2O30NCgkuc3Q1NHtkaXNwbGF5OmlubGluZTtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkQyMDA7fQ0KCS5zdDU1e2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0NTZ7ZGlzcGxheTppbmxpbmU7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjAyMDk0MWUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCQ0KCQkuc3Q1N3tkaXNwbGF5OmlubGluZTtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuMTI2NjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDU4e2ZpbGw6bm9uZTtzdHJva2U6I0YzNzAyMTtzdHJva2Utd2lkdGg6NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NTl7ZmlsbDpub25lO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2MHtmaWxsOm5vbmU7c3Ryb2tlOiNDQ0NDQ0M7c3Ryb2tlLXdpZHRoOjAuOTY4OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjF7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjk1NTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDYye2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NjN7ZmlsbDojOTk5OTk5O3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDowLjU4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY0e2ZpbGw6I0NDQ0NDQztzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC45NTU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2NXtmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiNGRkZGRkY7fQ0KCS5zdDY2e2ZpbGw6I0ZGRkZGRjtzdHJva2U6I0ZGRkZGRjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Njd7ZmlsbDojRkZGRkZGO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjMyNjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDY4e2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzBBMUE1Qzt9DQoJLnN0Njl7ZmlsbDojRkZGRkZFO30NCgkuc3Q3MHtmaWxsOiNBQUFBQUE7fQ0KCS5zdDcxe2ZpbGw6I0UyRTJFMjt9DQoJLnN0NzJ7ZmlsbDojNTY1NjU2O30NCgkuc3Q3M3tvcGFjaXR5OjAuODtmaWxsOiMwQTFBNUM7fQ0KCS5zdDc0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MS43NzMxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3NXtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0NzZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4OTQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDc3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zNzg3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3OHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjQ5NztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0Nzl7ZmlsbDojOTk5OTk5O3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo5LjQ2Nzk4MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgwe2ZpbGw6IzAwRkYwMDt9DQoJLnN0ODF7ZmlsbDojRkZGRkZGO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjg4NjY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDgye2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MDU1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4M3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuMDM4MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODR7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjI0NzU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg1e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4yNzg5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4NntmaWxsOiNDQ0NDQ0M7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNzczMTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0ODd7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDg4e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTcxO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q4OXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNTQxNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTB7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjM5NzE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDkxe2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC41MjE3O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5MntmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuNDU2NjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTN7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozLjA2NDY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk0e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyLjQ0MTQ7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk1e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6My4yNTUyO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5NntmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjIuNDQxNDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0OTd7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjgxMzg7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDk4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MC4zOTI2O3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q5OXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjEuNTkyNTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAwe2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC40MDUyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDF7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjgxMDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwMntmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMjU3MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTAze29wYWNpdHk6MC44O2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4xODk5O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDR7b3BhY2l0eTowLjg7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIxOTI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwNXtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg5OTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA2e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC41MDYyNTZlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMDd7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDo4LjUxNzE1NGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEwOHtmaWxsOiM5REEzQkU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTEwMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTA5e2ZpbGw6IzlEQTNCRTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6OC44Mzg2NjllLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTB7ZmlsbDojMEExQTVDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4MzY7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExMXtmaWxsOm5vbmU7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjAuMTI0NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTEye2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6MC4xMjQ0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTN7ZmlsbDojQUFBQUFBO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDowLjEyNDQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTg2MTtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE1e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS4xMTY4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMTZ7ZmlsbDojOURBM0JFO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjE4NjE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDExN3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLXdpZHRoOjEuODYxMztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTE4e2ZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MS44NjEzO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6NS40NTE4LDUuNDUxODt9DQoJLnN0MTE5e2ZpbGw6IzBBMUE1QztzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4zOTI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjB7ZmlsbDojQ0NDQ0NDO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDowLjIwMTU7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyMXtmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjc7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjJ7ZmlsbDojRkZGRkZGO3N0cm9rZTojQ0NDQ0NDO3N0cm9rZS13aWR0aDoxLjAyMDg7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyM3tmaWxsOiNGRkZGRkY7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyNHtmaWxsOiMwQTFBNUM7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuMTE1NDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI1e2ZpbGw6bm9uZTtzdHJva2U6IzIzMUYyMDtzdHJva2Utd2lkdGg6Ny44MTc4NzBlLTAyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjZ7ZmlsbDojRkZGRkZGO3N0cm9rZTojMjMxRjIwO3N0cm9rZS13aWR0aDo3LjgxNzg3MGUtMDI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEyN3tmaWxsOiNBQUFBQUE7c3Ryb2tlOiMyMzFGMjA7c3Ryb2tlLXdpZHRoOjcuODE3ODcwZS0wMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTI4e2ZpbGw6bm9uZTtzdHJva2U6I0NDQ0NDQztzdHJva2Utd2lkdGg6MC42OTQ4O3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMjl7ZmlsbDojOTk5OTk5O30NCgkuc3QxMzB7ZmlsbDojRkZGRkZGO3N0cm9rZTojQjNCM0IzO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzF7ZmlsbDpub25lO3N0cm9rZTojRkZGRkZGO3N0cm9rZS13aWR0aDowLjc3MzI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3QxMzJ7ZmlsbDojMEExQTVDO3N0cm9rZTojMEExQTVDO3N0cm9rZS13aWR0aDowLjg0MjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDEzM3tmaWxsOm5vbmU7c3Ryb2tlOiMwQTFBNUM7c3Ryb2tlLXdpZHRoOjAuODQyMjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MTM0e2ZpbGw6I0ZGRkZGRjtzdHJva2U6IzBBMUE1QztzdHJva2Utd2lkdGg6MC44NDIyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCjwvc3R5bGU+DQo8Zz4NCgk8Zz4NCgkJPGc+DQoJCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjE0OC41LDgzLjIgMy41LDgzLjIgMzMuNSwxMC4yIDExOS41LDEwLjIgCQkJIi8+DQoJCTwvZz4NCgkJPHJlY3QgeD0iMy41IiB5PSI4My4yIiBjbGFzcz0ic3QyMCIgd2lkdGg9IjE0NSIgaGVpZ2h0PSIxMSIvPg0KCQk8bGluZSBjbGFzcz0ic3QyMSIgeDE9Ijc2IiB5MT0iMTAuMiIgeDI9Ijc2IiB5Mj0iODMuMiIvPg0KCQk8bGluZSBjbGFzcz0ic3QyMSIgeDE9IjI2IiB5MT0iMjcuNyIgeDI9IjEyNyIgeTI9IjI3LjciLz4NCgkJPGxpbmUgY2xhc3M9InN0MjEiIHgxPSIxNSIgeTE9IjUzLjciIHgyPSIxMzciIHkyPSI1My43Ii8+DQoJCTxwYXRoIGQ9Ik0xNDkuMiw4My43SDIuOGwzMC40LTc0aDg2LjdMMTQ5LjIsODMuN3ogTTQuMiw4Mi43aDE0My42bC0yOC42LTcySDMzLjhMNC4yLDgyLjd6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8Zz4NCgkJCTxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMTc5LjUsMTIxLjIgMzQuNSwxMjEuMiA2NC41LDQ4LjIgMTUwLjUsNDguMiAJCQkiLz4NCgkJPC9nPg0KCQk8cmVjdCB4PSIzNC41IiB5PSIxMjEuMiIgY2xhc3M9InN0MjAiIHdpZHRoPSIxNDUiIGhlaWdodD0iMTEiLz4NCgkJPGxpbmUgY2xhc3M9InN0MjEiIHgxPSIxMDciIHkxPSI0OC4yIiB4Mj0iMTA3IiB5Mj0iMTIxLjIiLz4NCgkJPGxpbmUgY2xhc3M9InN0MjEiIHgxPSI1NyIgeTE9IjY1LjciIHgyPSIxNTgiIHkyPSI2NS43Ii8+DQoJCTxsaW5lIGNsYXNzPSJzdDIxIiB4MT0iNDYiIHkxPSI5MS43IiB4Mj0iMTY4IiB5Mj0iOTEuNyIvPg0KCQk8cGF0aCBkPSJNMTgwLjIsMTIxLjdIMzMuOGwzMC40LTc0aDg2LjdMMTgwLjIsMTIxLjd6IE0zNS4yLDEyMC43aDE0My42bC0yOC42LTcySDY0LjhMMzUuMiwxMjAuN3oiLz4NCgk8L2c+DQoJPGc+DQoJCTxnPg0KCQkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyMTIuNSwxNTMuMiA2Ny41LDE1My4yIDk3LjUsODAuMiAxODMuNSw4MC4yIAkJCSIvPg0KCQk8L2c+DQoJCTxyZWN0IHg9IjY3LjUiIHk9IjE1My4yIiBjbGFzcz0ic3QyMCIgd2lkdGg9IjE0NSIgaGVpZ2h0PSIxMSIvPg0KCQk8bGluZSBjbGFzcz0ic3QyMSIgeDE9IjE0MCIgeTE9IjgwLjIiIHgyPSIxNDAiIHkyPSIxNTMuMiIvPg0KCQk8bGluZSBjbGFzcz0ic3QyMSIgeDE9IjkwIiB5MT0iOTcuNyIgeDI9IjE5MSIgeTI9Ijk3LjciLz4NCgkJPGxpbmUgY2xhc3M9InN0MjEiIHgxPSI3OSIgeTE9IjEyMy43IiB4Mj0iMjAxIiB5Mj0iMTIzLjciLz4NCgkJPHBhdGggZD0iTTIxMy4yLDE1My43SDY2LjhsMzAuNC03NGg4Ni43TDIxMy4yLDE1My43eiBNNjguMiwxNTIuN2gxNDMuNmwtMjguNi03Mkg5Ny44TDY4LjIsMTUyLjd6Ii8+DQoJCTxyZWN0IHg9IjEyOC44IiB5PSIxNjQuMiIgY2xhc3M9InN0MjIiIHdpZHRoPSIyMi41IiBoZWlnaHQ9IjE3Ii8+DQoJCTxyZWN0IHg9IjExNi45IiB5PSIxODEuMiIgY2xhc3M9InN0MjMiIHdpZHRoPSI0Ni4zIiBoZWlnaHQ9IjEwLjUiLz4NCgk8L2c+DQo8L2c+DQo8L3N2Zz4NCg==',1,0)
+            ,(23,'DC Box',0,NULL,NULL,1,0)
+            ,(24,'Gateway',0,NULL,NULL,1,0);
+
+        --
+        -- Table structure for table `s3m_warning`
+        --
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_warning`;
+        /*!40101 SET @saved_cs_client     = @@character_set_client */;
+        /*!50503 SET character_set_client = utf8mb4 */;
+        CREATE TABLE ${schema}.`s3m_warning` (
+          `warning_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID cảnh báo',
+          `warning_type` varchar(20) NOT NULL COMMENT 'Loại cảnh báo (\\n     101: Ngưỡng áp cao, \\n     102: Ngưỡng áp thấp, \\n     103: Nhiệt độ tiếp xúc, \\n     104: Hệ số công suất thấp, \\n     105: Quá tải, \\n     106: Tần số thấp, \\n     107: Tần số cao, \\n     108: Mất nguồn pha, \\n     109: Lệch pha, \\n     110: Ngược pha, \\n     111: Ngưỡng méo sóng hài bậc,\\n     112: Ngưỡng tổng méo sóng hài,\\n     113: Quá dòng trung tính (ln),\\n     114: Quá dòng tiếp địa,\\n     115: Đầu vào số cảnh báo 1,\\n     116: Đầu vào số cảnh báo 2,\\n     117: Lệch áp pha)',
+          `data_id` bigint(20) unsigned DEFAULT NULL COMMENT 'ID bản tin bị cảnh báo',
+          `device_id` bigint(20) unsigned NOT NULL COMMENT 'ID thiết bị',
+          `system_type_id` bigint(20) DEFAULT NULL,
+          `from_date` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Thời gian bắt đầu bị cảnh báo',
+          `to_date` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Thời gian kết thúc bị cảnh báo',
+          `handle_flag` tinyint(3) unsigned DEFAULT 0 COMMENT 'Trạng thái xử lý (0: Chưa xử lý, 1: Đã xử lý)',
+          `handle_name` varchar(100) DEFAULT NULL COMMENT 'Người xử lý',
+          `phone` varchar(100) DEFAULT NULL COMMENT 'Điện thoại người xử lý',
+          `setting_history_id` bigint(20) unsigned DEFAULT NULL COMMENT 'ID thông tin cài đặt',
+          `description` varchar(1000) DEFAULT NULL,
+          `create_id` smallint(5) unsigned DEFAULT NULL,
+          `create_date` timestamp NOT NULL DEFAULT current_timestamp(),
+          `update_id` smallint(5) unsigned DEFAULT NULL,
+          `update_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+          `user_id` varchar(45) DEFAULT NULL,
+          PRIMARY KEY (`warning_id`,`create_date`),
+          UNIQUE KEY `warning_id` (`warning_id`,`create_date`) USING BTREE,
+          KEY `idx_search` (`warning_id`,`create_date`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+        <!-- Tạo bảng dữ liệu mô phỏng năng lượng và tiền điện -->
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_simulation_data_ep`;
+        CREATE TABLE ${schema}.`s3m_data_simulation_data_ep` (
+                `id` int NOT NULL AUTO_INCREMENT,
+                `year` int DEFAULT NULL,
+                `jan` int DEFAULT NULL,
+                `feb` int DEFAULT NULL,
+                `mar` int DEFAULT NULL,
+                `apr` int DEFAULT NULL,
+                `may` int DEFAULT NULL,
+                `jun` int DEFAULT NULL,
+                `jul` int DEFAULT NULL,
+                `aug` int DEFAULT NULL,
+                `sep` int DEFAULT NULL,
+                `oct` int DEFAULT NULL,
+                `nov` int DEFAULT NULL,
+                `dec` int DEFAULT NULL,
+                `create_date` datetime NOT NULL,
+                `update_date` datetime NOT NULL,
+                `project_id` int NOT NULL,
+                `system_type_id` int NOT NULL,
+                PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_simulation_data_money`;
+        CREATE TABLE ${schema}.`s3m_data_simulation_data_money` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `year` int DEFAULT NULL,
+            `jan` int DEFAULT NULL,
+            `feb` int DEFAULT NULL,
+            `mar` int DEFAULT NULL,
+            `apr` int DEFAULT NULL,
+            `may` int DEFAULT NULL,
+            `jun` int DEFAULT NULL,
+            `jul` int DEFAULT NULL,
+            `aug` int DEFAULT NULL,
+            `sep` int DEFAULT NULL,
+            `oct` int DEFAULT NULL,
+            `nov` int DEFAULT NULL,
+            `dec` int DEFAULT NULL,
+            `create_date` datetime NOT NULL,
+            `update_date` datetime NOT NULL,
+            `project_id` int NOT NULL,
+            `system_type_id` int NOT NULL,
+            `unit` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+        <!-- Điểm mốc và kế hoạch năng lượng và tiền điện -->
+        DROP TABLE IF EXISTS ${schema}.`s3m_landmarks_energy`;
+        CREATE TABLE ${schema}.`s3m_landmarks_energy` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `date_of_month` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
+              `jan` int(11) DEFAULT NULL,
+              `feb` int(11) DEFAULT NULL,
+              `mar` int(11) DEFAULT NULL,
+              `may` int(11) DEFAULT NULL,
+              `apr` int(11) DEFAULT NULL,
+              `jun` int(11) DEFAULT NULL,
+              `jul` int(11) DEFAULT NULL,
+              `aug` int(11) DEFAULT NULL,
+              `sep` int(11) DEFAULT NULL,
+              `oct` int(11) DEFAULT NULL,
+              `nov` int(11) DEFAULT NULL,
+              `dec` int(11) DEFAULT NULL,
+              `create_date` datetime DEFAULT NULL,
+              `update_date` datetime DEFAULT NULL,
+              `status` int(11) NOT NULL,
+              `project_id` int(11) NOT NULL,
+              `system_type_id` int(11) NOT NULL,
+              `type` int(11) DEFAULT NULL,
+              `device_id` int(11) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        
+        -- Table structure for table `s3m_plans_energy`
+        DROP TABLE IF EXISTS ${schema}.`s3m_plans_energy`;
+        CREATE TABLE ${schema}.`s3m_plans_energy` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `date_of_month` varchar(50) NOT NULL,
+            `jan` int DEFAULT NULL,
+            `feb` int DEFAULT NULL,
+            `mar` int DEFAULT NULL,
+            `may` int DEFAULT NULL,
+            `apr` int DEFAULT NULL,
+            `jun` int DEFAULT NULL,
+            `jul` int DEFAULT NULL,
+            `aug` int DEFAULT NULL,
+            `sep` int DEFAULT NULL,
+            `oct` int DEFAULT NULL,
+            `nov` int DEFAULT NULL,
+            `dec` int DEFAULT NULL,
+            `create_date` datetime DEFAULT NULL,
+            `update_date` datetime DEFAULT NULL,
+            `status` int NOT NULL,
+            `project_id` int NOT NULL,
+            `system_type_id` int NOT NULL,
+            `type` int DEFAULT NULL,
+            `device_id` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        
+        <!--Batch Điểm mốc và kế hoạch sử dụng năng lượng và tiền điện -->
+        DROP TABLE IF EXISTS ${schema}.`s3m_data_batch_plan_energy`;
+        CREATE TABLE ${schema}.`s3m_data_batch_plan_energy` (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `project_id` int DEFAULT NULL,
+          `device_id` int DEFAULT NULL,
+          `time_start` varchar(45) DEFAULT NULL,
+          `time_end` varchar(45) DEFAULT NULL,
+          `system_type_id` varchar(45) DEFAULT NULL,
+          `ep` varchar(45) DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        
+        DROP TABLE IF EXISTS ${schema}.s3m_data_gw_1_${year};
+        CREATE TABLE ${schema}.s3m_data_gw_1_${year} (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `device_id` int NOT NULL,
+          `sng` varchar(45) DEFAULT NULL,
+          `hwv` varchar(45) DEFAULT NULL,
+          `fwv` varchar(45) DEFAULT NULL,
+          `sim` varchar(45) DEFAULT NULL,
+          `ip` varchar(45) DEFAULT NULL,
+          `status` int DEFAULT NULL,
+          `bat` float DEFAULT NULL,
+          `n_rtu` int DEFAULT NULL,
+          `n_mbtcp` int DEFAULT NULL,
+          `n_plc` int DEFAULT NULL,
+          `n_ws` int DEFAULT NULL,
+          `sent_date` varchar(45) NOT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        
+        DROP TABLE IF EXISTS ${schema}.s3m_data_gw_2_${year};
+        CREATE TABLE ${schema}.s3m_data_gw_2_${year} (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `device_id` int NOT NULL,
+          `unique_key` varchar(45) NOT NULL,
+          `n_rtu` int DEFAULT NULL,
+          `n_mbtcp` int DEFAULT NULL,
+          `n_plc` int DEFAULT NULL,
+          `n_ws` int DEFAULT NULL,
+          `uid` bigint DEFAULT NULL,
+          `ip` varchar(45) DEFAULT NULL,
+          `status_con` int DEFAULT NULL,
+          `sid` varchar(45) DEFAULT NULL,
+          `sent_date` varchar(45) NOT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        
+        DROP TABLE IF EXISTS ${schema}.s3m_data_pd_htr02_1_${year};
+        CREATE TABLE ${schema}.s3m_data_pd_htr02_1_${year} (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `device_id` int NOT NULL,
+          `alarm_status_bit` bigint DEFAULT NULL,
+          `lfb_ratio` float DEFAULT NULL,
+          `lfb_eppc` float DEFAULT NULL,
+          `mfb_ratio` float DEFAULT NULL,
+          `mfb_eppc` float DEFAULT NULL,
+          `hfb_ratio` float DEFAULT NULL,
+          `hfb_eppc` float DEFAULT NULL,
+          `mean_ratio` float DEFAULT NULL,
+          `mean_eppc` float DEFAULT NULL,
+          `ratio_eppc_hi` float DEFAULT NULL,
+          `ratio_eppc_lo` float DEFAULT NULL,
+          `sent_date` timestamp NOT NULL,
+          `indicator` int DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        
+        DROP TABLE IF EXISTS ${schema}.s3m_data_pd_ams01_1_${year};
+        CREATE TABLE ${schema}.s3m_data_pd_ams01_1_${year} (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `device_id` int NOT NULL,
+          `indicator` int DEFAULT NULL,
+          `ratio` float DEFAULT NULL,
+          `eppc` float DEFAULT NULL,
+          `pd_level` float DEFAULT NULL,
+          `notifier` float DEFAULT NULL,
+          `sent_date` timestamp NOT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        
+        DROP TABLE IF EXISTS ${schema}.s3m_data_relay_1_${year};
+        CREATE TABLE ${schema}.s3m_data_relay_1_${year} (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `device_id` int NOT NULL,
+          `status` int DEFAULT NULL,
+          `sent_date` varchar(45) NOT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+        -- Bang cong doan san xuat
+
+        DROP TABLE IF EXISTS ${schema}.s3m_production_step;
+        CREATE TABLE ${schema}.s3m_production_step (
+        `production_step_id` int(11) NOT NULL AUTO_INCREMENT,
+        `production_id` bigint(20) DEFAULT NULL,
+        `production_step_name` varchar(1000) DEFAULT NULL,
+        `create_date` timestamp NULL DEFAULT current_timestamp(),
+        PRIMARY KEY (`production_step_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        DROP TABLE IF EXISTS `s3m_manufacture_shift_detail`;
+
+        -- Bang quan ly san xuat detail
+        DROP TABLE IF EXISTS ${schema}.s3m_manufacture_shift_detail;
+        CREATE TABLE ${schema}.s3m_manufacture_shift_detail (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `ep_total` float DEFAULT NULL,
+        `manufacture_id` int(11) NOT NULL,
+        `shift_id` int(11) NOT NULL,
+        `view_time` date NOT NULL,
+        `production_number` int(11) NOT NULL,
+        `total_revenue` int(11) NOT NULL,
+        `create_date` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+        `update_date` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+        -- Bang quan ly san pham
+        DROP TABLE IF EXISTS ${schema}.s3m_production;
+        CREATE TABLE ${schema}.s3m_production (
+        `production_id` int(11) NOT NULL AUTO_INCREMENT,
+        `production_name` varchar(255) DEFAULT NULL,
+        `project_id` bigint(20) DEFAULT NULL,
+        `unit` varchar(45) DEFAULT NULL,
+        PRIMARY KEY (`production_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+        -- Bang quan ly san xuat
+        DROP TABLE IF EXISTS ${schema}.s3m_manufacture_shift;
+        CREATE TABLE ${schema}.s3m_manufacture_shift (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `production_step_id` int(11) NOT NULL,
+        `device_ids` varchar(45) COLLATE utf8mb3_unicode_ci NOT NULL,
+        `create_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+        `update_date` timestamp NOT NULL DEFAULT current_timestamp(),
+        `status` int(11) NOT NULL DEFAULT 1,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+        
+        /*!40101 SET character_set_client = @saved_cs_client */;
+        /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+        /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+        /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+        /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+        /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+        /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+        /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+        /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+        -- Dump completed on ${year}-05-18 11:07:41
+
+    </insert>
+
+    <update id="updateCustomer" parameterType="Customer">  
+        Update s3m_customer SET customer_name = #{customerName}, description = #{description}, customer_code = #{customerCode}  where customer_id = #{customerId}
+    </update>
+
+    <update id="deleteCustomer" parameterType="map">
+        SET SQL_SAFE_UPDATES = 0;
+        
+        UPDATE s3m_customer SET s3m_customer.delete_flag = 1  WHERE s3m_customer.customer_id = #{customerId};
+        
+        UPDATE s3m_project SET s3m_project.delete_flag = 1 WHERE s3m_project.customer_id = #{customerId};
+        
+        UPDATE s3m_system_map SET s3m_system_map.delete_flag = 1 WHERE s3m_system_map.project_id IN (SELECT project_id FROM s3m_project WHERE customer_id = #{customerId});
+        
+        UPDATE s3m_device SET s3m_device.delete_flag = 1 WHERE s3m_device.project_id IN (SELECT project_id FROM s3m_project WHERE customer_id = #{customerId});
+        
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+
+    <select id="getCustomerByUserId" parameterType="map" resultMap="customerResult">
+        SELECT distinct
+            A.customer_id,
+            A.customer_name,
+            A.customer_code,
+            A.description,
+            A.update_date
+        FROM 
+            s3m_customer A
+            LEFT JOIN s3m_user B ON A.customer_id = B.customer_id
+        WHERE
+             A.customer_id IS NOT NULL
+        <if test="userId != null">
+                AND B.user_id = #{userId}
+            </if>
+    </select>
+
+    <select id="getCustomersByManagerId" parameterType="map" resultMap="customerResult">
+        SELECT
+            *
+        FROM
+            s3m_customer A
+        WHERE
+            A.customer_id IS NOT NULL
+        <if test="managerId != null">
+                AND A.manager_id = #{managerId}
+            </if>
+    </select>
+    <select id="getCustomerByProjectId" parameterType="map" resultMap="customerResult">
+        SELECT
+            *
+        FROM
+            s3m_customer A 
+                LEFT JOIN s3m_project B ON A.customer_id = B.customer_id
+        WHERE
+            A.customer_id IS NOT NULL
+        <if test="projectId != null">
+                AND B.project_id = #{projectId}
+            </if>
+    </select>
+    <select id="getCustomerBySuperId" parameterType="map" resultMap="customerResult">
+        SELECT
+            *
+        FROM
+            s3m_customer A 
+                LEFT JOIN s3m_manager B ON A.manager_id = B.manager_id
+                LEFT JOIN s3m_super_manager C ON B.super_manager_id = C.id
+        WHERE
+            A.customer_id IS NOT NULL
+        <if test="superManagerId != null">
+                AND C.id = #{superManagerId}
+            </if>
+    </select>
+
+    <select id="getPowerByCustomerId" parameterType="map" resultType="java.lang.Long">
+        SELECT
+            SUM(A.p_total) 
+         FROM
+            s3m_data_load_frame_1_2022 A
+            JOIN s3m_device B  ON A.device_id = B.device_id
+            JOIN s3m_project C ON B.project_id = C.project_id
+         WHERE
+            C.customer_id =${customerId}
+    </select>
+
+    <select id="getCustomersTool" resultMap="customerResult">
+        SELECT
+            *
+        FROM
+            s3m_customer
+        WHERE 
+            customer_id IS NOT NULL
+        <if test="customerId != null">
+                AND customer_id = #{customerId}
+            </if>
+        ORDER BY update_date DESC
+    </select>
+
+    <insert id="insertOtp" parameterType="OtpData">
+        INSERT INTO s3m_otp_data(otp_code, user_id, customer_id, status, create_date) VALUES (#{otpCode}, #{userId}, #{customerId}, #{status}, NOW())
+    </insert>
+
+    <select id="getOtpInfor" parameterType="OtpData" resultType="OtpData">
+        SELECT
+            A.user_id AS userId,
+            A.customer_id AS customerId,
+            A.create_date AS createDate,
+            A.otp_code AS otpCode
+        FROM
+            s3m_otp_data A
+        JOIN s3m_user B ON A.user_id = B.user_id
+        WHERE
+            B.username = #{userName}
+        AND
+            A.customer_id = #{customerId}
+        AND
+            A.status = 0
+        ORDER BY  A.create_date DESC LIMIT 1
+    </select>
+
+    <update id="updateStatusOtp" parameterType="OtpData">
+        SET SQL_SAFE_UPDATES = 0;
+        
+        UPDATE s3m_otp_data SET status = 1 WHERE user_id = #{userId} AND customer_id = #{customerId};
+        
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+
+    <select id="getCustomerIdFirstTime" resultMap="customerResult">
+        SELECT customer_id FROM s3m_customer  ORDER BY customer_id ASC LIMIT 1;
+    </select>
+    
+    <select id="getListCustomerIds" resultType="java.lang.String">
+        SELECT
+            customer_ids
+        FROM
+            s3m_user
+        WHERE
+            username = #{userName}        
+    </select>
+    
+    <select id="getListCus" resultMap="customerResult">  
+        SELECT A.customer_id, A.customer_name, A.customer_code, A.description, A.update_date 
+        FROM s3m_customer A
+        WHERE 
+             A.delete_flag != 1
+             AND A.customer_id IN (${ids})
+    </select>
+</mapper>

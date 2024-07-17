@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SettingShiftMapper">
+<!--    <resultMap id="listDataResult" type="ShiftSetting">-->
+<!--    </resultMap>-->
+    <resultMap id="settingShiftResult" type="SettingShift">
+        <result property="id"  column="id" />
+        <result property="projectId" column="project_id" />
+        <result property="shiftName" column="shift_name" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="updateDate" column="update_date" />
+        <result property="createDate" column="create_date" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="getSettingShiftByProject" resultMap="settingShiftResult" parameterType="map">
+        SELECT * FROM s3m_setting_shift A where A.project_id = #{project} and A.status != -1;
+    </select>
+    <select id="getSettingShiftById" resultMap="settingShiftResult" parameterType="Integer">
+        SELECT *
+        FROM s3m_setting_shift A where A.id = #{id};
+    </select>
+    <insert id="addSettingShift" parameterType="vn.ses.s3m.plus.form.SettingShiftForm">
+        INSERT INTO
+            s3m_setting_shift
+            (`project_id`, `shift_name`, `start_time`, `end_time`, `create_date`, `status`)
+            VALUES (#{projectId}, #{shiftName}, #{startTime}, #{endTime}, current_timestamp(), 1);
+    </insert>
+    <update id="updateSettingShift" parameterType="map">
+        UPDATE s3m_setting_shift A SET
+            A.shift_name = #{shiftName},
+            A.end_time = #{endTime},
+            A.start_time = #{startTime},
+            A.status = #{status}
+        where A.id = #{id}
+    </update>
+
+    <update id="updateStatusSettingShift"  parameterType="Integer">
+        UPDATE s3m_setting_shift A SET
+            A.status = #{status} where A.id = #{id}
+    </update>
+
+    <update id="deleteSettingShift"  parameterType="Integer">
+        UPDATE s3m_setting_shift A SET
+            A.status = #{status} where A.id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,16 @@
+.btn {
+    font-size: 0.85rem;
+}
+
+.input-group-text {
+    font-size: 0.85rem;
+}
+
+.form-control {
+    height: auto;
+}
+
+.table {
+    word-wrap: break-word;
+    table-layout: fixed;
+}

@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: 
+              - "http://localhost:3000"
+              - "http://localhost:3001"
+              - "http://10.68.21.36:3000"
+              - "http://10.68.21.36:3001"
+              - "http://42.112.22.28:3000"
+              - "http://42.112.22.28:3001"
+              - "http://sems.ses-tech.vn"
+              - "http://sems.ses-tech.vn:3000"
+              - "http://sems.ses-tech.vn:3001"
+              - "https://sems.ses-tech.vn"
+              - "https://sems.ses-tech.vn:3000"
+              - "https://sems.ses-tech.vn:3001"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowCredentials: true

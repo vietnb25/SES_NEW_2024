@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.OverviewPowerMapper">
+
+    <resultMap id="warningResult" type="Warning">
+        <result column="id" property="id" />
+        <result column="warning_id" property="warningId" />
+        <result column="warning_type" property="warningType" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="total" property="totalDevice" />
+        <result column="system_type_id" property="systemTypeId" />
+        <result column="from_date" property="fromDate" />
+        <result column="to_date" property="toDate" />
+        <result column="handle_flag" property="handleFlag" />
+        <result column="project_name" property="projectName" />
+        <result column="project_id" property="projectId" />
+        <result column="handle_name" property="handleName" />
+        <result column="staff_name" property="staffName" />
+        <result column="setting_history_id" property="settingHistoryId" />
+        <result column="description" property="description" />
+        <result column="create_id" property="createId" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_id" property="updateId" />
+        <result column="update_date" property="updateDate" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="system_map_name" property="systemMapName" />
+    </resultMap>
+
+    <resultMap id="overviewPower" type="OverviewLoadPower">
+        <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="p_total" property="pTotal" />
+        <result column="ep" property="eP" />
+        <result column="warningCount" property="warningCount" />
+        <result column="id" property="id"/>
+        <result column="sent_date" property="sentDate" />
+    </resultMap>
+
+    <resultMap id="overviewPowerPV" type="OverviewPVPower">
+       <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="warningCount" property="warningCount" />
+    </resultMap>
+    
+    
+    <resultMap id="overviewPowerGrid" type="OverviewGridPower">
+        <result column="layer" property="layer" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="project_id" property="projectId" />
+        <result column="device_status" property="deviceStatus" />
+        <result column="p_total" property="pTotal" />
+        <result column="INDICATOR" property="indicator" />
+        <result column="T" property="temp" />
+        <result column="H" property="humidity" />
+        <result column="warningCount" property="warningCount" />
+    </resultMap>
+
+    <resultMap id="overviewPowerInDay" type="OverviewLoadTotalPower"></resultMap>
+
+    <resultMap id="overviewPowerPVInDay" type="OverviewPVTotalPower"></resultMap>
+    
+    <resultMap id="overviewPowerGridInDay" type="OverviewGridTotalPower"></resultMap>
+
+    <resultMap id="resultForecast" type="Forecast"></resultMap>
+
+    <!--<select id="getOverviewPower" parameterType="map" resultMap="overviewPower">
+        SELECT
+            sum(A.p_total) AS pTotal,
+            sum(A.ep) AS eP
+        FROM
+            s3m_data_load_frame_1_2022 A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            A.device_id = #{deviceId}
+        AND
+            (A.transaction_date BETWEEN UNIX_TIMESTAMP(CURRENT_DATE) and UNIX_TIMESTAMP(now()))
+    </select> -->
+    <!--<select id="getOverviewPowers" parameterType="map" resultMap="overviewPower">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.p_total,
+            A.ep
+        FROM
+            ${schema}s3m_data_load_frame_1_view A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND
+            A.view_type = 3
+        ORDER BY 
+            A.view_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+           </if>
+    </select> -->
+    
+    <select id="getSumEnergy" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                B.project_id = #{projectId} 
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time <![CDATA[<=]]> #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByYear" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                B.project_id = #{projectId} 
+                AND B.calculate_flag = 1
+                AND A.view_type = 1
+                AND A.view_time = #{year}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByMonth" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                B.project_id = #{projectId} 
+                AND B.calculate_flag = 1
+                AND A.view_type = 2
+                AND A.view_time = #{month}
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+    
+    <select id="getSumEnergyByDay" parameterType="map" resultType="java.lang.Long">
+        SELECT SUM(A.ep)
+        FROM ${schema}s3m_data_load_frame_1_view A
+        WHERE A.id IN 
+        (SELECT max(id) 
+            FROM ${schema}s3m_data_load_frame_1_view A 
+            JOIN s3m_device B ON A.device_id = B.device_id
+            WHERE
+                B.project_id = #{projectId} 
+                AND B.calculate_flag = 1
+                AND A.view_type = 3
+                AND date(A.view_time) = date(#{day})
+                GROUP BY A.device_id, A.view_time
+         )
+    </select>
+
+<!--    <select id="getOverviewPowers" parameterType="map" resultMap="overviewPower">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.p_total
+        FROM
+            ${table} A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND
+            A.transaction_date IN
+            (
+                SELECT MAX(A.transaction_date) FROM ${table} A JOIN s3m_device B ON A.device_id = B.device_id 
+                WHERE B.project_id = #{projectId} AND B.calculate_flag = 1 AND system_type_id = 1 GROUP BY A.device_id
+            )
+    </select>  -->
+    <select id="getOverviewPowers" parameterType="map" resultMap="overviewPower">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.p_total
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            A.device_id = ${deviceId}
+        AND
+            A.transaction_date BETWEEN (UNIX_TIMESTAMP(now()) - 900) AND UNIX_TIMESTAMP(now())
+    </select>
+
+    <select id="getOverviewPowerPV" parameterType="map" resultMap="overviewPowerPV">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.p_total AS W,
+            A.Pdc AS DCW,
+            A.ep AS Wh
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1    
+    </select>
+    
+    <select id="getOverviewPowerCombiner" parameterType="map" resultMap="overviewPowerPV">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.PdcCombiner AS DCW,
+            A.EpCombiner AS Wh,
+            A.PR AS pr
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1    
+    </select>
+    
+    <select id="getOverviewPowerString" parameterType="map" resultMap="overviewPowerPV">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.PdcStr AS DCW,
+            A.EpStr AS Wh,
+            A.InDCPR AS inDCPR
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1    
+    </select>
+    
+    <select id="getOverviewPowerWeather" parameterType="map" resultMap="overviewPowerPV">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.TEMP,
+            A.H,
+            A.Rad
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1  
+    </select>
+
+    <select id="getLayer" parameterType="map" resultMap="overviewPower">
+        SELECT
+           system_map_id,
+           layer,
+           system_map_name
+        FROM
+            s3m_system_map A
+        WHERE
+        A.system_map_id IS NOT NULL
+        <if test="systemMapIds != null">
+            AND A.system_map_id IN
+            <foreach item="systemMapIds" collection="systemMapIds" open="(" separator="," close=")">
+                    #{systemMapIds}
+                </foreach>
+        </if>
+    </select>
+
+    <select id="getLayerPV" parameterType="map" resultMap="overviewPowerPV">
+        SELECT
+           system_map_id,
+           layer,
+           system_map_name
+        FROM
+            s3m_system_map A
+        WHERE
+        A.system_map_id IS NOT NULL
+        <if test="systemMapIds != null">
+            AND A.system_map_id IN
+            <foreach item="systemMapIds" collection="systemMapIds" open="(" separator="," close=")">
+                    #{systemMapIds}
+                </foreach>
+        </if>
+    </select>
+
+    <select id="getDeviceHasWarning" parameterType="map" resultType="java.lang.Integer">
+    SELECT 
+        COUNT(DISTINCT A.device_id) AS total
+    FROM
+        s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.system_type_id = 1
+            AND B.project_id = #{projectId}
+            AND A.device_id = #{deviceId}
+            AND (A.create_date BETWEEN UNIX_TIMESTAMP(CURRENT_DATE) AND NOW())
+    </select>
+
+    <select id="getDevicesHasWarning" parameterType="map" resultMap="overviewPower">
+        SELECT 
+        COUNT(A.warning_id) AS warningCount,
+        A.device_id
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.system_type_id = 1
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+        GROUP BY A.device_id
+    </select>
+    
+    <select id="getDevicesHasWarningPV" parameterType="map" resultMap="overviewPowerPV">
+        SELECT 
+        COUNT(A.warning_id) AS warningCount,
+        A.device_id
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+        A.warning_type BETWEEN 200 AND 300
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+        GROUP BY A.device_id
+    </select>
+
+
+    <select id="getTotalPowerInDay" parameterType="map" resultMap="overviewPowerInDay">
+        SELECT
+            sum(A.p_total) AS power,
+            sum(A.ep) AS energy
+        FROM
+            s3m_data_load_frame_1_2022 A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getTotalPowerPVInDay" parameterType="map" resultMap="overviewPowerPVInDay">
+        SELECT
+            sum(A.Wh) AS energy,
+            sum(A.W) AS power
+        FROM
+            s3m_data_inverter_1 A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getListPowerInDay" parameterType="map" resultMap="overviewPowerInDay">
+        SELECT
+            A.p_total AS power,
+            A.ep AS energy,
+            A.view_time AS viewTime,
+            A.device_id AS deviceId,
+            A.id
+        FROM
+            ${schema}s3m_data_load_frame_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.view_type = 5
+        AND
+            A.view_time BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getListPowerPVInDay" parameterType="map" resultMap="overviewPowerPVInDay">
+        SELECT
+            A.Ptotal AS power,
+            A.Ep AS energy,
+            A.view_time AS viewTime,
+            A.device_id AS deviceId
+        FROM
+            ${schema}s3m_data_inverter_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.view_type = 5
+        AND
+            DATE(A.view_time) BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getListPowerCombinerInDay" parameterType="map" resultMap="overviewPowerPVInDay">
+        SELECT
+            A.POWER AS power,
+            A.EpCombiner AS energy,
+            A.view_time AS viewTime,
+            A.device_id AS deviceId
+        FROM
+            ${schema}s3m_data_combiner_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.view_type = 5
+        AND
+            DATE(A.view_time) BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getListPowerStringInDay" parameterType="map" resultMap="overviewPowerPVInDay">
+        SELECT
+            A.power AS power,
+            A.VdcStr AS energy,
+            A.view_time AS viewTime,
+            A.device_id AS deviceId
+        FROM
+            ${schema}s3m_data_string_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.view_type = 5
+        AND
+            DATE(A.view_time) BETWEEN #{from} AND #{to}
+    </select>
+
+    <select id="getInformationProject" parameterType="map" resultType="map">
+        SELECT A.project_name AS projectName,
+               B.area_name AS areaName,
+               C.manager_name AS managerName,
+               D.name AS superManagerName,
+               E.customer_name AS customerName
+        FROM s3m_project A
+            JOIN s3m_area B ON A.area_id = B.area_id
+            JOIN s3m_manager C ON B.manager_id = C.manager_id
+            JOIN s3m_super_manager D ON C.super_manager_id = D.id
+            JOIN s3m_customer E ON A.customer_id = E.customer_id
+        WHERE A.project_id = #{projectId}
+    </select>
+
+    <select id="getListDeviceLoadByProjectId" parameterType="map" resultType="vn.ses.s3m.plus.dto.Device">
+        SELECT DISTINCT A.device_name AS deviceName,
+                        A.device_code AS deviceCode
+        FROM s3m_device A
+            JOIN s3m_data_load_frame_1_2022 B ON A.device_id = B.device_id
+        WHERE
+            A.project_id = #{projectId}
+    </select>
+
+    <select id="getForecast" parameterType="map" resultMap="resultForecast">
+        SELECT
+            F.id,
+            F.project_id as projectId,
+            F.system_type_id as systemTypeId,
+            F.a0,
+            F.a1,
+            F.a2,
+            F.a3,
+            F.a4,
+            F.a5,
+            F.a6,
+            F.a7,
+            F.a8,
+            F.a9,
+            F.update_date as updateDate
+        FROM
+            ${schema}s3m_forecast F
+        WHERE
+            F.project_id = #{projectId}
+        <if test="customerId != null">
+        AND
+            F.customer_id = #{customerId}
+            </if>
+        <if test="systemTypeId != null">
+        AND
+            F.system_type_id = #{systemTypeId}
+            </if>
+        <if test="date != null">
+            AND F.update_date
+            <![CDATA[<]]>
+            #{date}
+        </if>
+        ORDER BY
+            F.update_date DESC
+        LIMIT 1
+    </select>
+
+    <select id="getListForecast" parameterType="map" resultMap="resultForecast">
+        SELECT
+            F.id,
+            F.project_id as projectId,
+            F.system_type_id as systemTypeId,
+            F.a0,
+            F.a1,
+            F.a2,
+            F.a3,
+            F.a4,
+            F.a5,
+            F.a6,
+            F.a7,
+            F.a8,
+            F.a9,
+            F.update_date as updateDate
+        FROM
+            ${schema}s3m_forecast F
+        WHERE
+            F.project_id = #{projectId}
+        <if test="customerId != null">
+        AND
+            F.customer_id = #{customerId}
+            </if>
+        <if test="systemTypeId != null">
+        AND
+            F.system_type_id = #{systemTypeId}
+            </if>
+        <if test="from != null">
+            AND F.update_date
+            <![CDATA[>=]]>
+            #{from}
+        </if>
+        <if test="to != null">
+            AND F.update_date
+            <![CDATA[<=]]>
+            #{to}
+        </if>
+        ORDER BY
+            F.update_date DESC
+    </select>
+
+    <select id="getForecasts" parameterType="map" resultMap="resultForecast">
+        SELECT
+            F.id,
+            F.project_id as projectId,
+            F.system_type_id as systemTypeId,
+            F.a0,
+            F.a1,
+            F.a2,
+            F.a3,
+            F.a4,
+            F.a5,
+            F.a6,
+            F.a7,
+            F.a8,
+            F.a9,
+            F.update_date as updateDate,
+            F.create_date as createDate
+        FROM
+            ${schema}s3m_forecast_history F
+        WHERE
+            F.project_id = #{projectId}
+        <if test="customerId != null">
+        AND
+            F.customer_id = #{customerId}
+            </if>
+        <if test="systemTypeId != null">
+        AND
+            F.system_type_id = #{systemTypeId}
+            </if>
+        <if test="fromDate != null and toDate != null">
+            AND (F.update_date BETWEEN #{fromDate} AND #{toDate})
+        </if>
+        ORDER BY
+            F.update_date DESC
+        <if test="start != null and end != null">
+            LIMIT #{start}, #{end}
+        </if>
+    </select>
+
+    <insert id="insertForecast" parameterType="map">
+        INSERT INTO
+            ${schema}s3m_forecast(
+            project_id,
+            system_type_id,
+            a0,
+            a1,
+            a2,
+            a3,
+            a4,
+            a5,
+            a6,
+            a7,
+            a8,
+            a9)
+        VALUES(
+        #{projectId},
+        #{systemTypeId},
+        #{a0},
+        #{a1},
+        #{a2},
+        #{a3},
+        #{a4},
+        #{a5},
+        #{a6},
+        #{a7},
+        #{a8},
+        #{a9})
+    </insert>
+
+    <insert id="insertForecastHistory" parameterType="map">
+        INSERT INTO
+            ${schema}s3m_forecast_history(
+            project_id,
+            system_type_id,
+            a0,
+            a1,
+            a2,
+            a3,
+            a4,
+            a5,
+            a6,
+            a7,
+            a8,
+            a9)
+        VALUES(
+        #{projectId},
+        #{systemTypeId},
+        #{a0},
+        #{a1},
+        #{a2},
+        #{a3},
+        #{a4},
+        #{a5},
+        #{a6},
+        #{a7},
+        #{a8},
+        #{a9})
+    </insert>
+
+    <update id="updateForecast" parameterType="map">
+        UPDATE
+            ${schema}s3m_forecast
+        SET
+            a0 = #{a0},
+            a1 = #{a1},
+            a2 = #{a2},
+            a3 = #{a3},
+            a4 = #{a4},
+            a5 = #{a5},
+            a6 = #{a6},
+            a7 = #{a7},
+            a8 = #{a8},
+            a9 = #{a9}
+        WHERE
+            id = ${id}
+    </update>
+
+    <select id="countTotalForecasts" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            ${schema}s3m_forecast_history F
+        WHERE
+            F.project_id = #{projectId}
+        <if test="customerId != null">
+        AND
+            F.customer_id = #{customerId}
+            </if>
+        <if test="systemTypeId != null">
+        AND
+            F.system_type_id = #{systemTypeId}
+            </if>
+        ORDER BY
+            F.update_date DESC
+    </select>
+    
+     <select id="getOverviewPowerRMU" parameterType="map" resultMap="overviewPowerGrid">
+        SELECT
+            B.device_id,
+            B.device_name,
+            B.system_map_id,
+            B.project_id,
+            A.p_total,
+            A.INDICATOR,
+            A.T,
+            A.H,
+            A.device_status
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        AND
+            A.transaction_date BETWEEN #{from} AND #{to}
+        ORDER BY 
+            A.transaction_date DESC
+        LIMIT 1
+    </select>
+    
+    <select id="getDevicesHasWarningGrid" parameterType="map" resultMap="overviewPowerGrid">
+        SELECT 
+        COUNT(A.warning_id) AS warningCount,
+        A.device_id
+    FROM
+        ${schema}s3m_warning A
+            JOIN
+        s3m_device B ON A.device_id = B.device_id
+    WHERE
+       A.warning_type > 500
+        <if test="deviceIds != null">
+            AND A.device_id  IN
+            <foreach item="deviceIds" collection="deviceIds" open="(" separator="," close=")">
+                    #{deviceIds}
+                </foreach>
+        </if>
+        AND (A.create_date BETWEEN CURRENT_DATE AND NOW())
+        GROUP BY A.device_id
+    </select>
+    
+    <select id="getLayerGrid" parameterType="map" resultMap="overviewPowerGrid">
+        SELECT
+           system_map_id,
+           layer,
+           system_map_name
+        FROM
+            s3m_system_map A
+        WHERE
+        A.system_map_id IS NOT NULL
+        <if test="systemMapIds != null">
+            AND A.system_map_id IN
+            <foreach item="systemMapIds" collection="systemMapIds" open="(" separator="," close=")">
+                    #{systemMapIds}
+                </foreach>
+        </if>
+    </select>
+    
+    <select id="getListPowerRMUInDay" parameterType="map" resultMap="overviewPowerGridInDay">
+        SELECT
+            A.p_total AS power,
+            A.ep AS energy,
+            A.view_time AS viewTime,
+            A.device_id AS deviceId,
+            A.id
+        FROM
+            ${schema}s3m_data_rmu_drawer_1_view A
+        JOIN
+            s3m_device B  ON A.device_id = B.device_id
+        WHERE
+            A.id IS NOT NULL
+        AND
+            B.calculate_flag = 1
+        <if test="projectId != null">
+            AND
+                B.project_id = #{projectId}
+        </if>
+        AND
+            A.view_type = 5
+        AND
+            DATE(A.view_time) BETWEEN #{from} AND #{to}
+    </select>
+</mapper>

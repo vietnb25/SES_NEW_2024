@@ -1,0 +1,67 @@
+#system-datetime {
+    display: block;
+    border: 1px solid #ECECEC;
+    border-radius: 3px;
+    width: 170px;
+    margin: 10px 15px 0px 0px;
+    padding: 5px 8px;
+}
+
+.pickadate--root {
+    font-size: 12px !important;
+    font-weight: 300 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    max-width: 23em !important;
+    min-width: 20em !important;
+    border: 1px solid #ccc !important;
+    background-color: #fff !important;
+    border-radius: 0px !important;
+    width: 250px !important;
+}
+
+.pickadate--input-root {
+    position: relative !important;
+}
+
+.pickadate--element {
+    background-color: white; 
+}
+
+.pickadate--button {
+    top: 20% !important;
+    position: absolute !important;
+}
+
+.pickadate--button__previous {
+    left: 0 !important;
+}
+
+.pickadate--button__next {
+    right: 0 !important;
+}
+
+
+.pickadate--button__today {
+    display: none !important;
+}
+
+.pickadate--header {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    text-align: center !important;
+    flex-direction: column !important; 
+}
+
+.pickadate--grid_cell__today > div {
+    border: 1px solid #007bff !important;
+}
+
+.modal-backdrop {
+    display: contents !important;
+}
+
+#system-datetime {
+    margin: 3px 8px;
+}

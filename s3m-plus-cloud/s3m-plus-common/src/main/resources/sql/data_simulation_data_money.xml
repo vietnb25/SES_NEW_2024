@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.SimulationDataMoneyMapper">
+<resultMap id="SimulationDataResult" type="SimulationDataMoney">
+		<result property="id" column="id" />
+		<result property="year" column="year" />
+		<result property="jan" column="jan" />
+		<result property="mar" column="mar" />
+		<result property="apr" column="apr" />
+		<result property="may" column="may" />
+		<result property="jun" column="jun" />
+		<result property="jul" column="jul" />
+		<result property="aug" column="aug" />
+		<result property="sep" column="sep" />
+		<result property="oct" column="oct" />
+		<result property="nov" column="nov" />
+		<result property="dec" column="dec" />
+		<result property="feb" column="feb" />
+		<result property="updateDate" column="update_date" />
+		<result property="projectId" column="project_id" />
+		<result property="systemTypeId" column="system_type_id" />
+	</resultMap>
+	<select id="getListByProjectAndSystemType" parameterType="map" resultMap="SimulationDataResult">
+		select A.* 
+		from 
+		${schema}s3m_data_simulation_data_money A 
+		left join s3m_plus.s3m_system_type B on B.system_type_id = A.system_type_id 
+		left join s3m_plus.s3m_project C on A.project_id = C.project_id
+		where A.project_id = #{projectId} and A.system_type_id = #{systemTypeId};
+	</select>
+	<select id="addDataMoney" parameterType="vn.ses.s3m.plus.form.SimulationDataForm">
+			INSERT INTO ${customer}s3m_data_simulation_data_money
+			(
+			`year`, `jan`,`feb`, `mar`, `apr`, `may`, `jun`, `jul`, `aug`, `sep`, 
+			`oct`, `nov`, `dec`, `create_date`, `update_date`, `project_id`, `system_type_id`,`unit`
+			) 
+			VALUES 
+			(
+			#{year}, #{jan}, #{feb}, #{mar}, #{apr}, #{may}, #{jun}, #{jul}, #{aug}, #{sep}, #{oct}, #{nov}, #{dec},
+			current_date(), current_date(), #{projectId}, #{systemTypeId}, "dollar"
+			);
+	</select>
+	<select id="updateDataMoney" parameterType="map">
+			 UPDATE  ${schema}s3m_data_simulation_data_money
+			SET 
+			<if test="year != null and year != ''">
+				year = ${year},
+			</if>
+			<if test="jan != null and jan != ''">
+				jan = ${jan},
+			</if>
+			<if test="mar != null and mar != ''">
+				mar = ${mar},
+			</if>
+			<if test="apr != null and apr != ''">
+				apr = ${apr},
+			</if>
+			<if test="may != null and may != ''">
+				may = ${may},
+			</if>
+			<if test="jun != null and jun != ''">
+				jun = ${jun},
+			</if>
+			<if test="jul != null and jul !=''">
+				jul = ${jul},
+			</if>
+			<if test="aug != null and aug !=''">
+				aug = ${aug},
+			</if>
+			<if test="sep != null and sep !=''">
+				sep = ${sep},
+			</if>
+			<if test="oct != null and oct !=''">
+				oct = ${oct},
+			</if>
+			<if test="nov != null and nov !=''">
+				nov = ${nov},
+			</if>
+			<if test="dec != null and dec !=''">
+				`dec` = ${dec},
+			</if>
+			<if test="feb != null and feb !=''">
+				feb = ${feb},
+			</if>
+			update_date = current_date(),
+			
+			project_id = ${projectId},
+			
+			system_type_id = ${systemTypeId}
+			
+ 			WHERE id = ${id}
+	</select>
+	
+</mapper>

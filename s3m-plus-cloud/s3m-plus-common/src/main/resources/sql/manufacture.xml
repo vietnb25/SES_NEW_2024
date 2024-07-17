@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ManufactureMapper">
+<resultMap id="listDataResult" type="Manufacture">
+    <result column="ep1" property="ep1"/>
+    <result column="ep2" property="ep2"/>
+    <result column="ep3" property="ep3"/>
+</resultMap>
+    <resultMap id="listDataResultPqs" type="DataPqs">
+        <result column="view_time" property="viewTime"/>
+        <result column="view_type" property="viewType"/>
+        <result column="ep" property="ep"/>
+        <result column="device_id" property="deviceId"/>
+    </resultMap>
+    <resultMap id="DataExport" type="Manufacture">
+        <result column="view_time" property="viewTime"/>
+        <result column="view_type" property="viewType"/>
+        <result column="total_unit" property="totalUnit"/>
+        <result column="ravenue" property="ravenue"/>
+        <result column="ep" property="ep"/>
+        <result column="device_ids" property="deviceId"/>
+        <result property="deviceName" jdbcType="INTEGER" column="device_name" />
+        <result property="shift1" jdbcType="INTEGER" column="shift_1" />
+        <result property="shift2" jdbcType="INTEGER" column="shift_2" />
+        <result property="shift3" jdbcType="INTEGER" column="shift_3" />
+        <result property="updateDate" jdbcType="INTEGER" column="update_date" />
+        <result column="ep1" property="ep1"/>
+        <result column="ep2" property="ep2"/>
+        <result column="ep3" property="ep3"/>
+        <result column="project_id" property="projectId"/>
+    </resultMap>
+
+
+    <select id="exportManufactures" parameterType="map" resultMap="DataExport">
+        SELECT
+            A.id,
+            A.view_time,
+            A.shift_1,
+            A.shift_2,
+            A.shift_3,
+            A.project_id,
+            A.ravenue,
+            A.total_unit,
+            SUM(CASE
+                    WHEN P.view_time
+                   <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_1, ' - ', 1))
+                        AND P.view_time <![CDATA[<]]> CONCAT(
+                                CASE
+                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_1, ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_1, ' - ', -1), '%H:%i')
+                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                    END,
+                                ' ', SUBSTRING_INDEX(S.shift_1 , ' - ', -1))
+                        THEN P.ep ELSE 0 END) AS ep1,
+            SUM(CASE
+                    WHEN P.view_time
+                    <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', 1))
+                        AND P.view_time <![CDATA[<]]> CONCAT(
+                                CASE
+                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', -1), '%H:%i')
+                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                    END,
+                                ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', -1))
+                        THEN P.ep ELSE 0 END) AS ep2,
+            SUM(CASE
+                    WHEN P.view_time
+                     <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', 1))
+                        AND P.view_time <![CDATA[<]]> CONCAT(
+                                CASE
+                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', -1), '%H:%i')
+                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                    END,
+                                ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', -1))
+                        THEN P.ep ELSE 0 END) AS ep3,
+            S.shift_1,
+            S.shift_2,
+            S.shift_3
+        FROM
+            ${schema}s3m_manufacture A
+            LEFT JOIN
+                ${schema}s3m_data_pqs P ON A.device_ids = P.device_id
+            LEFT JOIN
+                s3m_shift_setting S ON S.project_id = A.project_id
+        WHERE
+            P.view_type = 5
+          AND
+            A.project_id = #{projectId}
+          AND
+            A.device_ids LIKE '${deviceIds}'
+          AND
+            A.production_id = #{productionId}
+          AND
+            A.production_step_id = #{productionStepId}
+          AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+          AND
+            A.view_time <![CDATA[<=]]> #{toDate}
+        GROUP BY
+            A.id, A.view_time
+    </select>
+<!--    <select id="exportManufactures" resultMap="listDataResult">-->
+<!--        SELECT-->
+<!--            A.id,-->
+<!--            A.system_type_id AS systemTypeId,-->
+<!--            A.project_id AS projectId,-->
+<!--            A.device_ids AS deviceIds,-->
+<!--            A.area,-->
+<!--            A.load_type_id AS loadTypeId,-->
+<!--            A.object_type_id AS objectTypeId,-->
+<!--            A.view_type AS viewType,-->
+<!--            A.view_time AS viewTime,-->
+<!--            A.unit_id AS unitId,-->
+<!--            A.shift_1 AS shift1,-->
+<!--            A.shift_2 AS shift2,-->
+<!--            A.shift_3 AS shift3,-->
+<!--            A.total_unit AS totalUnit,-->
+<!--            SUM(CASE-->
+<!--                    WHEN P.view_time -->
+<!--                        BETWEEN CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_1 , ' - ', 1))-->
+<!--                        AND CONCAT(-->
+<!--                                CASE-->
+<!--                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_1, ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_1 , ' - ', -1), '%H:%i')-->
+<!--                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)-->
+<!--                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')-->
+<!--                                    END,-->
+<!--                                ' ', SUBSTRING_INDEX(S.shift_1))-->
+<!--                        THEN P.ep ELSE 0 END) AS ep1,-->
+<!--            SUM(CASE-->
+<!--                    WHEN P.view_time -->
+<!--                        BETWEEN CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', 1))-->
+<!--                        AND CONCAT(-->
+<!--                                CASE-->
+<!--                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', -1), '%H:%i')-->
+<!--                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)-->
+<!--                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')-->
+<!--                                    END,-->
+<!--                                ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', -1))-->
+<!--                        THEN P.ep ELSE 0 END) AS ep2,-->
+<!--            SUM(CASE-->
+<!--                    WHEN P.view_time -->
+<!--                        BETWEEN CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', 1))-->
+<!--                        AND CONCAT(-->
+<!--                                CASE-->
+<!--                                    WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', -1), '%H:%i')-->
+<!--                                        THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)-->
+<!--                                    ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')-->
+<!--                                    END,-->
+<!--                                ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', -1))-->
+<!--                        THEN P.ep ELSE 0 END) AS ep3,-->
+<!--            A.ravenue,-->
+<!--            A.production_id AS productionId,-->
+<!--            A.production_step_id AS productionStepId,-->
+<!--            A.update_date AS updateDate-->
+<!--        FROM-->
+<!--            ${schema}s3m_manufacture A-->
+<!--                LEFT JOIN-->
+<!--            ${schema}s3m_data_pqs P ON A.device_ids = P.device_id-->
+<!--                LEFT JOIN-->
+<!--            s3m_shift_setting S ON S.project_id = A.project_id-->
+
+<!--        WHERE-->
+<!--            P.view_type = 5-->
+<!--          AND-->
+<!--            A.project_id = #{projectId}-->
+<!--          AND-->
+<!--            A.device_ids LIKE '${deviceIds}'-->
+<!--          AND-->
+<!--            A.production_id = #{productionId}-->
+<!--          AND-->
+<!--            A.production_step_id = #{productionStepId}-->
+<!--          AND-->
+<!--            A.view_time <![CDATA[>=]]> #{fromDate}-->
+<!--          AND-->
+<!--            A.view_time <![CDATA[<=]]> #{toDate}-->
+<!--        GROUP BY-->
+<!--            A.id, A.view_time-->
+<!--    </select>-->
+
+<select id="getManufactures" resultMap="listDataResult">
+    SELECT
+        A.id,
+        A.system_type_id AS systemTypeId,
+        A.project_id AS projectId,
+        A.device_ids AS deviceIds,
+        A.area,
+        A.load_type_id AS loadTypeId,
+        A.object_type_id AS objectTypeId,
+        A.view_type AS viewType,
+        A.view_time AS viewTime,
+        A.unit_id AS unitId,
+        A.shift_1 AS shift1,
+        A.shift_2 AS shift2,
+        A.shift_3 AS shift3,
+        A.total_unit AS totalUnit,
+        SUM(CASE
+                WHEN P.view_time 
+                   <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_1, ' - ', 1))
+                    AND P.view_time <![CDATA[<]]> CONCAT(
+                            CASE
+                                WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_1, ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_1, ' - ', -1), '%H:%i')
+                                    THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                END,
+                            ' ', SUBSTRING_INDEX(S.shift_1 , ' - ', -1))
+                    THEN P.ep ELSE 0 END) AS ep1,
+        SUM(CASE
+                WHEN P.view_time 
+                    <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', 1))
+                    AND P.view_time <![CDATA[<]]> CONCAT(
+                            CASE
+                                WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_2 , ' - ', -1), '%H:%i')
+                                    THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                END,
+                            ' ', SUBSTRING_INDEX(S.shift_2 , ' - ', -1))
+                    THEN P.ep ELSE 0 END) AS ep2,
+        SUM(CASE
+                WHEN P.view_time 
+                     <![CDATA[>=]]> CONCAT(A.view_time, ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', 1))
+                         AND P.view_time <![CDATA[<]]> CONCAT(
+                            CASE
+                                WHEN STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', 1), '%H:%i') > STR_TO_DATE(SUBSTRING_INDEX(S.shift_3 , ' - ', -1), '%H:%i')
+                                    THEN DATE_ADD(STR_TO_DATE(A.view_time, '%Y-%m-%d'), INTERVAL 1 DAY)
+                                ELSE STR_TO_DATE(A.view_time, '%Y-%m-%d')
+                                END,
+                            ' ', SUBSTRING_INDEX(S.shift_3 , ' - ', -1))
+                    THEN P.ep ELSE 0 END) AS ep3,
+        A.ravenue,
+        A.production_id AS productionId,
+        A.production_step_id AS productionStepId,
+        A.update_date AS updateDate
+    FROM
+        ${schema}s3m_manufacture A
+            LEFT JOIN
+        ${schema}s3m_data_pqs P ON A.device_ids = P.device_id
+            LEFT JOIN
+        s3m_shift_setting S ON S.project_id = A.project_id
+
+    WHERE
+        P.view_type = 5
+        AND
+            A.project_id = #{projectId}
+        AND 
+            A.device_ids LIKE '${deviceIds}'
+        AND 
+            A.production_id = #{productionId}
+        AND 
+            A.production_step_id = #{productionStepId}
+        AND 
+            A.view_time <![CDATA[>=]]> #{fromDate}
+        AND
+            A.view_time <![CDATA[<=]]> #{toDate}
+        GROUP BY
+            A.id, A.view_time
+</select>
+    <insert id="addViewTimeManufactures" parameterType="Manufacture" >
+        INSERT INTO ${schema}s3m_manufacture(
+             system_type_id,
+             project_id,
+             device_ids,
+             view_time,
+             production_id,
+             production_step_id
+        )
+        VALUES (
+            #{manufactures.systemTypeId},
+            #{manufactures.projectId},
+            #{manufactures.deviceIds},
+            #{manufactures.viewTime},
+            #{manufactures.productionId},
+            #{manufactures.productionStepId}
+        )
+    </insert>
+<insert id="addManufactures" parameterType="Manufacture" >
+        INSERT INTO ${schema}s3m_manufacture(
+            system_type_id,
+            project_id,
+            device_ids,
+            area,
+            load_type_id,
+            object_type_id,
+            view_type,
+            view_time,
+            unit_id,
+            shift_1,
+            shift_2,
+            shift_3,
+            total_unit,
+            ravenue,
+            production_id,
+            production_step_id,
+            update_date)
+        VALUES(
+            #{manufactures.systemTypeId},
+            #{manufactures.projectId},
+            #{manufactures.deviceIds},
+            #{manufactures.area},
+            #{manufactures.loadTypeId},
+            #{manufactures.objectTypeId},
+            #{manufactures.viewType},
+            #{manufactures.viewTime},
+            #{manufactures.unitId},
+            #{manufactures.shift1},
+            #{manufactures.shift2},
+            #{manufactures.shift3},
+            #{manufactures.totalUnit},
+            #{manufactures.ravenue},
+            #{manufactures.productionId},
+            #{manufactures.productionStepId},
+            #{manufactures.updateDate}
+            )
+    </insert>
+    <update id="updateManufactures" parameterType="Manufacture">
+        UPDATE
+            ${schema}s3m_manufacture
+        SET
+            shift_1 = #{manufactures.shift1},
+            shift_2 = #{manufactures.shift2},
+            shift_3 = #{manufactures.shift3},
+            total_unit = #{manufactures.totalUnit},
+            ravenue = #{manufactures.ravenue},
+            update_date = #{manufactures.updateDate}
+        WHERE
+            id = #{manufactures.id}
+    </update>
+
+    <select id="getDataPqsManufactures" resultMap="listDataResultPqs">
+        SELECT
+            A.view_time,
+            A.ep,
+            A.view_type,
+            A.device_id
+        FROM
+            ${schema}s3m_data_pqs A
+        WHERE
+            A.device_id LIKE '${deviceId}'
+          AND
+            A.view_time <![CDATA[>=]]> #{fromDate}
+          AND
+            A.view_time <![CDATA[<=]]> #{toDate}
+          AND A.view_type = 5
+    </select>
+
+
+</mapper>

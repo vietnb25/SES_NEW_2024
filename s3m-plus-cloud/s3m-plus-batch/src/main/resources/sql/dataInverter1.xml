@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataInverter1Mapper">
+
+    <resultMap id="baseResult" type="DataInverter1">
+        <result property="id"  column="id" />
+        <result property="deviceId"  column="device_id" />
+        <result property="Ptotal"  column="Ptotal" />
+        <result property="Pdc"  column="Pdc" />
+        <result property="Ep"  column="Ep" />
+        <result property="sentDate"  column="sent_date" />
+    </resultMap>
+    
+    <select id="selectNewRecordInverter" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	WHERE 
+    		id > #{id} 
+    	LIMIT 1000000
+    </select>
+    
+    <select id="selectDataInverterBySentDate" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	WHERE 
+    		device_id = #{deviceId} 
+			AND sent_date <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d %H:%i:%s') 
+			AND sent_date <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d %H:%i:%s')
+    </select>
+    
+    <select id="selectDataInverterByFromDate" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	WHERE 
+    		device_id = #{deviceId} 
+			AND sent_date <![CDATA[>]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d %H:%i:%s') 
+			AND sent_date <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d %H:%i:%s')
+    </select>
+    
+    <select id="selectNewestRecordInverter" parameterType="map" resultMap="baseResult">
+    	SELECT 
+    		* 
+    	FROM 
+    		${schema}.${table} 
+    	ORDER BY id DESC
+    	LIMIT 1
+    </select>
+</mapper>

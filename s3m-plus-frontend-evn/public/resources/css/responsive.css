@@ -1,0 +1,33 @@
+/*
+ --------------------------------------------------------------------------------------------------
+ * Responsive stylesheet design Version 2.1
+ --------------------------------------------------------------------------------------------------
+ -- Author        : Arius Vietnam JSC
+ -- Date        : 2022/10/16
+ -- Description    : Common style design for all web pages.
+ -- Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+ -- History        :
+ -- -- --- ------------ --------------- -----------------------------------------------------------
+ -- -- No    Date         Author          Description
+ -- -- --- ------------ --------------- -----------------------------------------------------------
+ -- --   1 2022/10/16   Phong D. Nguyen    New stylesheet
+ --------------------------------------------------------------------------------------------------
+ */
+
+@media only screen and (max-width: 550px) {
+    #page-header #site-logo-pc {
+        display: none;
+    }
+    #page-header #site-logo-mobile {
+        display: block;
+    }
+    
+    #page-body #main-search .search-item.w-300px {
+        width: calc(100%) !important;
+    }
+    
+    #page-body #main-search .search-item.w-minus-300px {
+        width: calc(100% - 40px - 10px);
+        margin-left: 0px;
+    }
+}

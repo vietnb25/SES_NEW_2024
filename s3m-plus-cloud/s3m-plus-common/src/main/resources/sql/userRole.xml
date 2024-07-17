@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.UserRoleMapper">
+
+    <resultMap id="userRoleResult" type="UserRole">
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="roleCode" column="role_code" />
+    </resultMap>
+
+    <select id="getRoleNames" parameterType="map" resultType="String">
+        SELECT
+            B.role_name
+        FROM
+            s3m_user_role A
+        LEFT JOIN
+            s3m_role B ON A.role_id = B.role_id
+        WHERE
+            A.user_id = #{userId}
+    </select>
+
+    <select id="getRole" resultMap="userRoleResult">
+        SELECT
+            role_id,
+            role_name as role_code,
+        CASE
+            WHEN role_name = 'ROLE_ADMIN' THEN 'Quản trị'
+            WHEN role_name = 'ROLE_USER' THEN 'Giám sát'
+            WHEN role_name = 'ROLE_MOD' THEN 'Quản lý'
+        END role_name
+        FROM
+            s3m_role
+    </select>
+
+    <insert id="insertUserRole" parameterType="map">
+        INSERT INTO
+            s3m_user_role(user_id, role_id, create_date)
+        VALUES(#{userId}, #{roleId}, NOW())
+    </insert>
+
+    <update id="updateUserRole" parameterType="map">
+        UPDATE s3m_user_role
+        SET
+            role_id = #{roleId}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+    <update id="deleteUserRole" parameterType="map">
+        UPDATE s3m_user_role
+        SET delete_flag = 1
+        WHERE
+            user_id = #{userId}
+    </update>
+</mapper>

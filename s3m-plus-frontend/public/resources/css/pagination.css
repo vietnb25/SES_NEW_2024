@@ -1,0 +1,104 @@
+
+/*
+Plugin Name: WP-Digg Style Paginator
+Plugin URI: http://www.mis-algoritmos.com/2007/09/09/wp-digg-style-pagination-plugin-v-10/
+Author: Victor De la Rocha
+Author URI: http://www.mis-algoritmos.com
+*/
+
+/*CSS Sabrosus style pagination*/
+div.pagination {
+	padding: 0;
+	margin: 0;
+	text-align:right;
+}
+
+span.pagelinks {
+	/* width: 100%; */
+	padding: 3px 0;
+	margin: 15px 0;
+	text-align: right;
+	vertical-align: middle;
+}
+
+span.pagelinks a {
+	float: left;
+	padding: 5px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #0A1A5C;
+	color: #0A1A5C;
+	text-decoration: none; 
+}
+
+span.active a{
+	background-color: #0A1A5C;
+	color: #FFF !important;
+}
+
+span.pagelinks strong {
+	float: left;
+	padding: 5px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid navy;
+	font-weight: bold;
+	background-color: #0A1A5C;
+	color: #FFF;
+}
+
+span.pagelinks span.disabled {
+	float: left;
+	padding: 5px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #929292;
+	color: #929292;
+}
+
+span.pagebanner {
+	float: left;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	font-size: 11px;
+	font-style: italic;
+	vertical-align: middle;
+}
+
+div#pagination {
+	padding: 0;
+	margin: 0;
+	text-align:right;
+}
+
+div#pagination ul {
+	margin-bottom: 0 !important;
+}
+
+div#pagination ul.pagination {
+	height: 40px !important;
+}
+
+div#pagination li.pagelinks {
+	/* width: 100%; */
+	padding: 3px 0;
+	margin: 10px 0;
+	text-align: right;
+	vertical-align: middle;
+}
+
+div#pagination li.pagelinks a {
+	float: left;
+	padding: 5px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #0A1A5C;
+	color: #0A1A5C;
+	text-decoration: none; 
+}
+
+div#pagination li.active a{
+	background-color: #0A1A5C;
+	color: #FFF !important;
+}

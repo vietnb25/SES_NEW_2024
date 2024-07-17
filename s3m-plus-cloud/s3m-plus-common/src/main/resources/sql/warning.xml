@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.WarningMapper">
+    <resultMap id="warningResult" type="Warning">
+        <result column="id" property="id" />
+        <result column="warning_id" property="warningId" />
+        <result column="warning_type" property="warningType" />
+        <result column="warning_type_name" property="warningTypeName" />
+        <result column="warning_category" property="warningCategory" />
+        <result column="warning_level" property="warningLevel" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="total" property="totalDevice" />
+        <result column="system_type_id" property="systemTypeId" />
+        <result column="system_type_name" property="systemTypeName" />
+        <result column="from_date" property="fromDate" />
+        <result column="to_date" property="toDate" />
+        <result column="handle_flag" property="handleFlag" />
+        <result column="project_name" property="projectName" />
+        <result column="project_id" property="projectId" />
+        <result column="handle_name" property="handleName" />
+        <result column="staff_name" property="staffName" />
+        <result column="setting_history_id" property="settingHistoryId" />
+        <result column="description" property="description" />
+        <result column="create_id" property="createId" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_id" property="updateId" />
+        <result column="update_date" property="updateDate" />
+        <result column="system_map_id" property="systemMapId" />
+        <result column="system_map_name" property="systemMapName" />
+        <result column="layer" property="layer" />
+        <result column="total" property="total" />
+        <result column="device_type" property="deviceType" />
+        <result column="device_type_name" property="deviceTypeName" />
+        <result column="createDateSettingHistory" property="createDateSettingHistory" />
+        <result column="settingValueHistory" property="settingValueHistory" />
+    </resultMap>
+
+    <resultMap id="warningOfOperationResult" type="Warning">
+        <result column="sentDate" property="sentDate" />
+        <result column="warningNo" property="warningNo" />
+        <result column="warningType" property="warningType" />
+        <result column="warningDuration" property="warningDuration" />
+        <result column="description" property="description" />
+        <result column="fromDate" property="fromDate" />
+        <result column="toDate" property="toDate" />
+    </resultMap>
+
+    <select id="getTotalWarning" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_type, 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{toDate}
+        AND 
+            B.system_type_id = #{systemTypeId}
+        <if test="projectId != null">
+        AND 
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+           <if test="ids != null">
+            AND B.project_id IN (${ids})
+        </if>
+        GROUP BY
+            A.warning_type;
+    </select>
+    
+    <select id="getTotalWarningPV" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_type, 
+            B.device_type,
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{toDate}
+        AND 
+            A.warning_type BETWEEN 200 AND 300
+        AND 
+            B.project_id = #{projectId}
+        GROUP BY
+            A.warning_type, B.device_type;
+    </select>
+    
+    <select id="getTotalWarningGrid" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_type, 
+            B.device_type,
+            A.device_id,
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{toDate}
+        AND 
+            B.system_type_id = #{type}
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        GROUP BY
+            A.warning_type, B.device_type, A.device_id
+    </select>
+    
+    <select id="getAllDeviceHasWarning" parameterType="map"  resultType="java.lang.Integer">
+        SELECT 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A 
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date BETWEEN #{fromDate} AND #{toDate}
+        AND 
+            B.system_type_id = #{systemTypeId}
+        <if test="projectId != null">
+        AND 
+            B.project_id = #{projectId}
+        </if>
+        <if test="warningType != null">
+        AND 
+            A.warning_type IN (${warningType})
+        </if>
+         <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+           <if test="ids != null">
+            AND B.project_id IN (${ids})
+        </if>
+    </select>
+    
+    <select id="getAllDeviceHasWarningPV" parameterType="map"  resultType="java.lang.Integer">
+        SELECT 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A 
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{toDate}
+        AND 
+            A.warning_type BETWEEN 200 AND 300
+        AND 
+            B.project_id = #{projectId}
+    </select>
+    
+    <select id="getAllDeviceHasWarningGrid" parameterType="map"  resultType="java.lang.Integer">
+        SELECT 
+            count(DISTINCT B.device_id) AS total
+        FROM
+            ${schema}s3m_warning A 
+        JOIN
+            s3m_device B ON A.device_id = B.device_id
+        WHERE
+            A.create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.create_date <![CDATA[<=]]> #{toDate}
+        AND 
+            B.system_type_id = #{type}
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+        AND
+            B.device_id = #{deviceId}
+        </if>
+    </select>
+
+    <select id="getWarnings" parameterType="map" resultMap="warningResult">
+        SELECT 
+            warning_id,
+            warning_type,
+            device_id,
+            create_date
+        FROM
+            s3m_warning
+        WHERE
+            device_id = #{deviceId}
+        AND
+            system_type_id = 1
+        AND
+            create_date <![CDATA[>=]]> #{fromDate}
+        AND
+            create_date <![CDATA[<=]]> #{toDate}
+    </select>
+
+    <select id="getListDeviceId" parameterType="map" resultType="java.lang.String">
+        SELECT
+            device_id 
+        FROM
+            s3m_device A
+        JOIN
+            s3m_project B ON A.project_id = B.project_id
+        JOIN
+            s3m_system_type C ON A.system_type_id = C.system_type_id
+        WHERE
+            B.project_id = #{projectId} 
+        AND
+            A.system_type_id = 1
+    </select>
+    
+    <select id="getDetailWarningByWarningType" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            A.from_date,
+            A.to_date,
+            A.handle_flag,
+            C.staff_name,
+            D.system_map_id,
+            D.system_map_name,
+            D.layer
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        JOIN
+            s3m_system_map D ON B.system_map_id = D.system_map_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        AND
+            A.warning_type <![CDATA[<=]]> 199
+        AND
+            B.project_id = #{projectId}
+        GROUP BY
+            A.warning_id
+        ORDER BY
+            A.warning_id DESC
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset}, #{pageSize}
+        </if>
+    </select>
+
+    
+    <!-- SELECT - Lấy danh sách thiết bị inverter bị cảnh báo và số lần cảnh báo theo warningType. -->
+    <select id="getDetailWarningType" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            A.handle_flag,
+            C.staff_name,
+            B.device_type,
+            D.system_map_id,
+            D.system_map_name,
+            D.layer
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        JOIN
+            s3m_system_map D ON B.system_map_id = D.system_map_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+         <if test="type != null">
+        AND
+            B.system_type_id = #{type}
+        </if>
+        GROUP BY
+            B.device_id, warning_type, DAY(A.from_date), month(A.from_date), YEAR(A.from_date)
+        ORDER BY
+            A.warning_id DESC
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset}, #{pageSize}
+        </if>
+    </select>
+    
+    <!-- SELECT - Lấy danh sách số lần cảnh báo theo warningType. -->
+    <select id="countWarningRMU" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.device_id,
+            A.warning_type,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            count(E.id) AS total
+        FROM
+            ${schema}s3m_warning A
+        LEFT JOIN 
+            ${schema}s3m_data_rmu_drawer_1${year} E ON E.device_id = A.device_id
+         WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        AND
+            E.sent_date BETWEEN A.from_date AND A.to_date
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.device_id, warning_type, DAY(A.from_date), month(A.from_date), YEAR(A.from_date)
+        ORDER BY
+            A.warning_id DESC
+    </select>
+    
+    <!-- SELECT - Lấy danh sách số lần cảnh báo theo warningType. -->
+    <select id="countWarningInverter" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.device_id,
+            A.warning_type,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            count(E.id) AS total
+        FROM
+            ${schema}s3m_warning A
+        LEFT JOIN 
+            ${schema}s3m_data_inverter_1${year} E ON E.device_id = A.device_id
+         WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        AND
+            E.sent_date BETWEEN A.from_date AND A.to_date
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.device_id, warning_type, DAY(A.from_date), month(A.from_date), YEAR(A.from_date)
+        ORDER BY
+            A.warning_id DESC
+    </select>
+    
+    <!-- SELECT - Lấy danh sách số lần cảnh báo theo warningType. -->
+    <select id="countWarningCombiner" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.device_id,
+            A.warning_type,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            count(E.id) AS total
+        FROM
+            ${schema}s3m_warning A
+        LEFT JOIN 
+            ${schema}s3m_data_combiner_1${year} E ON E.device_id = A.device_id
+         WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        AND
+            E.sent_date BETWEEN A.from_date AND A.to_date
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.device_id, warning_type, DAY(A.from_date), month(A.from_date), YEAR(A.from_date)
+        ORDER BY
+            A.warning_id DESC
+    </select>
+    
+    <!-- SELECT - Lấy danh sách số lần cảnh báo theo warningType. -->
+    <select id="countWarningString" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.device_id,
+            A.warning_type,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            count(E.id) AS total
+        FROM
+            ${schema}s3m_warning A
+        LEFT JOIN 
+            ${schema}s3m_data_string_1${year} E ON E.device_id = A.device_id
+         WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        AND
+            E.sent_date BETWEEN A.from_date AND A.to_date
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.device_id, warning_type, DAY(A.from_date), month(A.from_date), YEAR(A.from_date)
+        ORDER BY
+            A.warning_id DESC
+    </select>
+    
+    <!-- getWarningOperation - SELECT - Lấy danh sách cảnh báo tab thông tin vận hành. -->
+    <select id="getWarningList" parameterType="map" resultMap="warningOfOperationResult">
+        SELECT
+            DATE_FORMAT(W.warning_date, '%Y-%m-%d') AS sentDate,
+            CASE
+                WHEN W.warning_count = 0 THEN 1
+                ELSE W.warning_count
+            END AS warningNo,
+            W.warning_type AS warningType,
+            W.duration AS warningDuration,
+            W.description
+        FROM
+            s3m_warning_duration W
+        WHERE
+            id IS NOT NULL
+            <if test="incident != null">
+                AND W.warning_type <![CDATA[>]]> 100
+            </if>
+            <if test="warning != null">
+                AND W.warning_type <![CDATA[<]]> 100
+            </if>
+            <if test="type != null">
+                AND W.warning_type = #{type}
+            </if>
+            <if test="deviceId != null">
+                AND W.device_id = #{deviceId}
+            </if>
+            <if test="warningDate != null">
+                AND DATE(W.warning_date) <![CDATA[>=]]> STR_TO_DATE(#{warningDate}, '%Y-%m-%d')
+            </if>
+            <if test="fromDate != null">
+                AND DATE(W.warning_date) <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+            </if>
+            <if test="toDate != null">
+                AND DATE(W.warning_date) <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+            </if>
+        ORDER BY W.warning_date DESC
+    </select>
+
+    <!-- getWarningCaches - SELECT - Lấy danh sách bộ đệm cảnh báo. -->
+    <select id="getWarningCaches" parameterType="map" resultMap="warningOfOperationResult">
+        SELECT
+            W.from_date AS fromDate,
+            W.to_date AS toDate
+        FROM
+            s3m_warning_cache W
+        WHERE
+            id IS NOT NULL
+            <if test="type != null">
+                AND W.warning_type = #{type}
+            </if>
+            <if test="deviceId != null">
+                AND W.device_id = #{deviceId}
+            </if>
+            <if test="warningDate != null">
+                AND DATE(W.warning_date) <![CDATA[>=]]> STR_TO_DATE(#{warningDate}, '%Y-%m-%d')
+            </if>
+            <if test="fromDate != null">
+                AND DATE(W.warning_date) <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+            </if>
+            <if test="toDate != null">
+                AND DATE(W.warning_date) <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+            </if>
+        ORDER BY W.warning_date DESC;
+    </select>
+
+    <!-- getStatusWarningDescription - SELECT - Lấy mô tả cảnh báo trạng thái. -->
+    <select id="getStatusWarningDescription" parameterType="map" resultMap="warningResult">
+        SELECT
+            W.description
+        FROM (
+            SELECT
+               GROUP_CONCAT(DISTINCT warning_type ORDER BY warning_type ASC SEPARATOR ',') as description
+            FROM s3m_warning
+            WHERE
+                device_id = #{deviceId}
+            <if test="fromDate != null">
+                AND create_date <![CDATA[>=]]> #{fromDate}
+            </if>
+            <if test="toDate != null">
+                AND create_date <![CDATA[<=]]> #{toDate}
+            </if>
+            GROUP BY device_id) as W
+        WHERE
+            W.description like CONCAT('%', #{type}, '%')
+    </select>
+    
+    <select id="getWarningByDevice" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.warning_type,
+            B.device_name,
+            A.from_date,
+            A.to_date,
+            A.handle_flag,
+            C.staff_name,
+            D.project_id ,
+            E.system_map_id ,
+            E.system_map_name,
+            E.layer
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        JOIN 
+            s3m_project D ON B.project_id = D.project_id
+        JOIN 
+            s3m_system_map E ON B.system_map_id = E.system_map_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        <if test="deviceId != null">
+            AND B.device_id = #{deviceId}
+        </if>
+        GROUP BY
+            A.warning_id
+    </select>
+    <select id="countWarnings" parameterType="map" resultMap="warningResult">
+        SELECT 
+            device_id,
+            warning_type,
+            COUNT(*) AS total
+        FROM 
+            ${schema}s3m_warning
+        WHERE
+            from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            to_date <![CDATA[<=]]> #{toDate}
+        GROUP BY
+            device_id,
+            warning_type
+    </select>
+    
+    <select id="getDetailWarningCache" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            B.device_type,
+            A.handle_flag,
+            C.staff_name,
+            A.description,
+            A.from_date
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        WHERE
+            A.warning_id = #{warningId}
+    </select>
+    
+    <select id="getDetailWarningCachePV" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            B.device_type,
+            A.handle_flag,
+            C.staff_name,
+            A.description,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date
+        FROM
+            ${schema}s3m_warning A
+         LEFT JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        WHERE
+            from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            to_date <![CDATA[<=]]> #{toDate}
+        AND
+            A.device_id = #{deviceId}
+        AND
+            A.warning_type = #{warningType}
+        GROUP BY
+            A.device_id, A.warning_type, DAY(A.from_date), MONTH(A.from_date), YEAR(A.from_date)
+    </select>
+    
+    <update id="updateWarningCache" parameterType="map">
+        UPDATE
+            ${schema}s3m_warning
+        SET
+            handle_flag = #{status},
+            user_id = #{userId},
+            description = #{description}
+        WHERE
+            warning_id = #{id}
+    </update>
+    
+    <update id="updateWarningCachePV" parameterType="map">
+        UPDATE
+            ${schema}s3m_warning A
+        SET
+            handle_flag = #{status},
+            user_id = #{userId},
+            description = #{description}
+        WHERE
+            from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            to_date <![CDATA[<=]]> #{toDate}
+        AND
+            A.device_id = #{deviceId}
+        AND
+            A.warning_type = #{warningType}
+    </update>
+    
+    <select id="countProjectWarning" parameterType="map" resultType="java.lang.Integer">
+        SELECT 
+            SUM(A.device_status)
+        FROM
+            ${schema}s3m_instant_data A
+        JOIN
+            s3m_plus.s3m_device B ON A.device_id = B.device_id
+        WHERE
+            B.project_id = #{projectId}
+        AND
+            B.system_type_id = #{systemTypeId}
+    </select>
+    
+    <select id="countWarningByWarningType" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+           count(*)
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        JOIN
+            s3m_system_map D ON B.system_map_id = D.system_map_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+        AND
+            B.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        AND A.warning_type <![CDATA[<=]]> 199
+    </select>
+    
+    <select id="getListWarningByWarningType"  parameterType="map" resultMap="warningResult">
+        SELECT
+           count(*)
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        JOIN
+            s3m_system_map D ON B.system_map_id = D.system_map_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        AND
+            A.system_type_id = #{type}
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+        AND
+            A.device_id = #{deviceId}
+        </if>
+        <if test="warningType != null">
+            AND A.warning_type = #{warningType}
+        </if>
+        GROUP BY
+            A.device_id, A.warning_type, DAY(A.from_date), MONTH(A.from_date), YEAR(A.from_date) 
+    </select>
+    
+     <select id="getWarningByProject" parameterType="map" resultMap="warningResult">
+        SELECT 
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            B.device_name,
+            A.description,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date
+        FROM
+            ${schema}s3m_warning A
+        JOIN
+            s3m_plus.s3m_device B ON A.device_id = B.device_id
+         WHERE
+            A.from_date <![CDATA[>=]]> #{time}
+        AND
+            B.project_id = #{projectId}
+    </select>
+    
+    <!-- Lấy bản tin cảnh báo -->
+    <select id="getWarningsByCustomerId" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.warning_id,
+            A.device_id,
+            A.warning_type,
+            G.warning_type_name,
+            G.warning_category,
+            COALESCE(S.warning_level, G.warning_level) AS warning_level,
+            B.device_name,
+            B.device_type_id,
+            F.name,
+            E.system_type_id,
+            E.system_type_name,
+            D.project_id,
+            D.project_name,
+            MIN(A.from_date) AS from_date,
+            MAX(A.to_date) AS to_date,
+            A.handle_flag,
+            C.staff_name,
+            COUNT(A.warning_id) AS total
+
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        JOIN 
+            s3m_project D ON D.project_id = B.project_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        LEFT JOIN
+            s3m_system_type E ON E.system_type_id = A.system_type_id
+        LEFT JOIN
+            s3m_device_type_mst F ON F.id = B.device_type_id 
+        LEFT JOIN
+            s3m_warning_type_mst G ON G.warning_type_id = A.warning_type 
+        LEFT JOIN
+            s3m_setting S ON S.warning_type = A.warning_type AND B.device_id = S.device_id
+        LEFT JOIN
+            s3m_setting_history SH ON S.id = SH.setting_id
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="systemTypeId != null">
+            AND B.system_type_id = #{systemTypeId}
+        </if>
+        <if test="projectId != null">
+            AND B.project_id = #{projectId}
+        </if>
+           <if test="ids != null">
+            AND B.project_id IN (${ids})
+        </if>
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        <if test="level != null">
+            AND  COALESCE(S.warning_level, G.warning_level) = #{level}
+        </if>   
+        GROUP BY
+            A.warning_type, A.device_id
+        ORDER BY
+            S.warning_level DESC, MAX(A.to_date) DESC
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset}, #{pageSize}
+        </if>
+    </select>
+    
+    <!-- Lấy số lượng danh sách cảnh báo-->
+    <select id="getCountListWarning"  parameterType="map" resultMap="warningResult">
+        SELECT
+           count(*)
+        FROM
+            ${schema}s3m_warning A
+        JOIN 
+            s3m_device B ON A.device_id = B.device_id
+        LEFT JOIN
+            s3m_user C ON A.user_id = C.user_id
+        LEFT JOIN
+            s3m_warning_type_mst G ON G.warning_type = A.warning_type
+        WHERE
+            A.from_date <![CDATA[>=]]> #{fromDate}
+        AND
+            A.to_date <![CDATA[<=]]> #{toDate}
+        <if test="systemTypeId != null">
+            AND A.system_type_id = #{systemTypeId}
+        </if>
+        <if test="projectId != null">
+        AND
+            B.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND A.device_id = #{deviceId}
+        </if>
+        <if test="level != null">
+            AND G.warning_level = #{level}
+        </if>   
+        GROUP BY
+            A.warning_type, A.device_id, DAY(A.to_date), MONTH(A.to_date), YEAR(A.to_date) 
+    </select>
+    
+    <select id="getWarningInstance" parameterType="map" resultMap="warningResult">
+        SELECT
+            A.*
+        FROM
+            ${schema}s3m_warning A
+        WHERE
+            A.device_id = #{deviceId}
+            AND A.to_date BETWEEN #{fromDate} AND #{toDate}
+         GROUP BY
+            A.warning_type, A.device_id    
+    </select>
+    
+    <select id="getListWarning" parameterType="map" resultMap="warningResult">
+        SELECT
+            *
+        FROM
+            ${schema}s3m_warning A
+        WHERE
+            A.device_id = #{deviceId}
+            <if test="day != null">
+                AND A.to_date LIKE "${day}%" 
+            </if>   
+            <if test="month != null">
+                AND A.to_date LIKE "${month}%" 
+            </if>
+            LIMIT 1      
+    </select>
+
+</mapper>

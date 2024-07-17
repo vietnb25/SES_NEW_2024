@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ProfileMapper">
+    <resultMap id="User" type="User">
+        <result property="id" column="user_id" />
+        <result property="username" column="username" />
+        <result property="staffName" column="staff_name" />
+        <result property="email" column="email" />
+        <result property="userType" column="user_type" />
+        <result property="company" column="company" />
+        <result property="projectId" column="project_id" />
+        <result property="projectName" column="project_name" />
+        <result property="customerId" column="customer_id" />
+        <result property="customerName" column="customer_name" />
+        <result property="areaId" column="area_id" />
+        <result property="areaName" column="area_name" />
+        <result property="managerId" column="manager_id" />
+        <result property="managerName" column="manager_name" />
+        <result property="superManagerId" column="super_manager_id" />
+        <result property="superManagerName" column="super_manager_name" />
+        <result property="role" column="role_name" />
+        <result property="roleId" column="role_id" />
+        <result property="systemTypeId" column="system_type_id" />
+        <result property="systemTypeName" column="system_type_name" />
+        <result property="updateDate" column="update_date" />
+        <result property="img" column="img" />
+         <result property="password" column="password" />
+         
+    </resultMap>
+
+    <!-- Lấy danh sách người dùng. -->
+    <select id="getUser" parameterType="map" resultMap="User">
+        SELECT
+            *
+        FROM
+            s3m_user A
+        WHERE
+            A.username = #{username}
+        AND A.delete_flag != 1
+    </select>
+
+    <!-- Lấy danh sách người dùng theo id -->
+    <select id="getUserByid" parameterType="map" resultMap="User">
+        SELECT
+            *
+        FROM
+            s3m_user A
+        WHERE
+            A.user_id = #{id}
+        AND A.delete_flag != 1
+    </select>
+    <!-- update Profile -->
+    <update id="updateProfile" parameterType="vn.ses.s3m.plus.dto.User">
+        UPDATE s3m_user
+        SET
+            staff_name=#{staffName},
+            email=#{email},
+            img=#{img},
+            update_date=now()
+        WHERE
+            user_id=#{id}
+    </update>
+    <!-- update Profile -->
+    <update id="changePassword" parameterType="vn.ses.s3m.plus.dto.User">
+        UPDATE s3m_user
+        SET
+            password=#{newPassword}
+        WHERE
+            user_id=#{id}
+    </update>
+</mapper>

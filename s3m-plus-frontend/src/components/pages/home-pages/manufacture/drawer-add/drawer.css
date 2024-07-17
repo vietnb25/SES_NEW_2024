@@ -1,0 +1,30 @@
+/* Drawer.css */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: -800px;
+    /* Initially off-screen */
+    width: 800px;
+    height: 800%;
+    background-color: #ffffff;
+    transition: right 0.3s ease-in-out;
+}
+
+.drawer.open {
+    right: -420px;
+}
+.drawer.openFull {
+    right: 0px;
+}
+
+.drawer-content {
+    padding: 16px;
+    color: #fff;
+}
+
+.close-btn {
+    background-color: #3b3b3b;
+    color: #fff;
+    padding: 8px;    border: none;
+    cursor: pointer;
+}

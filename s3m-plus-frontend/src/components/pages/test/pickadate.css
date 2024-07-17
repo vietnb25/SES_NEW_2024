@@ -1,0 +1,49 @@
+.pickadate--root {
+    font-size: 12px;
+    font-weight: 300;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 23em;
+    min-width: 20em;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 0px;
+    width: 250px;
+}
+
+.pickadate--input-root {
+    position: relative;
+}
+
+.pickadate--element {
+    background-color: white;
+}
+
+.pickadate--button {
+    top: 20%;
+    position: absolute;
+}
+
+.pickadate--button__previous {
+    left: 0;
+}
+
+.pickadate--button__next {
+    right: 0;
+}
+
+
+.pickadate--button__today {
+    display: none;
+}
+
+.pickadate--header {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+    flex-direction: column;
+}
+.pickadate--grid_cell__today > div {
+    border: 1px solid #007bff;
+}

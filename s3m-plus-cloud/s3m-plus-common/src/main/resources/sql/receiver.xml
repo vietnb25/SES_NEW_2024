@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.ReceiverMapper">
+
+    <resultMap id="receiverResult" type="Receiver"></resultMap>
+    <resultMap id="warningInfor" type="java.lang.Integer"></resultMap>
+
+    <select id="getListReceiverLoad" resultMap="receiverResult" parameterType="map">
+        SELECT
+            receiver_id AS receiverId,
+            name,
+            phone,
+            email,
+            description,
+            update_date AS updateDate
+        FROM
+            s3m_receiver
+        WHERE
+            receiver_id IS NOT NULL
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        <if test="systemType != null">
+            AND system_type = #{systemType}
+        </if>
+
+    </select>
+
+    <delete id="deleteInforByReceiverIdAndDeviceIdLoad" parameterType="map">
+        SET SQL_SAFE_UPDATES = 0;
+        DELETE
+            
+        FROM
+            s3m_receiver_warning
+        WHERE
+        id IS NOT NULL
+        <if test="receiverId != null">
+               AND receiver_id = #{receiverId}
+            </if>
+        <if test="deviceId != null">
+                AND device_id = #{deviceId}
+            </if>
+        ;
+        SET SQL_SAFE_UPDATES = 1;
+    </delete>
+    
+    <delete id="deleteReceiverLoad" parameterType="map">
+        SET SQL_SAFE_UPDATES = 0;
+        
+        DELETE
+        FROM
+            s3m_receiver
+        WHERE
+            receiver_id = #{receiverId};
+        SET SQL_SAFE_UPDATES = 1;
+    </delete>
+
+    <insert id="insertInforWarningLoad" parameterType="map">
+        INSERT INTO s3m_receiver_warning(device_id, receiver_id, warning_type)
+        VALUES
+        (#{deviceId}, #{receiverId}, #{warningType})
+    </insert>
+    
+    <insert id="addNewReceiverLoad" parameterType="map">
+        INSERT INTO s3m_receiver(name, phone, email, description, update_date, project_id, system_type)
+        VALUES
+        (#{name}, #{phone}, #{email}, #{description}, NOW(), #{projectId}, #{systemType})
+    </insert>
+    
+    <update id="updateReceiverLoad" parameterType="Receiver">
+        UPDATE
+            s3m_receiver
+        SET
+            phone = #{phone},
+            email = #{email},
+            description = #{description},
+            update_date = NOW()
+        WHERE
+            receiver_id = #{receiverId}
+    </update>
+    
+    <select id="getWarningsInforLoad" parameterType="map" resultMap="warningInfor">
+        SELECT warning_type
+        FROM    
+            s3m_receiver_warning
+        WHERE
+            id IS NOT NULL
+        <if test="receiverId != null">
+            AND receiver_id = #{receiverId}
+        </if>
+        <if test="deviceId != null">
+            AND device_id = #{deviceId}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,13 @@
+db/
+db-data/
+s3m-plus-cloud/s3m-plus-auth/log/auth.log
+s3m-plus-cloud/s3m-plus-config/log/config.log
+s3m-plus-cloud/s3m-plus-consumer/log/consumer.log
+s3m-plus-cloud/s3m-plus-gateway/log/gateway.log
+s3m-plus-cloud/s3m-plus-consumer/log/consumer.log
+s3m-plus-cloud/s3m-plus-consumer/log/consumer.log
+s3m-plus-cloud/s3m-plus-load-services-producer/log/producer.log
+*.log
+*.log
+*.log
+*.gz

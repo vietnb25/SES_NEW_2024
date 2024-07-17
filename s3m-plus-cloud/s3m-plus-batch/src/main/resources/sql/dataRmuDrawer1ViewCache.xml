@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.batch.mapper.DataRmuDrawer1ViewCacheMapper">
+
+    <resultMap id="baseResult" type="DataRmuDarwer1ViewCache">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="deviceId" jdbcType="INTEGER" column="device_id" />
+        <result property="ep" jdbcType="INTEGER" column="EP" />
+    </resultMap>
+    
+    <select id="selectAll" parameterType="map" resultMap="baseResult">
+        SELECT 
+            * 
+        FROM 
+            ${schema}.s3m_data_rmu_drawer_1_view_cache
+    </select>
+    
+    <update id="update" parameterType="DataLoadFrame1ViewCache">
+        UPDATE 
+            ${schema}.s3m_data_rmu_drawer_1_view_cache 
+        SET 
+            device_id = #{data.deviceId}, 
+            ep = #{data.ep}
+        WHERE 
+            id = #{data.id}
+    </update>
+    
+    <update id="saveAll" parameterType="DataLoadFrame1ViewCache">
+        INSERT INTO ${schema}.s3m_data_rmu_drawer_1_view_cache
+            (device_id, EP)
+        VALUES
+          <foreach item="data" collection="datas" separator=",">
+            (#{data.deviceId}, #{data.ep})
+          </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.ses.s3m.plus.dao.evn.ScheduleMapper">
+
+    <resultMap id="scheduleResult" type="Schedule"></resultMap>
+    <select id="getListSchedule" resultMap="scheduleResult">
+SELECT
+            A.id AS id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.create_date AS createDate,
+            A.history_id AS historyId
+        FROM 
+            s3m_schedule A
+            
+</select>
+    <select id="getScheduleBySuperManagerId" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.id AS id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.create_date AS createDate,
+            A.history_id AS historyId
+        FROM 
+            s3m_schedule A
+        WHERE 
+        A.id IS NOT NULL
+        <if test="superManagerId != null">
+        AND A.stt=#{superManagerId}
+        </if>
+        <if test="typeScrop != null">
+        AND A.type_scrop = #{typeScrop}
+        
+        </if>
+        <if test="managerId !=null">
+      AND A.stt=#{managerId}
+        </if>
+          <if test="areaId !=null">
+      AND A.stt=#{areaId}
+        </if>
+ <if test ="projectId != null">
+    AND A.stt = #{projectId}
+    </if>
+    </select>
+    <select id="getSchedulesByDeviceIds" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.id AS id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.create_date AS createDate
+        FROM 
+            s3m_schedule A
+        WHERE
+            A.id IS NOT NULL
+            <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+            <if test="fromDate != null">
+                AND DATE(A.time_view) <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+            </if>
+            <if test="toDate != null">
+                AND DATE(A.time_view) <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+            </if>
+            <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+            <if test="listDeviceId != null">
+                AND A.stt IN (#{listDeviceId})
+            </if>
+    </select>
+    <select id="getSchedule" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.status AS status,
+            A.create_date AS createDate,
+            A.history_id AS historyId
+        FROM 
+            s3m_schedule A
+        WHERE
+            A.id IS NOT NULL
+        <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+        </if>
+        <if test="stt != null">
+                AND A.stt = #{stt}
+        </if>
+        <if test="date != null">
+                AND DATE(time_view) = STR_TO_DATE(#{date}, '%Y-%m-%d') 
+        </if>
+        <if test="timeview != null and fromTime != null">
+                AND (DATE(time_view) = STR_TO_DATE(#{timeview}, '%Y-%m-%d') 
+                AND STR_TO_DATE(from_time, '%H:%i') >= STR_TO_DATE(#{fromTime}, '%H:%i')) Or DATE(time_view) > STR_TO_DATE(#{timeview}, '%Y-%m-%d') 
+                order by time_view + STR_TO_DATE(from_time, '%H:%i') asc Limit 1
+        </if>
+        <if test="toTime != null">
+            AND STR_TO_DATE(from_time, '%H:%i')
+            <![CDATA[<=]]>
+            STR_TO_DATE(#{toTime}, '%H:%i') AND STR_TO_DATE(to_time, '%H:%i') >= STR_TO_DATE(#{toTime}, '%H:%i')
+                order by time_view + STR_TO_DATE(from_time, '%H:%i') asc Limit 1
+        </if>
+        <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+        </if>
+        <if test="historyId != null">
+                AND A.history_id = #{historyId}
+        </if>
+        ORDER BY A.time_view DESC
+            LIMIT 1
+    </select>
+    
+    <select id="getSchedules" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.id AS id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.create_date AS createDate
+        FROM 
+            s3m_schedule A
+        WHERE
+            A.id IS NOT NULL
+            <if test="stt != null">
+                AND A.stt = #{stt}
+            </if>
+            <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+            <if test="fromDate != null">
+                AND DATE(A.time_view) <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+            </if>
+            <if test="toDate != null">
+                AND DATE(A.time_view) <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+            </if>
+            <if test="hourMiniView != null">
+                AND A.from_time <![CDATA[<=]]> #{hourMiniView}
+            </if>
+            <if test="hourMiniView != null">
+                AND A.to_time <![CDATA[>=]]> #{hourMiniView}
+            </if>
+            <if test="timeView != null">
+                AND DATE(A.time_view) <![CDATA[>=]]> STR_TO_DATE(#{timeView}, '%Y-%m-%d')
+            </if>
+            <if test="timeViewArchive != null">
+                AND DATE(A.time_view) <![CDATA[=]]> STR_TO_DATE(#{timeViewArchive}, '%Y-%m-%d')
+            </if>
+            <if test="historyId != null">
+                AND A.history_id = #{historyId}
+            </if>
+            <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+            <if test="date != null">
+                AND DATE(time_view) = STR_TO_DATE(#{date}, '%Y-%m-%d') 
+            </if>
+    </select>
+    
+    <select id="getSchedulesPlants" parameterType="map" resultMap="scheduleResult">
+        SELECT
+            A.id AS id,
+            A.stt AS stt,
+            A.address AS addRess,
+            A.type_scrop AS typeScrop,
+            A.cong_suat_tiet_giam AS congSuatTietGiam,
+            A.to_time AS toTime,
+            A.from_time AS fromTime,
+            A.time_view AS timeView,
+            A.cong_suat_cho_phep AS congSuatChoPhep,
+            A.delete_flag AS deleteFlag,
+            A.status AS status,
+            A.create_date AS createDate
+        FROM 
+            s3m_schedule A
+        WHERE
+            A.id IS NOT NULL
+            <if test="stts != null">
+				AND A.stt IN
+				<foreach item="stts" collection="stts" open="(" separator="," close=")">
+	           			 	#{stts}
+    			</foreach>
+			</if>
+            <if test="typeScrop != null">
+                AND A.type_scrop = #{typeScrop}
+            </if>
+            <if test="fromDate != null">
+                AND DATE(A.time_view) <![CDATA[>=]]> STR_TO_DATE(#{fromDate}, '%Y-%m-%d')
+            </if>
+            <if test="toDate != null">
+                AND DATE(A.time_view) <![CDATA[<=]]> STR_TO_DATE(#{toDate}, '%Y-%m-%d')
+            </if>
+            <if test="hourMiniView != null">
+                AND A.from_time <![CDATA[<=]]> #{hourMiniView}
+            </if>
+            <if test="hourMiniView != null">
+                AND A.to_time <![CDATA[>=]]> #{hourMiniView}
+            </if>
+            <if test="timeView != null">
+                AND DATE(A.time_view) <![CDATA[>=]]> STR_TO_DATE(#{timeView}, '%Y-%m-%d')
+            </if>
+            <if test="timeViewArchive != null">
+                AND DATE(A.time_view) <![CDATA[=]]> STR_TO_DATE(#{timeViewArchive}, '%Y-%m-%d')
+            </if>
+            <if test="historyId != null">
+                AND A.history_id = #{historyId}
+            </if>
+            <if test="deleteFlag != null">
+                AND A.delete_flag = #{deleteFlag}
+            </if>
+            <if test="date != null">
+                AND DATE(time_view) = STR_TO_DATE(#{date}, '%Y-%m-%d') 
+            </if>
+    </select>
+    
+    <insert id="add" parameterType="map">
+        INSERT INTO
+        s3m_schedule(
+            stt,
+            address,
+            type_scrop,
+            cong_suat_tiet_giam,
+            from_time,
+            to_time,
+            time_view,
+            cong_suat_cho_phep,
+            history_id,
+            delete_flag,
+            parent_id,
+            status,
+            create_date)
+        VALUES (
+            #{stt},
+            #{addRess},
+            #{scrop},
+            #{congSuatTietGiam},
+            #{fromTime},
+            #{toTime},
+            #{timeView},
+            #{congSuatChoPhep},
+            #{historyId},
+            #{deleteFlag},
+            #{parentId},
+            #{status},
+            #{createDate})
+    </insert>
+    
+      <insert id="addSchedule" parameterType="map">
+        INSERT INTO
+        s3m_schedule(
+            stt,
+            address,
+            type_scrop,
+            cong_suat_tiet_giam,
+            from_time,
+            to_time,
+            time_view,
+            cong_suat_cho_phep,
+            history_id,
+            delete_flag,
+            parent_id,
+            status,
+            create_date)
+        VALUES (
+            #{stt},
+            #{addRess},
+            #{scrop},
+            #{congSuatTietGiam},
+            #{fromTime},
+            #{toTime},
+            #{timeView},
+            #{congSuatChoPhep},
+            #{historyId},
+            #{deleteFlag},
+            #{parentId},
+            #{status},
+            NOW())
+    </insert>
+    
+    <update id="update" parameterType="map">
+        UPDATE
+            s3m_schedule
+        SET
+            <if test="congSuatChoPhep != null"> 
+                cong_suat_cho_phep = #{congSuatChoPhep},
+            </if>
+            <if test="congSuatTietGiam != null"> 
+                cong_suat_tiet_giam = #{congSuatTietGiam},
+            </if>
+            update_date = NOW()
+        WHERE
+            id IS NOT NULL
+            <if test="stt != null">
+                AND stt = #{stt}
+            </if>
+            <if test="historyIdAfter != null">
+                AND history_id = #{historyIdAfter}
+            </if>
+    </update>
+    
+     <delete id="deleteHistoryIds">
+        UPDATE
+            s3m_schedule
+        SET
+            delete_flag = 1
+        WHERE
+            <if test="deleteIdList != null">
+                history_id IN 
+            <foreach item="sId" collection="deleteIdList" separator="," open="(" close=")">
+                #{sId}
+            </foreach>
+        </if>           
+    </delete>
+    
+</mapper>

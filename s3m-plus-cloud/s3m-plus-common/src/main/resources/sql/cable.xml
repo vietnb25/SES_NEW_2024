@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.CableMapper">
+    <resultMap id="cableResult" type="Cable"></resultMap>
+
+    <!-- Lấy danh sách systemType. -->
+    <select id="getCables" resultMap="cableResult">
+        SELECT
+            cable_id AS cableId,
+            cable_name AS cableName,
+            current,
+            description,
+            create_id AS createId,
+            create_date AS createDate,
+            update_id AS updateId,
+            update_date AS updateDate
+        FROM
+            s3m_cable
+        WHERE
+            delete_flag = 0
+    </select>
+
+
+    <!-- Lấy danh sách systemType. -->
+    <select id="getCableById" parameterType="Integer" resultMap="cableResult">
+        SELECT
+            cable_id AS cableId,
+            cable_name AS cableName,
+            current,
+            description,
+            create_id AS createId,
+            create_date AS createDate,
+            update_id AS updateId,
+            update_date AS updateDate
+        FROM
+            s3m_cable
+        WHERE
+            cable_id=#{id}
+    </select>
+
+    <select id="getCableByCableName" parameterType="java.lang.String" resultMap="cableResult">
+        SELECT * FROM s3m_cable WHERE cable_name = #{cableName}
+    </select>
+
+    <insert id="insertCable" parameterType="Cable">
+        INSERT INTO
+            s3m_cable (cable_name,current,description)
+        VALUES
+            (#{cableName}, #{current}, #{description});
+    </insert>
+
+    <update id="updateCable" parameterType="Cable">
+        UPDATE s3m_cable
+        SET cable_name=#{cableName}, current=#{current}, description=#{description}
+        WHERE cable_id = #{cableId}
+    </update>
+
+    <delete id="deleteCable" parameterType="Integer">
+        UPDATE s3m_cable
+        SET delete_flag =1
+        WHERE cable_id = #{cableId}
+    </delete>
+
+    <select id="searchCables" parameterType="java.lang.String" resultMap="cableResult">
+        SELECT
+            cable_id AS cableId,
+            cable_name AS cableName,
+            current,
+            description,
+            create_id AS createId,
+            create_date AS createDate,
+            update_id AS updateId,
+            update_date AS updateDate
+        FROM
+            s3m_cable
+        WHERE (cable_id like '%' #{keyword} '%' or cable_name like '%' #{keyword} '%' or current like '%' #{keyword} '%' or description like '%' #{keyword} '%')
+        AND delete_flag != 1
+        GROUP BY cableId
+    </select>
+</mapper>

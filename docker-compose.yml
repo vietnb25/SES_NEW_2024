@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  mysql-db:
+    command: [ "--max_connections=1000" ]
+    image: mariadb:10.8
+    container_name: mysql-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4407:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      TZ: Asia/Ho_Chi_Minh
+    volumes:
+      - ./db:/var/lib/mysql/
+  rabbitmq:
+    image: rabbitmq:3.9.11-management-alpine
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'secret cookie here'
+    volumes:
+     - ./db-data:/var/lib/rabbitmq
+    ports:
+      - "5673:5672"
+      - "15672:15672"
+      - "1883:1883"

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.ses.s3m.plus.dao.UserMapper">
+    <resultMap id="User" type="User">
+        <result property="id" column="user_id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="staffName" column="staff_name" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="img" column="img" />
+        <result property="company" column="company" />
+        <result property="customerId" column="customer_id" />
+        <result property="superManagerId" column="super_manager_id" />
+        <result property="managerId" column="manager_id" />
+        <result property="areaId" column="area_id" />
+        <result property="projectId" column="project_id" />
+        <result property="systemTypeId" column="system_type_id" />
+        <result property="userType" column="user_type" />
+        <result property="deleteFlag" column="delete_flag" />
+        <result property="failedAttempts" column="failed_attempts" />
+        <result property="lockFlag" column="lock_flag" />
+        <result property="description" column="description" />
+        <result property="createId" column="create_id" />
+        <result property="createDate" column="create_date" />
+        <result property="updateId" column="update_id" />
+        <result property="updateDate" column="update_date" />
+        <result property="resetPasswordToken" column="reset_password_token" />
+        <result property="resetPasswordTokenExpire" column="reset_password_token_expire" />
+        <result property="firstLoginFlag" column="first_login_flag" />
+        <result property="authorized" column="authorized" />
+        <result property="customerIds" column="customer_ids" />
+        <result property="projectIds" column="project_ids" />
+        <result property="targetId" column="target_id" />
+        <result property="prioritySystem" column="priority_system" />
+        <result property="priorityIngredients" column="priority_ingredients" />
+         <result property="priorityLoad" column="priority_load" />
+        <result property="prioritySolar" column="priority_solar" />
+        <result property="priorityGrid" column="priority_grid" />
+        <result property="priorityBattery" column="priority_battery" />
+        <result property="priorityWind" column="priority_wind" />
+    </resultMap>
+
+    <resultMap id="UserDto" type="UserDto">
+        <result property="id" column="user_id" />
+        <result property="staffName" column="staff_name" />
+        <result property="customerName" column="customer_name" />
+        <result property="superManagerName" column="super_manager_name" />
+        <result property="managerName" column="manager_name" />
+        <result property="areaName" column="area_name" />
+        <result property="projectName" column="project_name" />
+        <result property="username" column="username" />
+        <result property="lockFlag" column="lock_flag" />
+        <result property="updateDate" column="update_date" />
+        <result property="roleId" column="role_id" />
+        <result property="userType" column="user_type" />
+        <result property="customerId" column="customer_id" />
+        <result property="superManagerId" column="super_manager_id" />
+        <result property="projectId" column="project_id" />
+        <result property="managerId" column="manager_id" />
+        <result property="areaId" column="area_id" />
+        <result property="authorized" column="authorized" />
+        <result property="createId" column="create_id" />
+        <result property="customerIds" column="customer_ids" />
+        <result property="targetId" column="target_id" />
+        <result property="projectIds" column="project_ids" />
+        <result property="prioritySystem" column="priority_system" />
+        <result property="priorityIngredients" column="priority_ingredients" />
+        <result property="priorityLoad" column="priority_load" />
+        <result property="prioritySolar" column="priority_solar" />
+        <result property="priorityGrid" column="priority_grid" />
+        <result property="priorityBattery" column="priority_battery" />
+        <result property="priorityWind" column="priority_wind" />
+                
+    </resultMap>
+
+    <resultMap id="userRoleResult" type="UserRole">
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="roleCode" column="role_code" />
+    </resultMap>
+
+    <select id="getUserByUsername" parameterType="map" resultMap="User">
+        SELECT * FROM s3m_user WHERE username = #{username} AND delete_flag != 1;
+    </select>
+
+    <select id="getUserByEmail" parameterType="map" resultMap="User">
+        SELECT * FROM s3m_user WHERE email = #{email} AND delete_flag != 1;
+    </select>
+
+    <select id="getRoleNames" parameterType="map" resultType="String">
+        SELECT
+        B.role_name
+        FROM
+        s3m_user_role A
+        LEFT JOIN s3m_role B ON A.role_id = B.role_id
+        WHERE
+        A.user_id = #{userId}
+    </select>
+
+    <select id="getUser" parameterType="map" resultMap="User">
+        SELECT
+        *
+        FROM
+        s3m_user A
+        WHERE
+        A.username = #{username}
+        AND
+        A.delete_flag != 1
+    </select>
+
+    <select id="getRole" resultMap="userRoleResult">
+        SELECT
+        role_id,
+        role_name as role_code,
+        CASE
+        WHEN role_name = 'ROLE_ADMIN' THEN 'Quản trị'
+        WHEN role_name = 'ROLE_USER' THEN 'Giám sát'
+        WHEN role_name = 'ROLE_MOD' THEN 'Quản lý'
+        END role_name
+        FROM
+        s3m_role
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        INSERT INTO s3m_user(
+            username,
+            password,
+            staff_name,
+            email,
+            customer_ids,
+            project_ids,
+            user_type,
+            authorized,
+            create_id,
+            target_id,
+            create_date)
+        VALUES(
+            #{username},
+            #{password},
+            #{staffName},
+            #{email},
+            #{customerIds},
+            #{projectIds},
+            #{userType},
+            #{authorized},
+            #{createId},
+            #{targetId},
+            NOW())
+    </insert>
+
+    <select id="getAllUsers" resultMap="UserDto">
+        SELECT
+            A.user_id,
+            A.username,
+            A.staff_name,
+            B.customer_name,
+            C.name as super_manager_name,
+            D.manager_name,
+            E.project_name,
+            F.area_name,
+            A.update_date,
+            A.delete_flag,
+            A.lock_flag,
+            A.create_id,
+            A.customer_ids
+        FROM
+            s3m_user A
+            LEFT JOIN s3m_customer B ON A.customer_id = B.customer_id
+            LEFT JOIN s3m_super_manager C ON A.super_manager_id = C.id
+            LEFT JOIN s3m_manager D ON A.manager_id = D.manager_id
+            LEFT JOIN s3m_project E on A.project_id = E.project_id
+            LEFT JOIN s3m_area F on A.area_id = F.area_id
+        WHERE A.delete_flag = 0;
+    </select>
+    
+    <select id="findAllUsers" resultMap="UserDto">
+        SELECT
+            A.user_id,
+            A.username,
+            A.staff_name,
+            A.update_date,
+            A.delete_flag,
+            A.lock_flag,
+            A.create_id,
+            A.customer_ids,
+            A.user_type,
+            A.target_id
+        FROM
+            s3m_plus.s3m_user A
+            LEFT JOIN s3m_plus.s3m_customer B ON A.customer_id = B.customer_id
+        WHERE A.delete_flag = 0;
+    </select>
+    
+    <select id="usersByCustomerIds" resultMap="UserDto">
+        SELECT
+            A.user_id,
+            A.username,
+            A.staff_name,
+            B.customer_name,
+            C.name as super_manager_name,
+            D.manager_name,
+            E.project_name,
+            F.area_name,
+            A.update_date,
+            A.delete_flag,
+            A.lock_flag
+        FROM
+            s3m_user A
+            LEFT JOIN s3m_customer B ON A.customer_id = B.customer_id
+            LEFT JOIN s3m_super_manager C ON A.super_manager_id = C.id
+            LEFT JOIN s3m_manager D ON A.manager_id = D.manager_id
+            LEFT JOIN s3m_project E on A.project_id = E.project_id
+            LEFT JOIN s3m_area F on A.area_id = F.area_id
+        WHERE 
+            A.delete_flag = 0 AND A.customer_id IN 
+            <foreach item="customerId" index="index" collection="customerIds"
+                     open="(" separator="," close=")">
+                #{customerId}
+            </foreach>
+    </select>
+
+    <select id="searchUser" parameterType="map" resultMap="UserDto">
+        SELECT
+            A.user_id,
+            A.username,
+            A.staff_name,
+            A.email,
+            B.customer_name,
+            C.name as super_manager_name,
+            D.manager_name,
+            E.project_name,
+            F.area_name,
+            A.update_date,
+            A.delete_flag,
+            A.lock_flag,
+            A.create_id,
+            A.customer_ids,
+            A.user_type,
+            A.target_id
+        FROM
+        s3m_user A
+            LEFT JOIN s3m_customer B ON A.customer_id = B.customer_id
+            LEFT JOIN s3m_super_manager C ON A.super_manager_id = C.id
+            LEFT JOIN s3m_manager D ON A.manager_id = D.manager_id
+            LEFT JOIN s3m_project E on A.project_id = E.project_id
+            LEFT JOIN s3m_area F on A.area_id = F.area_id
+        WHERE A.username LIKE #{keyword}
+        OR A.email LIKE #{keyword}
+        OR A.staff_name LIKE #{keyword}
+        AND A.delete_flag = 0
+    </select>
+
+    <delete id="deleteUser" parameterType="map">
+        UPDATE s3m_user SET delete_flag = 1 WHERE user_id= #{userId};
+    </delete>
+
+    <select id="getUserById" parameterType="java.lang.Integer" resultMap="UserDto">
+        SELECT
+            A.user_id,
+            A.username,
+            A.staff_name,
+            A.user_type,
+            A.customer_id,
+            A.super_manager_id,
+            A.manager_id,
+            A.area_id,
+            A.project_id,
+            A.email,
+            A.customer_id,
+            B.customer_name,
+            C.name as super_manager_name,
+            D.manager_name,
+            E.project_name,
+            A.update_date,
+            F.role_id,
+            A.lock_flag,
+            A.authorized,
+            A.target_id,
+            A.customer_ids,
+            A.project_ids,
+            A.priority_system,
+            A.priority_ingredients,
+            A.priority_load,
+            A.priority_solar,
+            A.priority_grid,
+            A.priority_battery,
+            A.priority_wind
+        FROM
+            s3m_user A
+        LEFT JOIN
+            s3m_customer B ON A.customer_id = B.customer_id
+        LEFT JOIN
+            s3m_super_manager C ON A.super_manager_id = C.id
+        LEFT JOIN
+            s3m_manager D ON A.manager_id = D.manager_id
+        LEFT JOIN
+            s3m_project E on A.project_id = E.project_id
+        LEFT JOIN
+            s3m_user_role F ON A.user_id = F.user_id
+        WHERE
+            A.user_id=#{id}
+        AND A.delete_flag != 1
+    </select>
+
+    <select id="getLastUserId" resultType="java.lang.Integer">
+        SELECT MAX(user_id) FROM s3m_user WHERE delete_flag != 1
+    </select>
+
+    <insert id="insertUserRole" parameterType="User">
+        INSERT INTO s3m_user_role(
+        user_id,
+        role_id,
+        create_date)
+        VALUES(
+        #{id},
+        #{roleId},
+        NOW())
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        UPDATE
+            s3m_user
+        SET
+        <if test="staffName != null">
+            staff_name = #{staffName},
+        </if>
+        <if test="userType != null">
+            user_type = #{userType},
+        </if>
+        <if test="targetId != null">
+            target_id = #{targetId},
+        </if>
+        <if test="email != null">
+            email = #{email},
+        </if>
+        <if test="password != null">
+            password = #{password},
+        </if>
+        <if test="authorized != null">
+            authorized = #{authorized},
+        </if>
+        <if test="customerIds != null">
+            customer_ids = #{customerIds},
+        </if>
+         <if test="projectIds != null">
+            project_ids = #{projectIds},
+        </if>
+          <if test="prioritySystem != null">
+            priority_system = #{prioritySystem},
+        </if>
+          <if test="priorityIngredients != null">
+            priority_ingredients = #{priorityIngredients},
+        </if>
+          <if test="priorityLoad != null">
+            priority_load = #{priorityLoad},
+        </if>
+          <if test="prioritySolar != null">
+            priority_solar = #{prioritySolar},
+        </if>
+          <if test="priorityGrid != null">
+            priority_grid = #{priorityGrid},
+        </if>
+          <if test="priorityBattery != null">
+            priority_battery = #{priorityBattery},
+        </if>
+          <if test="priorityWind != null">
+            priority_wind = #{priorityWind},
+        </if>
+            update_date = NOW()
+        WHERE
+            user_id = #{id}
+    </update>
+
+    <update id="updateUserRole" parameterType="User">
+        UPDATE s3m_user_role
+        SET
+        role_id=#{roleId}
+        WHERE
+        user_id=#{id}
+    </update>
+
+    <update id="updateFailedAttempts" parameterType="map">
+        UPDATE s3m_user
+        SET failed_attempts = #{failedAttempt}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateLockedUser" parameterType="map">
+        UPDATE s3m_user
+        SET lock_flag = #{lockFlag}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateTokenResetPassword" parameterType="map">
+        UPDATE s3m_user
+        SET reset_password_token = #{resetPasswordToken},
+        reset_password_token_expire = #{resetPasswordTokenExpire}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectUserByTokenReset" parameterType="map" resultMap="User">
+        SELECT * FROM s3m_user where reset_password_token = #{token};
+    </select>
+
+    <update id="resetPassword" parameterType="map">
+        UPDATE s3m_user
+        SET password = #{password},
+        reset_password_token_expire = NULL,
+        reset_password_token = NULL
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updatePasswordFirstLogin" parameterType="map">
+        UPDATE s3m_user
+        SET password = #{password},
+        first_login_flag = 0
+        WHERE user_id = #{userId}
+    </update>
+    
+     <update id="updatePriorityIngredients" parameterType="User">
+        UPDATE s3m_user
+        SET priority_ingredients = #{priorityIngredients}
+        WHERE user_id = #{id}
+    </update>
+</mapper>
